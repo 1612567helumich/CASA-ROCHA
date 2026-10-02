@@ -74,7 +74,18 @@ def _segmento(a, o):
     return (Pp.x, Pp.y), (float(O[0]), float(O[1]))
 
 
-A_LEY, O_LEY = _ley()
+def _ley_u():
+    """Forma de U simple: 5 huellas rectas perpendiculares + 11 radiales en el medio giro."""
+    a, o = [], []
+    for i in range(6):
+        a.append(LS * i / 5); o.append(LS * i / 5)
+    for j in range(1, 12):
+        th = math.pi * j / 11
+        a.append(LS + th * R40); o.append(LS + th * RE)
+    return a, o
+
+
+A_LEY, O_LEY = _ley_u()
 NARIZ = [_segmento(a, o) for a, o in zip(A_LEY, O_LEY)]   # 17 líneas: arranque ... llegada
 
 

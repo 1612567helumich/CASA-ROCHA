@@ -114,10 +114,9 @@ def main():
     filas = [
         ['Opción', 'Peralte', 'Huella en línea de huella', 'Huella a 0.40 del barandal int.', '2P + H', '¿Cumple?'],
         ['16 peraltes (sólo quitar el escalón)', '0.1875', '0.29', '0.26', '0.665', 'No: P > 0.18 y 2P+H > 0.65'],
-        ['17 peraltes, 11 huellas radiales en la curva', '0.1765', '0.264', '0.236', '0.617', 'No: H40 < 0.25'],
-        ['<b>17 peraltes, 16 huellas compensadas (elegida)</b>', '<b>%.4f</b>' % R['peralte'],
+                ['<b>17 peraltes en U: 5 rectas + 11 radiales (elegida)</b>', '<b>%.4f</b>' % R['peralte'],
          '<b>%.3f – %.3f</b>' % (R['hw_min'], R['hw_max']), '<b>%.3f – %.3f</b>' % (R['h40_min'], R['h40_max']),
-         '<b>%.3f – %.3f</b>' % (R['2p_h_min'], R['2p_h_max']), '<b>Sí (criterio del plano)</b>'],
+         '<b>%.3f – %.3f</b>' % (R['2p_h_min'], R['2p_h_max']), '<b>Sí (huella mín. 0.25 en línea de huella)</b>'],
     ]
     s.append(tabla([[cel(c) for c in r] for r in filas],
                    [5.0 * cm, 1.5 * cm, 2.6 * cm, 3.0 * cm, 2.3 * cm, 3.4 * cm], fs=7.2))
