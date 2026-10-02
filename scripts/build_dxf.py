@@ -457,6 +457,59 @@ def paso_corte_muebles(c: Cad):
             m.set_location((93.585, 13.45, 0), attachment_point=2)
 
 
+# ---------------------------------------- 11. MOBILIARIO EN CORTE B-B' (PB)
+def paso_corte_bb_muebles(c: Cad):
+    """Sala y comedor nuevos vistos desde el corte B-B' (vista hacia el eje 15)."""
+    from ezdxf import bbox
+    from shapely.geometry import Polygon, LineString
+    from shapely.ops import unary_union
+    msp = c.msp
+    for e in list(msp.query('*[layer=="021_Muebles_Corte"]')):
+        b = bbox.extents([e])
+        if b.has_data and b.extmin.x >= 82.95 and b.extmax.x <= 85.35 and b.extmin.y >= -12.52 \
+                and b.extmax.y <= -11.45:
+            msp.delete_entity(e)
+    z0 = -12.50
+    X = lambda x: x + OFF_BB
+    objs = []
+
+    def obj(outline, extra=()):
+        pts = [(X(x), z0 + z) for x, z in outline]
+        lines = [pts + [pts[0]]] + [[(X(x), z0 + z) for x, z in ln] for ln in extra]
+        objs.append((Polygon(pts).buffer(0), lines))
+    # sillón lounge (cortado), de perfil con respaldo al poniente
+    obj([(32.75, 0.0), (32.75, 0.62), (32.85, 0.74), (33.02, 0.74), (33.02, 0.42), (33.55, 0.42), (33.55, 0.0)],
+        [[(33.02, 0.40), (33.55, 0.40)], [(32.75, 0.10), (33.55, 0.10)]])
+    # sofá seccional: brazo sur del módulo largo (cortado) con respaldo al oriente
+    obj([(35.30, 0.0), (35.30, 0.60), (36.05, 0.60), (36.05, 0.80), (36.25, 0.80), (36.25, 0.0)],
+        [[(35.30, 0.12), (36.25, 0.12)]])
+    # mesas de centro
+    obj([(33.90, 0.36), (34.80, 0.36), (34.80, 0.40), (33.90, 0.40)])
+    obj([(34.10, 0.0), (34.60, 0.0), (34.55, 0.36), (34.15, 0.36)])
+    obj([(34.58, 0.41), (35.08, 0.41), (35.08, 0.45), (34.58, 0.45)])
+    obj([(34.81, 0.0), (34.85, 0.0), (34.85, 0.41), (34.81, 0.41)])
+    # brazo corto del seccional (al fondo)
+    obj([(34.20, 0.0), (34.20, 0.80), (35.30, 0.80), (35.30, 0.0)],
+        [[(34.40, 0.42), (35.30, 0.42)], [(34.40, 0.42), (34.40, 0.60)], [(34.20, 0.60), (34.40, 0.60)],
+         [(34.20, 0.12), (35.30, 0.12)]])
+    # comedor: cabecera sur de la mesa y respaldos de las sillas laterales
+    obj([(33.60, 0.72), (34.70, 0.72), (34.70, 0.76), (33.60, 0.76)])
+    obj([(33.65, 0.0), (34.65, 0.0), (34.65, 0.72), (33.65, 0.72)])
+    for xa, xb, xr in ((33.325, 33.775, 33.325), (34.525, 34.975, 34.94)):
+        obj([(xa, 0.0), (xa, 0.45), (xb, 0.45), (xb, 0.0)])
+        obj([(xr, 0.45), (xr, 0.92), (xr + 0.035, 0.92), (xr + 0.035, 0.45)])
+    occ = None
+    for poly, lines in objs:
+        for ln in lines:
+            g = LineString(ln)
+            if occ is not None:
+                g = g.difference(occ)
+            for part in ([g] if g.geom_type == 'LineString' else list(getattr(g, 'geoms', []))):
+                if not part.is_empty and part.length > 0.005:
+                    msp.add_lwpolyline(list(part.coords), dxfattribs={'layer': '021_Muebles_Corte'})
+        occ = poly if occ is None else unary_union([occ, poly])
+
+
 def build():
     c = Cad(SRC)
     paso_ejes(c)
@@ -468,6 +521,7 @@ def build():
     paso_textos(c)
     paso_notas(c)
     paso_corte_muebles(c)
+    paso_corte_bb_muebles(c)
     paso_layouts(c)
     c.save(OUT)
     print('OK ->', OUT)

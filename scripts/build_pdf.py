@@ -101,7 +101,7 @@ def main():
         'claros de 0.50 m, el texto va abajo de la línea para que no se encime.',
         '<b>Bloques:</b> autos y pick-up modernos en planta y de perfil en el corte A-A\' (con líneas ocultas). '
         'La sala se cambió por un seccional en L, dos sillones lounge, mesas de centro anidadas, tapete y '
-        'lámpara de arco. El corte A-A\' también muestra la sala, el comedor de 15 y la isla nuevos.',
+        'lámpara de arco. Los cortes A-A\' y B-B\' también muestran la sala y el comedor nuevos.',
         '<b>Layouts:</b> plantas a 1:75 (antes 1:100), cortes a 1:40 (antes 1:50) y escalera a 1:20 (antes 1:25). '
         'Las notas se reacomodaron sin encimarse. Se corrigieron los rótulos y cotas que se encimaban (máquinas, '
         'recámaras, área de lavado, baño de PA y cotas de 0.50) y un rótulo RECÁMARA repetido. En el membrete, '
