@@ -72,12 +72,13 @@ def paso_ejes(c: Cad):
     for pl in list(msp.query('LWPOLYLINE[layer=="002_EjesVerticales"]')):
         msp.delete_entity(pl)
     # cotas que tocan el eje H (incluye las dos que estaban volteadas en planta alta)
+    est = {0.0: c.ovr_de('1378'), OFF_PA: c.ovr_de('144A'), OFF_BB: c.ovr_de('494F')}
     c.kill('1369', '1378', '144A', '40B7', '494F', '495E')
     for off in (0.0, OFF_PA):
-        c.hdim(37.858 + off, X_H_NEW + off, 24.321, 25.321)
-        c.hdim(X_H_NEW + off, 40.785 + off, 24.321, 25.321)
-    c.hdim(37.858 + OFF_BB, X_H_NEW + OFF_BB, -12.82, -13.12)
-    c.hdim(X_H_NEW + OFF_BB, 40.785 + OFF_BB, -12.82, -13.12)
+        c.hdim(37.858 + off, X_H_NEW + off, 24.321, 25.321, base=est[off])
+        c.hdim(X_H_NEW + off, 40.785 + off, 24.321, 25.321, base=est[off])
+    c.hdim(37.858 + OFF_BB, X_H_NEW + OFF_BB, -12.82, -13.12, base=est[OFF_BB])
+    c.hdim(X_H_NEW + OFF_BB, 40.785 + OFF_BB, -12.82, -13.12, base=est[OFF_BB])
 
 
 # ------------------------------------------- 2. RECÁMARA PRINCIPAL (PA)
@@ -115,8 +116,9 @@ def paso_comedor(c: Cad):
     lab = [m for m in msp.query('MTEXT') if m.plain_text().strip() == 'COMEDOR' and m.dxf.insert.y > 0][0]
     lab.set_location((34.15, 12.48, 0), attachment_point=5)
     # cota 4.78 se baja de la mesa: va entre la cabecera y la alberca
+    est = c.ovr_de('4AB6')
     c.kill('4AB6')
-    c.hdim(32.010, 36.785, 18.05, 18.05)
+    c.hdim(32.010, 36.785, 18.05, 18.05, base=est)
 
 
 # ---------------------------------------------------------------- 4. SALA
@@ -209,35 +211,44 @@ def paso_textos(c: Cad):
     def mt(h):
         return c.e(h)
     # PB: "MÁQUINAS Y SERVICIO" en una línea, fuera de la cota 3.77 y de la cota vertical 1.85
-    m = mt('89F')
-    m.text = 'MÁQUINAS Y SERVICIO'
-    m.dxf.width = 3.5
-    m.set_location((39.20, 16.95, 0), attachment_point=5)
+    # etiquetas de varias palabras como TEXT de un renglón (algunos visores parten el MTEXT)
+    from ezdxf.enums import TextEntityAlignment
+
+    def texto_1r(h_old, txt, xy):
+        old = mt(h_old)
+        a = {'layer': old.dxf.layer, 'style': old.dxf.style, 'height': old.dxf.char_height}
+        c.msp.add_text(txt, dxfattribs=a).set_placement(xy, align=TextEntityAlignment.MIDDLE_CENTER)
+        c.msp.delete_entity(old)
+    texto_1r('89F', 'MÁQUINAS Y SERVICIO', (39.20, 16.95))
     # PB: RECÁMARA fuera de la cota 3.15
     mt('956').set_location((36.98, 20.95, 0), attachment_point=1)
     # PA: RECÁMARA (eje 9-10) y su cota 3.05 recorrida al hueco entre escritorio y cama
     mt('109D').set_location((67.50, 12.75, 0), attachment_point=1)
+    est = c.ovr_de('4BD3')
     c.kill('4BD3')
-    c.vdim(10.600, 13.647, 68.60, 68.60)
+    c.vdim(10.600, 13.647, 68.60, 68.60, base=est)
     # PA: ÁREA DE LAVADO en una línea, arriba de la cota 3.28
-    m = mt('10D4')
-    m.text = 'ÁREA DE LAVADO'
-    m.dxf.width = 3.0
-    m.set_location((63.65, 13.15, 0), attachment_point=8)
+    texto_1r('10D4', 'ÁREA DE LAVADO', (63.65, 13.25))
+    # PA: la recámara del eje D-J (11-13) tenía su rótulo repetido; se deja el del centro del cuarto
+    c.kill('113A')
+    mt('62B1').set_location((67.35, 17.40, 0), attachment_point=1)
     # PA: baño eje 10-11 (cotas 2.88 y 1.45 encimadas)
+    est = c.ovr_de('4C1E')
     c.kill('4C1E', '4C2D')
-    c.hdim(67.832, 70.710, 14.97, 14.97)
-    c.vdim(13.797, 15.247, 69.50, 69.50)
+    c.hdim(67.832, 70.710, 14.92, 14.92, base=est)
+    c.vdim(13.797, 15.247, 69.60, 69.60, base=est)
     mt('10F8').set_location((68.70, 14.60, 0), attachment_point=7)
     # cadenas de ejes con claros de 0.50 m: el texto de los claros chicos va abajo de la línea
+    est = c.ovr_de('1486')
     c.kill('1486', '1459')
-    c.hdim(64.8604, 65.3624, 24.321, 25.321, ovr={'dimtad': 4})
-    c.hdim(67.3574, 67.8584, 24.321, 25.321, ovr={'dimtad': 4})
+    c.hdim(64.8604, 65.3624, 24.321, 25.321, ovr={'dimtad': 4}, base=est)
+    c.hdim(67.3574, 67.8584, 24.321, 25.321, ovr={'dimtad': 4}, base=est)
+    est = c.ovr_de('4904')
     c.kill('4904', '4922', '4931', '4940')
-    c.hdim(84.4254, 84.9274, -12.82, -13.12, ovr={'dimtad': 4})
-    c.hdim(85.9264, 86.4254, -12.82, -13.12, ovr={'dimtad': 4})
-    c.hdim(86.4254, 86.9224, -12.82, -13.12)
-    c.hdim(86.9224, 87.4234, -12.82, -13.12, ovr={'dimtad': 4})
+    c.hdim(84.4254, 84.9274, -12.82, -13.12, ovr={'dimtad': 4}, base=est)
+    c.hdim(85.9264, 86.4254, -12.82, -13.12, ovr={'dimtad': 4}, base=est)
+    c.hdim(86.4254, 86.9224, -12.82, -13.12, ovr={'dimtad': 1}, base=est)
+    c.hdim(86.9224, 87.4234, -12.82, -13.12, ovr={'dimtad': 4}, base=est)
 
 
 # ------------------------------------------------------------- 8. NOTAS
@@ -308,6 +319,7 @@ REV_TXT = ('REVISIONES\\P'
 def _vp(lay, center, size, vcenter, vheight):
     v = lay.add_viewport(center=center, size=size, view_center_point=vcenter, view_height=vheight)
     v.dxf.layer = '024_Ventanas'
+    v.dxf.status = 1 + sum(1 for e in lay.query('VIEWPORT') if e.dxf.id != 1)
     return v
 
 

@@ -103,8 +103,9 @@ def main():
         'La sala se cambió por un seccional en L, dos sillones lounge, mesas de centro anidadas, tapete y '
         'lámpara de arco. El corte A-A\' también muestra la sala, el comedor de 15 y la isla nuevos.',
         '<b>Layouts:</b> plantas a 1:75 (antes 1:100), cortes a 1:40 (antes 1:50) y escalera a 1:20 (antes 1:25). '
-        'Las notas se reacomodaron sin encimarse; se corrigieron 6 textos encimados con cotas y el membrete '
-        '(el renglón ARCHIVO se salía del marco). Se agregó un cuadro de revisiones.',
+        'Las notas se reacomodaron sin encimarse. Se corrigieron los rótulos y cotas que se encimaban (máquinas, '
+        'recámaras, área de lavado, baño de PA y cotas de 0.50) y un rótulo RECÁMARA repetido. En el membrete, '
+        'el renglón ARCHIVO se salía del marco. Se agregó un cuadro de revisiones.',
         '<b>Notas:</b> la nota 3 ahora dice azotea reticular, para que coincida con el modelo. La nota 6 se '
         'actualizó con la escalera nueva y se agregó la referencia del Reglamento de Morelia.',
     ])
@@ -198,6 +199,11 @@ def main():
         'descansan directo en la losa reticular, así que en obra necesitan trabe o nervadura reforzada. '
         'Hay además %d tramos sin losa arriba (bardas de la terraza 13-15).'
         % (GR.get('MUROS PA SOBRE LOSA (SIN MURO ABAJO)', 0), GR.get('MUROS PA SIN LOSA ARRIBA (BARDAS)', 0)),
+        '<b>Cochera:</b> la losa N+3.00 sobre la cochera (ejes 2-6, A-G) sólo apoya en el muro A y en el baño de PB, '
+        'y el muro oriente del baño de PA (eje G) cae en el borde libre de esa losa. El plano no trae trabes ni '
+        'columnas al frente (eje 2) ni en el eje G, y el modelo no las inventa; hay que definirlas.',
+        '<b>Claros grandes:</b> en sala y comedor la losa salva hasta 8.85 m entre los muros A y J. Revisar si '
+        'h = 25 alcanza o si hacen falta trabes.',
         '<b>PB casi sin muros en X:</b> %.1f m de muro en X contra %.1f m en Y (garage, sala y comedor abiertos). '
         'Revisar torsión y cortante en esa dirección.' % (W['Lx_PB'], W['Ly_PB']),
         '<b>Q = 2, R = 2</b> (mampostería confinada de piezas macizas). El factor de limitación de daños '

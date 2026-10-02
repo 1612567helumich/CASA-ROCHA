@@ -77,17 +77,21 @@ class Cad:
                 ent.dxf.lineweight = -2
         return dim
 
-    def hdim(self, x1, x2, y_def, y_line, layer='008_Cotas', ovr=None):
+    def ovr_de(self, handle):
+        """Override de estilo de una cota original (para rehacerla idéntica)."""
+        return dict(self.H[handle].override().dimstyle_attribs)
+
+    def hdim(self, x1, x2, y_def, y_line, layer='008_Cotas', ovr=None, base=None):
         """Cota horizontal de x1 a x2 (x1<x2) con línea de cota en y_line."""
-        o = dict(DIM_OVR)
+        o = dict(base if base is not None else DIM_OVR)
         o.update(ovr or {})
         d = self.msp.add_linear_dim(base=(x1, y_line), p1=(x1, y_def), p2=(x2, y_def), angle=0,
                                     dimstyle='EZDXF', override=o, dxfattribs={'layer': layer})
         d.render()
         return self._norm_dim(d, layer)
 
-    def vdim(self, y1, y2, x_def, x_line, layer='008_Cotas', ovr=None):
-        o = dict(DIM_OVR)
+    def vdim(self, y1, y2, x_def, x_line, layer='008_Cotas', ovr=None, base=None):
+        o = dict(base if base is not None else DIM_OVR)
         o.update(ovr or {})
         d = self.msp.add_linear_dim(base=(x_line, y1), p1=(x_def, y1), p2=(x_def, y2), angle=90,
                                     dimstyle='EZDXF', override=o, dxfattribs={'layer': layer})
