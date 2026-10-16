@@ -26,7 +26,7 @@ def sheet_resumen(wb):
             ('Tableros que no cumplen 6.7.8.1.4 (se diseñan como losa sobre vigas: recubrimiento de viga, sin ×1.1)', '=COUNTIFS(TABLEROS!$%s$%d:$%s$%d,"NO",TABLEROS!$%s$%d:$%s$%d,"PERIMETRAL")' % (TC['g678'], T0, TC['g678'], T1, TC['modo'], T0, TC['modo'], T1), '=COUNTIF(TABLEROS!$%s$%d:$%s$%d,"PERIMETRAL")' % (TC['modo'], T0, TC['modo'], T1), 'info'),
             ('Tableros fuera de 3.4.2.1 c) (M⁻ del borde común con un vecino difieren > 50 %): confirmar con el modelo', '=COUNTIF(TABLEROS!$%s$%d:$%s$%d,"FUERA*")' % (TC['c342'], T0, TC['c342'], T1), '=COUNTIF(TABLEROS!$%s$%d:$%s$%d,"PERIMETRAL")' % (TC['modo'], T0, TC['modo'], T1), 'info'),
             ('Nervaduras principales que CUMPLEN con la sección propuesta', '=COUNTIF(%s,"CUMPLE*")' % pest, '=COUNTA(%s)-COUNTIF(%s,"BORDE*")' % (pest, pest), 'ok'),
-            ('… de ellas, las que hay que PERALTAR respecto a la dala 15×25 del modelo', '=COUNTIF(PRINCIPALES!$%s$%d:$%s$%d,"PERALTAR*")' % (PC['cambio'], P0, PC['cambio'], P1), '=COUNTA(%s)-COUNTIF(%s,"BORDE*")' % (pest, pest), 'info'),
+            ('Nervaduras principales que hay que PERALTAR respecto a la dala 15×25 del modelo (incluye las PENDIENTES)', '=COUNTIF(PRINCIPALES!$%s$%d:$%s$%d,"PERALTAR*")' % (PC['cambio'], P0, PC['cambio'], P1), '=COUNTA(%s)-COUNTIF(%s,"BORDE*")' % (pest, pest), 'info'),
             ('Nervaduras principales PENDIENTES del análisis de interacción muro-viga (NTC-M 4.1.18.2.1)', '=COUNTIF(%s,"PENDIENTE*")' % pest, '=COUNTA(%s)-COUNTIF(%s,"BORDE*")' % (pest, pest), 'zero'),
             ('Nervaduras principales que NO CUMPLEN', '=COUNTIF(%s,"NO CUMPLE*")' % pest, '=COUNTA(%s)-COUNTIF(%s,"BORDE*")' % (pest, pest), 'zero'),
             ('Capa de compresión: temperatura, diafragma, recubrimiento, separación de la malla, punzonamiento, acero mínimo junto a la carga (6.7.6.1.2) y flexión con 1 000 kg', '=COUNTIF(%s,"NO CUMPLE*")' % N['CAPA_RNG'], 7, 'zero'),
@@ -63,7 +63,8 @@ def sheet_resumen(wb):
                 '9) ANCLAJE EN BORDES DISCONTINUOS: la barra inferior de cada nervadura debe desarrollar 1.25 fy en el paño (6.7.8.1.7) con ≥ 15 cm dentro del muro, y el bastón superior fy (6.7.7.4.1.1 b); con No. 4, L_dh = 25 cm (32 cm a 1.25 fy) y en la dala de 15 cm sólo hay 11 cm. '
                 'Opciones: dala o cadena de borde de ≥ 30–36 cm de ancho en esos bordes, barras con cabeza (14.4.4) o justificación del Responsable en planos (NERVADURA sección 10).',
                 '10) VOLADOS F80012 Y F80019 (NO CUMPLEN): sus nervaduras no son «viguetas» (6.7.8.1.4) y van como vigas con 4 cm de recubrimiento en las dos caras; además su cara superior queda sin techo (exposición A2, Tabla 4.3.1 c). En 10 cm de ancho cabe una sola varilla y el M⁻ del empotramiento (≈ 1.8 t·m por nervadura) pide una No. 8 que no cabe. '
-                'Opciones: nervaduras más anchas en los volados (casetón más chico o nervadura de 15–20 cm), volado macizo con su propio diseño, o volado más corto. La malla de la capa en esas zonas pide protección (piso o impermeabilizante; selector en DATOS) o capa más gruesa.']:
+                'Opciones: nervaduras más anchas en los volados (casetón más chico o nervadura de 15–20 cm), volado macizo con su propio diseño, o volado más corto. La malla de la capa en esas zonas pide protección (piso o impermeabilizante; selector en DATOS) o capa más gruesa. '
+                'Mientras sigan, el desequilibrio de su momento sube el cortante de los tableros de respaldo (F80016, F80018, F80020, F80021): F80020 y F80021 piden macizar (TABLEROS, columna «ΔV por volado vecino»).']:
         S.bullet(txt)
     S.gap()
     S.section('3. TABLA DE NERVADURAS SECUNDARIAS (COMO LA DE NAIM)')
@@ -90,7 +91,7 @@ def sheet_resumen(wb):
     S.gap()
     S.section('4. TABLA DE NERVADURAS PRINCIPALES')
     r = S.r
-    heads = ['Tramo', 'Nivel', 'Condición', 'L (m)', 'b (cm)', 'h (cm)', 'Inferior', '', 'Superior', '', 'Estribos', 'h req. (cm)', 'Estado']
+    heads = ['Tramo', 'Nivel', 'Condición', 'L (m)', 'b (cm)', 'h (cm)', 'Inferior', '', 'Superior', '', 'Estribos', 'h mín. sin flecha (cm)', 'Estado']
     for k, t in enumerate(heads):
         hdr_cell(ws, r, 2 + k, t)
     ws.merge_cells('H%d:I%d' % (r, r)); ws.merge_cells('J%d:K%d' % (r, r)); ws.row_dimensions[r].height = 30; S.r += 1
@@ -105,6 +106,7 @@ def sheet_resumen(wb):
         cell(ws, r, 12, '=' + P_('cort'), sz=8); cell(ws, r, 13, '=' + P_('hrec'), 'key', '0')
         cell(ws, r, 14, '=' + P_('estado'), al='left', sz=8)
         S.r += 1
+    S.secnote('«h mín. sin flecha» = el mínimo por flexión, Tabla 6.3.3.1.1 y NTC-M 4.1.18; la h propuesta (columna h) ya incluye la flecha de 13.4 y el acomodo de varillas: no se baja la trabe a ese valor.')
     S.gap()
     S.section('5. CANTIDADES')
     for k, (c, u) in enumerate([('Concreto de losas (con desperdicio)', 'm³'), ('Casetones 60×60×20', 'pzas'), ('Malla electrosoldada', 'm²'),

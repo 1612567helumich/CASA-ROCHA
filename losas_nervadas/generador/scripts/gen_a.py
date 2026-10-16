@@ -153,7 +153,7 @@ def sheet_datos(wb):
     S.row('¿Se anotan en planos las precauciones de 3.9.2? (casetón de medida fija que garantiza b_w y silletas que fijan el peralte del lecho superior)', 'SÍ', '—',
           'SELECTOR. b_w = 10 cm < 200 mm y, donde el lecho superior queda con d ≤ 200 mm, la norma pide calcular con 20 mm menos, salvo que se tomen precauciones que garanticen la dimensión y se anoten en planos. '
           'Si dices NO, la hoja usa b_w − 2 cm en cortante y en flexión negativa, y d − 2 cm en el lecho superior de cada tablero cuyo d sea ≤ 20 cm.',
-          NTCC + ' 3.9.1 e) y 3.9.2, p. 74 · 6.3.1.2 b), p. 117 (las nervaduras son vigas)', 'input', '@', 'ctl_bw')
+          NTCC + ' 3.9.1 d) y e) y 3.9.2, p. 74 · 6.3.1.2 b), p. 117 (las nervaduras son vigas)', 'input', '@', 'ctl_bw')
     dv_list(ws, N['ctl_bw'].split('!')[1].replace('$', ''), '"SÍ,NO"')
     S.row('b_w de cálculo', '=IF({ctl_bw}="SÍ",{bw},{bw}-2)', 'cm', 'CALCULADA.', NTCC + ' 3.9.1 e), p. 74', 'key', '0.0', 'bwc')
     S.row('r — recubrimiento libre en losa y nervaduras secundarias (interior, A1)', 2.0, 'cm',
@@ -189,10 +189,10 @@ def sheet_datos(wb):
           NTCC + ' 2.2.5.2.1, p. 32', 'input', '0.00', 'tmag')
     S.row('¿El agregado cabe? (≤ 2/3 de r y de la separación libre)', '=IF({tmag}<=2/3*MIN({rec},MAX(2.5,1.5*{tmag})),"CUMPLE","NO CUMPLE — usa agregado más chico")', '—', 'CALCULADA.', NTCC + ' 2.2.5.2.1, p. 32', 'calc', '@')
     S.row('Separación libre mínima entre varillas', '=MAX(2.5,1.5*{tmag})', 'cm', 'CALCULADA = el mayor de 25 mm, d_b y 1.5·TMA (d_b se revisa barra por barra).', NTCC + ' 14.2.1, p. 347', 'calc', '0.00', 'slib')
-    S.row('Ancho libre para varillas dentro de la nervadura secundaria', '={bw}-2*{rec}-2*' + dbz('{est_sec}'), 'cm', 'CALCULADA = b_w − 2r − 2·estribo. Con esto la hoja revisa cuántas varillas de cada número caben de verdad.', 'Geometría', 'calc', '0.00', 'av_sec')
+    S.row('Ancho libre para varillas dentro de la nervadura secundaria', '={bw}-2*{rec}-2*' + dbz('{est_sec}'), 'cm', 'CALCULADA = b_w − 2r − 2·estribo con r = 2 cm (tableros que cumplen 6.7.8.1.4). Informativa: TABLEROS revisa renglón por renglón con su r; con r = 4 cm (tableros que no cumplen 6.7.8.1.4 y volados) quedan 2 cm y cabe una sola varilla de d_b ≤ 2 cm.', 'Geometría', 'calc', '0.00', 'av_sec')
     S.row('Malla electrosoldada en la capa de compresión', '6x6-6/6', '—',
-          'SELECTOR. La lista está en TABLAS. Debe cubrir: contracción y temperatura (0.0018·t), cortante de diafragma (0.0025·t), flexión de la capa con 1 000 kg entre nervaduras y caber con 2 cm de recubrimiento por cara (NERVADURA sección 11). Con capa de 5 cm la 6x6-6/6 es la que mejor cumple; la 6x6-4/4 ya no cabe con su recubrimiento.',
-          NTCC + ' 13.8.2.1.1, p. 345 · 6.7.8.1.8, p. 188 · 6.8.6.4, p. 196 · ' + NAIMPL + ' · EST-03 (dice 6x6-10/10)', 'input', '@', 'malla')
+          'SELECTOR. La lista está en TABLAS. Debe cubrir: contracción y temperatura (0.0018·t), cortante de diafragma (0.0025·t), flexión de la capa con 1 000 kg entre nervaduras, acero mínimo alrededor de la carga concentrada (6.7.6.1.2) y caber con 2 cm de recubrimiento por cara (r_ext = 4 cm donde la cara superior queda expuesta: azotea o volados según los selectores de arriba) (NERVADURA sección 11). Con capa de 5 cm ninguna malla cumple a la vez diafragma, punzonamiento y acero mínimo junto a la carga (RESUMEN, decisión 3). Con capa de 5 cm la 6x6-6/6 es la que mejor cumple; la 6x6-4/4 ya no cabe con su recubrimiento.',
+          NTCC + ' 13.8.2.1.1, p. 345 · 6.7.8.1.8, p. 188 · 6.8.6.4, p. 196 · 6.7.6.1.2, p. 175 · Tabla 6.7.4.2.2.3, p. 171 · Tabla 4.14.16.a, p. 85 · ' + NAIMPL + ' · EST-03 (dice 6x6-10/10)', 'input', '@', 'malla')
     dv_list(ws, N['malla'].split('!')[1].replace('$', ''), '=TABLAS!$B$%d:$B$%d' % (TB_W0, TB_W1))
     S.row('Ø del alambre de la malla', '=INDEX(TABLAS!$C$%d:$C$%d,MATCH({malla},TABLAS!$B$%d:$B$%d,0))/10' % (TB_W0, TB_W1, TB_W0, TB_W1), 'cm',
           'CALCULADA. La malla va con r = 2 cm a la cara superior y las varillas superiores de las nervaduras pasan DEBAJO de ella: su d pierde 2·Ø.', 'TABLAS sección C', 'calc', '0.000', 'fim')
@@ -291,7 +291,7 @@ def sheet_datos(wb):
     S.notice('LO QUE QUEDA PENDIENTE DE TU LADO: (1) aceptar o rechazar los castillos que se proponen bajar a cimentación (hoja APOYOS); '
              '(2) revisar las secciones propuestas para las nervaduras principales que no pasan con 15×25 (PRINCIPALES, columnas b y h: son trabes descolgadas); '
              '(3) corregir en ETABS las secciones de F80032 y F80010 de azotea, que están como «Slab1»; (4) confirmar si la sobrecarga del modelo ya trae los 40 kg/m² de 5.1.2.1; '
-             '(5) anotar en planos: concreto Clase 1A con agregado calizo de 1/2", las precauciones de 3.9.2 y la malla de la capa; (6) las decisiones 7 a 10 de RESUMEN: tableros que no cumplen 6.7.8.1.4, tableros fuera de 3.4.2.1 c), anclaje en bordes discontinuos y volados.', 78)
+             '(5) anotar en planos: concreto Clase 1A con agregado calizo de 1/2", las precauciones de 3.9.2 y la malla de la capa; (6) la decisión 3 de RESUMEN (capa de compresión: capa de 6 cm con 6x6-4/4) y las decisiones 7 a 10: tableros que no cumplen 6.7.8.1.4, tableros fuera de 3.4.2.1 c), anclaje en bordes discontinuos y volados.', 78)
     add_cf(ws, 'C1:F%d' % S.r)
     ws.sheet_view.zoomScale = 85
     return ws

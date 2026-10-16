@@ -25,7 +25,7 @@ def font(sz=10, b=False, i=False, color=TXT):
 def add_cf(ws, rng):
     """Mismas reglas del ejemplo: rojo para lo que falla, verde para lo que cumple; ámbar para avisos."""
     red = ('OR(ISNUMBER(FIND("NO CUMPLE",{c})),ISNUMBER(FIND("REVISAR",{c})),ISNUMBER(FIND("NO CABE",{c})),'
-           'ISNUMBER(FIND("FUERA",{c})),ISNUMBER(FIND("SIN APOYO",{c})),ISNUMBER(FIND("INSUFICIENTE",{c})))')
+           'ISNUMBER(FIND("FUERA",{c})),ISNUMBER(FIND("SIN APOYO",{c})),ISNUMBER(FIND("INSUFICIENTE",{c})),ISNUMBER(FIND("PENDIENTE",{c})))')
     grn = 'OR(ISNUMBER(FIND("CUMPLE",{c})),ISNUMBER(FIND("SÍ aplica",{c})),ISNUMBER(FIND("MANDA",{c})))'
     amb = 'OR(ISNUMBER(FIND("MACIZAR",{c})),ISNUMBER(FIND("VOLADO",{c})),ISNUMBER(FIND("PROPUESTO",{c})),ISNUMBER(FIND("VER ",{c})))'
     first = rng.split(':')[0]
