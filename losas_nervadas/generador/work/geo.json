@@ -1,0 +1,3341 @@
+{
+ "tableros": [
+  {
+   "name": "F80001",
+   "level": "N+3.00",
+   "pts": [
+    [
+     4.327,
+     1.919
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     0.0,
+     2.921
+    ],
+    [
+     0.0,
+     1.919
+    ]
+   ],
+   "area_dxf": 4.34,
+   "label": "F80001  4.34 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 185.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    0.0,
+    1.919,
+    4.327,
+    2.921
+   ],
+   "Lx": 4.327,
+   "Ly": 1.002,
+   "area_poly": 4.336,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 4.327,
+     "frac_muro": 0.005,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 4.327,
+     "frac_muro": 0.005,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80003",
+       4.327
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 1.002,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 1.002,
+     "frac_muro": 0.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80003",
+   "level": "N+3.00",
+   "pts": [
+    [
+     0.0,
+     2.921
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     4.327,
+     5.946
+    ],
+    [
+     2.925,
+     5.946
+    ],
+    [
+     2.925,
+     5.346
+    ],
+    [
+     0.0,
+     5.346
+    ]
+   ],
+   "area_dxf": 11.33,
+   "label": "F80003  11.33 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    0.0,
+    2.921,
+    4.327,
+    5.946
+   ],
+   "Lx": 4.327,
+   "Ly": 3.025,
+   "area_poly": 11.334,
+   "rect": false,
+   "bordes": {
+    "inferior": {
+     "L": 4.327,
+     "frac_muro": 0.005,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80001",
+       4.327
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 4.327,
+     "frac_muro": 0.333,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80005",
+       2.945
+      ],
+      [
+       "F80006",
+       1.422
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 3.025,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.205,
+     "vecinos": [
+      [
+       "F80005",
+       0.62
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 3.025,
+     "frac_muro": 0.007,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80004",
+       3.025
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80004",
+   "level": "N+3.00",
+   "pts": [
+    [
+     5.923,
+     5.946
+    ],
+    [
+     4.327,
+     5.946
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     5.923,
+     2.921
+    ]
+   ],
+   "area_dxf": 4.83,
+   "label": "F80004  4.83 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 230.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    4.327,
+    2.921,
+    5.923,
+    5.946
+   ],
+   "Lx": 1.596,
+   "Ly": 3.025,
+   "area_poly": 4.828,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 1.596,
+     "frac_muro": 0.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 1.596,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80008",
+       1.596
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 3.025,
+     "frac_muro": 0.007,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80003",
+       3.025
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 3.025,
+     "frac_muro": 0.007,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80005",
+   "level": "N+3.00",
+   "pts": [
+    [
+     0.0,
+     5.346
+    ],
+    [
+     2.925,
+     5.346
+    ],
+    [
+     2.925,
+     6.948
+    ],
+    [
+     0.0,
+     6.948
+    ]
+   ],
+   "area_dxf": 4.69,
+   "label": "F80005  4.69 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    0.0,
+    5.346,
+    2.925,
+    6.948
+   ],
+   "Lx": 2.925,
+   "Ly": 1.602,
+   "area_poly": 4.686,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 2.925,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80003",
+       2.925
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 2.925,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80007",
+       2.925
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 1.602,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 1.602,
+     "frac_muro": 1.0,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80003",
+       0.62
+      ],
+      [
+       "F80006",
+       1.022
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80006",
+   "level": "N+3.00",
+   "pts": [
+    [
+     2.925,
+     6.948
+    ],
+    [
+     2.925,
+     5.946
+    ],
+    [
+     4.327,
+     5.946
+    ],
+    [
+     4.327,
+     6.948
+    ]
+   ],
+   "area_dxf": 1.4,
+   "label": "F80006  1.40 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    2.925,
+    5.946,
+    4.327,
+    6.948
+   ],
+   "Lx": 1.402,
+   "Ly": 1.002,
+   "area_poly": 1.405,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 1.402,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80003",
+       1.402
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 1.402,
+     "frac_muro": 0.014,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80007",
+       1.402
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 1.002,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80005",
+       1.002
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 1.002,
+     "frac_muro": 0.02,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80008",
+       1.002
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80007",
+   "level": "N+3.00",
+   "pts": [
+    [
+     0.0,
+     6.948
+    ],
+    [
+     4.327,
+     6.948
+    ],
+    [
+     4.327,
+     7.871
+    ],
+    [
+     0.0,
+     7.871
+    ]
+   ],
+   "area_dxf": 3.99,
+   "label": "F80007  3.99 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    0.0,
+    6.948,
+    4.327,
+    7.871
+   ],
+   "Lx": 4.327,
+   "Ly": 0.923,
+   "area_poly": 3.994,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 4.327,
+     "frac_muro": 0.681,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80005",
+       2.945
+      ],
+      [
+       "F80006",
+       1.422
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 4.327,
+     "frac_muro": 0.005,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 1.0,
+     "vacios": [
+      "Vacío doble altura (sala)"
+     ]
+    },
+    "izquierdo": {
+     "L": 0.923,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 0.923,
+     "frac_muro": 0.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80008",
+       0.923
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80008",
+   "level": "N+3.00",
+   "pts": [
+    [
+     4.327,
+     14.021
+    ],
+    [
+     4.327,
+     5.946
+    ],
+    [
+     5.923,
+     5.946
+    ],
+    [
+     5.923,
+     6.948
+    ],
+    [
+     5.46,
+     6.948
+    ],
+    [
+     5.46,
+     8.91
+    ],
+    [
+     7.35,
+     8.91
+    ],
+    [
+     7.35,
+     9.95
+    ],
+    [
+     5.422,
+     9.95
+    ],
+    [
+     5.422,
+     15.447
+    ],
+    [
+     4.925,
+     15.447
+    ],
+    [
+     4.925,
+     17.446
+    ],
+    [
+     3.029,
+     17.446
+    ],
+    [
+     3.029,
+     15.846
+    ],
+    [
+     3.427,
+     15.846
+    ],
+    [
+     3.427,
+     14.021
+    ]
+   ],
+   "area_dxf": 17.9,
+   "label": "F80008  17.90 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    3.029,
+    5.946,
+    7.35,
+    17.446
+   ],
+   "Lx": 4.321,
+   "Ly": 11.5,
+   "area_poly": 17.9,
+   "rect": false,
+   "bordes": {
+    "inferior": {
+     "L": 4.321,
+     "frac_muro": 0.674,
+     "frac_vecino": 0.989,
+     "vecinos": [
+      [
+       "F80003",
+       1.318
+      ],
+      [
+       "F80004",
+       1.636
+      ],
+      [
+       "F80006",
+       1.318
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 4.321,
+     "frac_muro": 0.566,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80013",
+       0.937
+      ],
+      [
+       "F80015",
+       1.548
+      ],
+      [
+       "F80016",
+       1.417
+      ],
+      [
+       "F80017",
+       0.539
+      ],
+      [
+       "F80018",
+       2.445
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 11.5,
+     "frac_muro": 0.002,
+     "frac_vecino": 0.476,
+     "vecinos": [
+      [
+       "F80006",
+       1.022
+      ],
+      [
+       "F80007",
+       0.963
+      ],
+      [
+       "F80010",
+       1.865
+      ],
+      [
+       "F80014",
+       1.62
+      ]
+     ],
+     "frac_vacio": 0.543,
+     "vacios": [
+      "Vacío doble altura (sala)"
+     ]
+    },
+    "derecho": {
+     "L": 11.5,
+     "frac_muro": 0.009,
+     "frac_vecino": 0.661,
+     "vecinos": [
+      [
+       "F80009",
+       5.537
+      ],
+      [
+       "F80011",
+       0.439
+      ],
+      [
+       "F80015",
+       1.62
+      ]
+     ],
+     "frac_vacio": 0.282,
+     "vacios": [
+      "Escalera curva (cubo)"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80009",
+   "level": "N+3.00",
+   "pts": [
+    [
+     8.85,
+     15.447
+    ],
+    [
+     5.422,
+     15.447
+    ],
+    [
+     5.422,
+     9.95
+    ],
+    [
+     8.85,
+     9.95
+    ]
+   ],
+   "area_dxf": 18.84,
+   "label": "F80009  18.84 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 175.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    5.422,
+    9.95,
+    8.85,
+    15.447
+   ],
+   "Lx": 3.428,
+   "Ly": 5.497,
+   "area_poly": 18.844,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 3.428,
+     "frac_muro": 0.211,
+     "frac_vecino": 0.568,
+     "vecinos": [
+      [
+       "F80008",
+       1.948
+      ]
+     ],
+     "frac_vacio": 0.519,
+     "vacios": [
+      "Escalera curva (cubo)"
+     ]
+    },
+    "superior": {
+     "L": 3.428,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80011",
+       3.428
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 5.497,
+     "frac_muro": 0.004,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80008",
+       5.497
+      ]
+     ],
+     "frac_vacio": 0.022,
+     "vacios": [
+      "Escalera curva (cubo)"
+     ]
+    },
+    "derecho": {
+     "L": 5.497,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.022,
+     "vacios": [
+      "Escalera curva (cubo)"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80010",
+   "level": "N+3.00",
+   "pts": [
+    [
+     3.427,
+     14.021
+    ],
+    [
+     3.427,
+     15.846
+    ],
+    [
+     0.0,
+     15.846
+    ],
+    [
+     0.0,
+     14.021
+    ]
+   ],
+   "area_dxf": 6.25,
+   "label": "F80010  6.25 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 240.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    0.0,
+    14.021,
+    3.427,
+    15.846
+   ],
+   "Lx": 3.427,
+   "Ly": 1.825,
+   "area_poly": 6.254,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 3.427,
+     "frac_muro": 0.006,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 1.0,
+     "vacios": [
+      "Vacío doble altura (sala)"
+     ]
+    },
+    "superior": {
+     "L": 3.427,
+     "frac_muro": 0.006,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80008",
+       0.418
+      ],
+      [
+       "F80014",
+       3.049
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 1.825,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80012",
+       1.825
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 1.825,
+     "frac_muro": 0.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80008",
+       1.825
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80011",
+   "level": "N+3.00",
+   "pts": [
+    [
+     8.85,
+     15.846
+    ],
+    [
+     5.422,
+     15.846
+    ],
+    [
+     5.422,
+     15.447
+    ],
+    [
+     8.85,
+     15.447
+    ]
+   ],
+   "area_dxf": 1.37,
+   "label": "F80011  1.37 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 230.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    5.422,
+    15.447,
+    8.85,
+    15.846
+   ],
+   "Lx": 3.428,
+   "Ly": 0.399,
+   "area_poly": 1.368,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 3.428,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80009",
+       3.428
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 3.428,
+     "frac_muro": 0.006,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80013",
+       0.42
+      ],
+      [
+       "F80015",
+       3.048
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 0.399,
+     "frac_muro": 0.05,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80013",
+       0.399
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 0.399,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80012",
+   "level": "N+3.00",
+   "pts": [
+    [
+     0.0,
+     14.021
+    ],
+    [
+     0.0,
+     17.446
+    ],
+    [
+     -2.0,
+     17.446
+    ],
+    [
+     -2.0,
+     14.021
+    ]
+   ],
+   "area_dxf": 6.85,
+   "label": "F80012  6.85 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 210.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    -2.0,
+    14.021,
+    0.0,
+    17.446
+   ],
+   "Lx": 2.0,
+   "Ly": 3.425,
+   "area_poly": 6.85,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 2.0,
+     "frac_muro": 0.01,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 2.0,
+     "frac_muro": 0.01,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 3.425,
+     "frac_muro": 0.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 3.425,
+     "frac_muro": 1.0,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80010",
+       1.845
+      ],
+      [
+       "F80014",
+       1.62
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80013",
+   "level": "N+3.00",
+   "pts": [
+    [
+     5.422,
+     15.447
+    ],
+    [
+     5.422,
+     15.846
+    ],
+    [
+     5.822,
+     15.846
+    ],
+    [
+     5.822,
+     17.446
+    ],
+    [
+     4.925,
+     17.446
+    ],
+    [
+     4.925,
+     15.447
+    ]
+   ],
+   "area_dxf": 1.63,
+   "label": "F80013  1.63 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    4.925,
+    15.447,
+    5.822,
+    17.446
+   ],
+   "Lx": 0.897,
+   "Ly": 1.999,
+   "area_poly": 1.634,
+   "rect": false,
+   "bordes": {
+    "inferior": {
+     "L": 0.897,
+     "frac_muro": 1.0,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80008",
+       0.517
+      ],
+      [
+       "F80009",
+       0.42
+      ],
+      [
+       "F80011",
+       0.42
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 0.897,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80018",
+       0.897
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 1.999,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80008",
+       1.999
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 1.999,
+     "frac_muro": 0.02,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80011",
+       0.419
+      ],
+      [
+       "F80015",
+       1.62
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80014",
+   "level": "N+3.00",
+   "pts": [
+    [
+     3.029,
+     15.846
+    ],
+    [
+     3.029,
+     17.446
+    ],
+    [
+     0.0,
+     17.446
+    ],
+    [
+     0.0,
+     15.846
+    ]
+   ],
+   "area_dxf": 4.85,
+   "label": "F80014  4.85 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 230.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    0.0,
+    15.846,
+    3.029,
+    17.446
+   ],
+   "Lx": 3.029,
+   "Ly": 1.6,
+   "area_poly": 4.846,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 3.029,
+     "frac_muro": 0.007,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80010",
+       3.029
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 3.029,
+     "frac_muro": 0.007,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80016",
+       3.029
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 1.6,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80012",
+       1.6
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 1.6,
+     "frac_muro": 0.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80008",
+       1.6
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80015",
+   "level": "N+3.00",
+   "pts": [
+    [
+     8.85,
+     17.446
+    ],
+    [
+     5.822,
+     17.446
+    ],
+    [
+     5.822,
+     15.846
+    ],
+    [
+     8.85,
+     15.846
+    ]
+   ],
+   "area_dxf": 4.84,
+   "label": "F80015  4.84 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 230.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    5.822,
+    15.846,
+    8.85,
+    17.446
+   ],
+   "Lx": 3.028,
+   "Ly": 1.6,
+   "area_poly": 4.845,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 3.028,
+     "frac_muro": 0.007,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80011",
+       3.028
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 3.028,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80018",
+       3.028
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 1.6,
+     "frac_muro": 0.012,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80013",
+       1.6
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 1.6,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80016",
+   "level": "N+3.00",
+   "pts": [
+    [
+     0.0,
+     17.446
+    ],
+    [
+     4.426,
+     17.446
+    ],
+    [
+     4.426,
+     21.446
+    ],
+    [
+     0.0,
+     21.446
+    ]
+   ],
+   "area_dxf": 17.7,
+   "label": "F80016  17.70 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    0.0,
+    17.446,
+    4.426,
+    21.446
+   ],
+   "Lx": 4.426,
+   "Ly": 4.0,
+   "area_poly": 17.704,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 4.426,
+     "frac_muro": 0.005,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80008",
+       1.417
+      ],
+      [
+       "F80014",
+       3.049
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 4.426,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80019",
+       4.426
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 4.0,
+     "frac_muro": 0.005,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80017",
+       4.0
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80017",
+   "level": "N+3.00",
+   "pts": [
+    [
+     4.925,
+     17.446
+    ],
+    [
+     4.925,
+     21.446
+    ],
+    [
+     4.426,
+     21.446
+    ],
+    [
+     4.426,
+     17.446
+    ]
+   ],
+   "area_dxf": 2.0,
+   "label": "F80017  2.00 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    4.426,
+    17.446,
+    4.925,
+    21.446
+   ],
+   "Lx": 0.499,
+   "Ly": 4.0,
+   "area_poly": 1.996,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 0.499,
+     "frac_muro": 0.04,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80008",
+       0.499
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 0.499,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80019",
+       0.499
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 4.0,
+     "frac_muro": 0.005,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80016",
+       4.0
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80018",
+       4.0
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80018",
+   "level": "N+3.00",
+   "pts": [
+    [
+     8.85,
+     21.446
+    ],
+    [
+     4.925,
+     21.446
+    ],
+    [
+     4.925,
+     17.446
+    ],
+    [
+     8.85,
+     17.446
+    ]
+   ],
+   "area_dxf": 15.7,
+   "label": "F80018  15.70 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    4.925,
+    17.446,
+    8.85,
+    21.446
+   ],
+   "Lx": 3.925,
+   "Ly": 4.0,
+   "area_poly": 15.7,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 3.925,
+     "frac_muro": 1.0,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80013",
+       0.917
+      ],
+      [
+       "F80015",
+       3.048
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 3.925,
+     "frac_muro": 1.0,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80019",
+       2.345
+      ],
+      [
+       "F80020",
+       1.62
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80017",
+       4.0
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80019",
+   "level": "N+3.00",
+   "pts": [
+    [
+     0.0,
+     23.446
+    ],
+    [
+     0.0,
+     21.446
+    ],
+    [
+     7.25,
+     21.446
+    ],
+    [
+     7.25,
+     23.446
+    ]
+   ],
+   "area_dxf": 14.5,
+   "label": "F80019  14.50 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 210.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    0.0,
+    21.446,
+    7.25,
+    23.446
+   ],
+   "Lx": 7.25,
+   "Ly": 2.0,
+   "area_poly": 14.5,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 7.25,
+     "frac_muro": 1.0,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80016",
+       4.446
+      ],
+      [
+       "F80017",
+       0.539
+      ],
+      [
+       "F80018",
+       2.345
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 7.25,
+     "frac_muro": 0.006,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 2.0,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80021",
+       2.0
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 2.0,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80020",
+       2.0
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80020",
+   "level": "N+3.00",
+   "pts": [
+    [
+     7.25,
+     24.371
+    ],
+    [
+     7.25,
+     21.446
+    ],
+    [
+     8.85,
+     21.446
+    ],
+    [
+     8.85,
+     24.371
+    ]
+   ],
+   "area_dxf": 4.68,
+   "label": "F80020  4.68 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 225.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "bbox": [
+    7.25,
+    21.446,
+    8.85,
+    24.371
+   ],
+   "Lx": 1.6,
+   "Ly": 2.925,
+   "area_poly": 4.68,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 1.6,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80018",
+       1.6
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 1.6,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 2.925,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.691,
+     "vecinos": [
+      [
+       "F80019",
+       2.02
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 2.925,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80021",
+   "level": "N+3.00",
+   "pts": [
+    [
+     0.0,
+     21.446
+    ],
+    [
+     0.0,
+     24.371
+    ],
+    [
+     -1.6,
+     24.371
+    ],
+    [
+     -1.6,
+     21.446
+    ]
+   ],
+   "area_dxf": 4.68,
+   "label": "F80021  4.68 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 270.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "bbox": [
+    -1.6,
+    21.446,
+    0.0,
+    24.371
+   ],
+   "Lx": 1.6,
+   "Ly": 2.925,
+   "area_poly": 4.68,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 1.6,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 1.6,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 2.925,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 2.925,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.691,
+     "vecinos": [
+      [
+       "F80019",
+       2.02
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80023",
+   "level": "N+6.00",
+   "pts": [
+    [
+     4.327,
+     5.946
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     5.923,
+     2.921
+    ],
+    [
+     5.923,
+     5.946
+    ]
+   ],
+   "area_dxf": 4.83,
+   "label": "F80023  4.83 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 270.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "bbox": [
+    4.327,
+    2.921,
+    5.923,
+    5.946
+   ],
+   "Lx": 1.596,
+   "Ly": 3.025,
+   "area_poly": 4.828,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 1.596,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 1.596,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80032",
+       1.596
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 3.025,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80024",
+       3.025
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 3.025,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80024",
+   "level": "N+6.00",
+   "pts": [
+    [
+     0.0,
+     2.921
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     4.327,
+     7.871
+    ],
+    [
+     0.0,
+     7.871
+    ]
+   ],
+   "area_dxf": 21.42,
+   "label": "F80024  21.42 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 315.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "bbox": [
+    0.0,
+    2.921,
+    4.327,
+    7.871
+   ],
+   "Lx": 4.327,
+   "Ly": 4.95,
+   "area_poly": 21.419,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 4.327,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F2",
+       4.327
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 4.327,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 1.0,
+     "vacios": [
+      "Pergolado sobre doble altura (vigas VP-15x40 @0.75 + cristal)"
+     ]
+    },
+    "izquierdo": {
+     "L": 4.95,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 4.95,
+     "frac_muro": 1.0,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80023",
+       3.045
+      ],
+      [
+       "F80032",
+       1.945
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80025",
+   "level": "N+6.00",
+   "pts": [
+    [
+     8.85,
+     15.846
+    ],
+    [
+     5.422,
+     15.846
+    ],
+    [
+     5.422,
+     9.95
+    ],
+    [
+     8.85,
+     9.95
+    ]
+   ],
+   "area_dxf": 20.21,
+   "label": "F80025  20.21 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 300.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "bbox": [
+    5.422,
+    9.95,
+    8.85,
+    15.846
+   ],
+   "Lx": 3.428,
+   "Ly": 5.896,
+   "area_poly": 20.211,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 3.428,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.152,
+     "vecinos": [
+      [
+       "F80032",
+       0.521
+      ]
+     ],
+     "frac_vacio": 0.859,
+     "vacios": [
+      "Vacío sobre escalera"
+     ]
+    },
+    "superior": {
+     "L": 3.428,
+     "frac_muro": 1.0,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80026",
+       3.048
+      ],
+      [
+       "F80032",
+       0.42
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 5.896,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80032",
+       5.896
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 5.896,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80026",
+   "level": "N+6.00",
+   "pts": [
+    [
+     5.822,
+     15.846
+    ],
+    [
+     8.85,
+     15.846
+    ],
+    [
+     8.85,
+     16.697
+    ],
+    [
+     5.822,
+     16.697
+    ]
+   ],
+   "area_dxf": 2.58,
+   "label": "F80026  2.58 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 295.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "bbox": [
+    5.822,
+    15.846,
+    8.85,
+    16.697
+   ],
+   "Lx": 3.028,
+   "Ly": 0.851,
+   "area_poly": 2.577,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 3.028,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80025",
+       3.028
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 3.028,
+     "frac_muro": 0.013,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80028",
+       3.028
+      ]
+     ],
+     "frac_vacio": 0.973,
+     "vacios": [
+      "Hueco 0.30 m (tragaluz)"
+     ]
+    },
+    "izquierdo": {
+     "L": 0.851,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80032",
+       0.851
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 0.851,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80027",
+   "level": "N+6.00",
+   "pts": [
+    [
+     3.029,
+     16.997
+    ],
+    [
+     0.0,
+     16.997
+    ],
+    [
+     0.0,
+     15.846
+    ],
+    [
+     3.029,
+     15.846
+    ]
+   ],
+   "area_dxf": 3.49,
+   "label": "F80027  3.49 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 295.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "bbox": [
+    0.0,
+    15.846,
+    3.029,
+    16.997
+   ],
+   "Lx": 3.029,
+   "Ly": 1.151,
+   "area_poly": 3.486,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 3.029,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80010",
+       3.029
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 3.029,
+     "frac_muro": 0.013,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80029",
+       3.029
+      ]
+     ],
+     "frac_vacio": 0.972,
+     "vacios": [
+      "Hueco 0.30 m (tragaluz)"
+     ]
+    },
+    "izquierdo": {
+     "L": 1.151,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 1.151,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80032",
+       1.151
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80028",
+   "level": "N+6.00",
+   "pts": [
+    [
+     5.822,
+     16.697
+    ],
+    [
+     8.85,
+     16.697
+    ],
+    [
+     8.85,
+     17.446
+    ],
+    [
+     5.822,
+     17.446
+    ]
+   ],
+   "area_dxf": 0.6,
+   "label": "F80028  0.60 m²  (sin huecos)",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 295.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "bbox": [
+    5.822,
+    16.697,
+    8.85,
+    17.446
+   ],
+   "Lx": 3.028,
+   "Ly": 0.749,
+   "area_poly": 2.268,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 3.028,
+     "frac_muro": 0.013,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80026",
+       3.028
+      ]
+     ],
+     "frac_vacio": 0.973,
+     "vacios": [
+      "Hueco 0.30 m (tragaluz)"
+     ]
+    },
+    "superior": {
+     "L": 3.028,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80031",
+       3.028
+      ]
+     ],
+     "frac_vacio": 0.973,
+     "vacios": [
+      "Hueco 0.30 m (tragaluz)"
+     ]
+    },
+    "izquierdo": {
+     "L": 0.749,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80032",
+       0.749
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 0.749,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 1,
+     "vacios": [
+      "Hueco 0.30 m (tragaluz)",
+      "Hueco 0.30 m (tragaluz)"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80029",
+   "level": "N+6.00",
+   "pts": [
+    [
+     3.029,
+     17.446
+    ],
+    [
+     0.0,
+     17.446
+    ],
+    [
+     0.0,
+     16.997
+    ],
+    [
+     3.029,
+     16.997
+    ]
+   ],
+   "area_dxf": 0.53,
+   "label": "F80029  0.53 m²  (sin huecos)",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 295.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "bbox": [
+    0.0,
+    16.997,
+    3.029,
+    17.446
+   ],
+   "Lx": 3.029,
+   "Ly": 0.449,
+   "area_poly": 1.36,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 3.029,
+     "frac_muro": 0.013,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80027",
+       3.029
+      ]
+     ],
+     "frac_vacio": 0.972,
+     "vacios": [
+      "Hueco 0.30 m (tragaluz)"
+     ]
+    },
+    "superior": {
+     "L": 3.029,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80030",
+       3.029
+      ]
+     ],
+     "frac_vacio": 0.972,
+     "vacios": [
+      "Hueco 0.30 m (tragaluz)"
+     ]
+    },
+    "izquierdo": {
+     "L": 0.449,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 1.0,
+     "vacios": [
+      "Hueco 0.30 m (tragaluz)"
+     ]
+    },
+    "derecho": {
+     "L": 0.449,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80032",
+       0.449
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80030",
+   "level": "N+6.00",
+   "pts": [
+    [
+     4.426,
+     17.446
+    ],
+    [
+     4.426,
+     21.446
+    ],
+    [
+     0.0,
+     21.446
+    ],
+    [
+     0.0,
+     17.446
+    ]
+   ],
+   "area_dxf": 17.7,
+   "label": "F80030  17.70 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 310.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "bbox": [
+    0.0,
+    17.446,
+    4.426,
+    21.446
+   ],
+   "Lx": 4.426,
+   "Ly": 4.0,
+   "area_poly": 17.704,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 4.426,
+     "frac_muro": 1.0,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80029",
+       3.049
+      ],
+      [
+       "F80032",
+       1.417
+      ]
+     ],
+     "frac_vacio": 0.665,
+     "vacios": [
+      "Hueco 0.30 m (tragaluz)"
+     ]
+    },
+    "superior": {
+     "L": 4.426,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80031",
+       4.0
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80031",
+   "level": "N+6.00",
+   "pts": [
+    [
+     4.426,
+     17.446
+    ],
+    [
+     8.85,
+     17.446
+    ],
+    [
+     8.85,
+     21.446
+    ],
+    [
+     4.426,
+     21.446
+    ]
+   ],
+   "area_dxf": 17.7,
+   "label": "F80031  17.70 m²",
+   "etabs_section": "LR-25",
+   "loads": {
+    "Sobrecarga": 310.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "bbox": [
+    4.426,
+    17.446,
+    8.85,
+    21.446
+   ],
+   "Lx": 4.424,
+   "Ly": 4.0,
+   "area_poly": 17.696,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 4.424,
+     "frac_muro": 1.0,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80028",
+       3.048
+      ],
+      [
+       "F80032",
+       1.416
+      ]
+     ],
+     "frac_vacio": 0.666,
+     "vacios": [
+      "Hueco 0.30 m (tragaluz)"
+     ]
+    },
+    "superior": {
+     "L": 4.424,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80030",
+       4.0
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F80032",
+   "level": "N+6.00",
+   "pts": [
+    [
+     4.327,
+     14.021
+    ],
+    [
+     4.327,
+     5.946
+    ],
+    [
+     5.923,
+     5.946
+    ],
+    [
+     5.923,
+     9.95
+    ],
+    [
+     5.422,
+     9.95
+    ],
+    [
+     5.422,
+     15.846
+    ],
+    [
+     5.822,
+     15.846
+    ],
+    [
+     5.822,
+     17.446
+    ],
+    [
+     3.029,
+     17.446
+    ],
+    [
+     3.029,
+     15.846
+    ],
+    [
+     3.427,
+     15.846
+    ],
+    [
+     3.427,
+     14.021
+    ]
+   ],
+   "area_dxf": 18.96,
+   "label": "F80032  18.96 m²",
+   "etabs_section": "Slab1",
+   "loads": {
+    "Sobrecarga": 315.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "bbox": [
+    3.029,
+    5.946,
+    5.923,
+    17.446
+   ],
+   "Lx": 2.894,
+   "Ly": 11.5,
+   "area_poly": 18.958,
+   "rect": false,
+   "bordes": {
+    "inferior": {
+     "L": 2.894,
+     "frac_muro": 0.558,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80023",
+       1.616
+      ],
+      [
+       "F80024",
+       1.318
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 2.894,
+     "frac_muro": 1.0,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80028",
+       0.121
+      ],
+      [
+       "F80030",
+       1.417
+      ],
+      [
+       "F80031",
+       1.517
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 11.5,
+     "frac_muro": 0.148,
+     "frac_vecino": 0.476,
+     "vecinos": [
+      [
+       "F80024",
+       1.945
+      ],
+      [
+       "F80027",
+       1.191
+      ],
+      [
+       "F80029",
+       0.469
+      ],
+      [
+       "F80010",
+       1.865
+      ]
+     ],
+     "frac_vacio": 0.543,
+     "vacios": [
+      "Pergolado sobre doble altura (vigas VP-15x40 @0.75 + cristal)"
+     ]
+    },
+    "derecho": {
+     "L": 11.5,
+     "frac_muro": 0.098,
+     "frac_vecino": 0.661,
+     "vecinos": [
+      [
+       "F80025",
+       5.936
+      ],
+      [
+       "F80026",
+       0.891
+      ],
+      [
+       "F80028",
+       0.769
+      ]
+     ],
+     "frac_vacio": 0.347,
+     "vacios": [
+      "Vacío sobre escalera",
+      "Hueco 0.30 m (tragaluz)",
+      "Hueco 0.30 m (tragaluz)"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80010",
+   "level": "N+6.00",
+   "pts": [
+    [
+     3.427,
+     14.021
+    ],
+    [
+     3.427,
+     15.846
+    ],
+    [
+     0.0,
+     15.846
+    ],
+    [
+     0.0,
+     14.021
+    ]
+   ],
+   "area_dxf": 6.25,
+   "label": "F80010  6.25 m²",
+   "etabs_section": "Slab1",
+   "loads": {
+    "Sobrecarga": 300.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "bbox": [
+    0.0,
+    14.021,
+    3.427,
+    15.846
+   ],
+   "Lx": 3.427,
+   "Ly": 1.825,
+   "area_poly": 6.254,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 3.427,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 1.0,
+     "vacios": [
+      "Pergolado sobre doble altura (vigas VP-15x40 @0.75 + cristal)"
+     ]
+    },
+    "superior": {
+     "L": 3.427,
+     "frac_muro": 1.0,
+     "frac_vecino": 1,
+     "vecinos": [
+      [
+       "F80027",
+       3.049
+      ],
+      [
+       "F80032",
+       0.418
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 1.825,
+     "frac_muro": 0.022,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 1.825,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80032",
+       1.825
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  },
+  {
+   "name": "F2",
+   "level": "N+6.00",
+   "pts": [
+    [
+     4.327,
+     1.919
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     0.0,
+     2.921
+    ],
+    [
+     0.0,
+     1.919
+    ]
+   ],
+   "area_dxf": 4.34,
+   "label": "F2  4.34 m²",
+   "etabs_section": "LR-25",
+   "loads": {},
+   "bbox": [
+    0.0,
+    1.919,
+    4.327,
+    2.921
+   ],
+   "Lx": 4.327,
+   "Ly": 1.002,
+   "area_poly": 4.336,
+   "rect": true,
+   "bordes": {
+    "inferior": {
+     "L": 4.327,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "superior": {
+     "L": 4.327,
+     "frac_muro": 1.0,
+     "frac_vecino": 1.0,
+     "vecinos": [
+      [
+       "F80024",
+       4.327
+      ]
+     ],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "izquierdo": {
+     "L": 1.002,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    },
+    "derecho": {
+     "L": 1.002,
+     "frac_muro": 1.0,
+     "frac_vecino": 0.0,
+     "vecinos": [],
+     "frac_vacio": 0.0,
+     "vacios": []
+    }
+   }
+  }
+ ],
+ "vacios": {
+  "N+3.00": [
+   {
+    "nombre": "Vacío doble altura (sala)",
+    "coords": [
+     [
+      4.247,
+      7.946
+     ],
+     [
+      4.247,
+      13.946
+     ],
+     [
+      0.075,
+      13.946
+     ],
+     [
+      0.075,
+      7.946
+     ],
+     [
+      4.247,
+      7.946
+     ]
+    ],
+    "fuente": "001_PLANO_CROCHA_R3.0.dxf capa 004_Vacios, PLANTA PRIMER NIVEL",
+    "area": 25.03
+   },
+   {
+    "nombre": "Escalera curva (cubo)",
+    "coords": [
+     [
+      8.85,
+      9.95
+     ],
+     [
+      8.85,
+      6.948
+     ],
+     [
+      5.46,
+      6.948
+     ],
+     [
+      5.422,
+      9.95
+     ],
+     [
+      5.46,
+      9.95
+     ],
+     [
+      5.46,
+      8.91
+     ],
+     [
+      7.35,
+      8.91
+     ],
+     [
+      7.35,
+      9.95
+     ],
+     [
+      8.85,
+      9.95
+     ]
+    ],
+    "fuente": "001_PLANO_CROCHA_R3.0.dxf capa 005_Escalera; hueco sin tablero en el E2K",
+    "area": 8.27
+   }
+  ],
+  "N+6.00": [
+   {
+    "nombre": "Pergolado sobre doble altura (vigas VP-15x40 @0.75 + cristal)",
+    "coords": [
+     [
+      4.427,
+      7.946
+     ],
+     [
+      4.427,
+      13.946
+     ],
+     [
+      0.075,
+      13.946
+     ],
+     [
+      0.075,
+      7.946
+     ],
+     [
+      4.427,
+      7.946
+     ]
+    ],
+    "fuente": "001_PLANO_CROCHA_R3.0.dxf capa 004_Vacios, PLANTA DE AZOTEA; E2K vigas VP-15x40",
+    "area": 26.11
+   },
+   {
+    "nombre": "Vacío sobre escalera",
+    "coords": [
+     [
+      8.775,
+      7.023
+     ],
+     [
+      8.775,
+      9.875
+     ],
+     [
+      5.998,
+      9.875
+     ],
+     [
+      5.998,
+      7.023
+     ],
+     [
+      8.775,
+      7.023
+     ]
+    ],
+    "fuente": "001_PLANO_CROCHA_R3.0.dxf capa 004_Vacios, PLANTA DE AZOTEA",
+    "area": 7.92
+   },
+   {
+    "nombre": "Hueco 0.30 m (tragaluz)",
+    "coords": [
+     [
+      5.998,
+      17.072
+     ],
+     [
+      8.775,
+      17.072
+     ],
+     [
+      8.775,
+      17.372
+     ],
+     [
+      5.998,
+      17.372
+     ],
+     [
+      5.998,
+      17.072
+     ]
+    ],
+    "fuente": "AREAS_TRIBUTARIAS_R3.2.dxf capa TRIB_HUECO / E2K áreas A1-A3",
+    "area": 0.83
+   },
+   {
+    "nombre": "Hueco 0.30 m (tragaluz)",
+    "coords": [
+     [
+      5.998,
+      16.772
+     ],
+     [
+      8.775,
+      16.772
+     ],
+     [
+      8.775,
+      17.072
+     ],
+     [
+      5.998,
+      17.072
+     ],
+     [
+      5.998,
+      16.772
+     ]
+    ],
+    "fuente": "AREAS_TRIBUTARIAS_R3.2.dxf capa TRIB_HUECO / E2K áreas A1-A3",
+    "area": 0.83
+   },
+   {
+    "nombre": "Hueco 0.30 m (tragaluz)",
+    "coords": [
+     [
+      0.075,
+      17.072
+     ],
+     [
+      2.85,
+      17.072
+     ],
+     [
+      2.85,
+      17.372
+     ],
+     [
+      0.075,
+      17.372
+     ],
+     [
+      0.075,
+      17.072
+     ]
+    ],
+    "fuente": "AREAS_TRIBUTARIAS_R3.2.dxf capa TRIB_HUECO / E2K áreas A1-A3",
+    "area": 0.83
+   }
+  ]
+ },
+ "principales": []
+}

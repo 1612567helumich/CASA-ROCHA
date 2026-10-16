@@ -1,0 +1,11988 @@
+{
+ "tableros": [
+  {
+   "name": "F80001",
+   "level": "N+3.00",
+   "x0": 0.0,
+   "y0": 1.919,
+   "x1": 4.327,
+   "y1": 2.921,
+   "Lx": 4.327,
+   "Ly": 1.002,
+   "area": 4.34,
+   "area_poly": 4.336,
+   "rect": true,
+   "pts": [
+    [
+     4.327,
+     1.919
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     0.0,
+     2.921
+    ],
+    [
+     0.0,
+     1.919
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 185.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 4.327,
+   "ay": 1.002,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 4.327,
+     "frac_muro": 0.005,
+     "apoyo": "NERV. PRINCIPAL NP-01",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": [
+      "NP-01"
+     ]
+    },
+    "superior": {
+     "L": 4.327,
+     "frac_muro": 0.005,
+     "apoyo": "NERV. PRINCIPAL NP-02",
+     "cont": "CONTINUO",
+     "vecinos": "F80003",
+     "vacio": "",
+     "nps": [
+      "NP-02"
+     ]
+    },
+    "izquierdo": {
+     "L": 1.002,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 1.002,
+     "frac_muro": 0.0,
+     "apoyo": "NERV. PRINCIPAL NP-20",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": [
+      "NP-20"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80003",
+   "level": "N+3.00",
+   "x0": 0.0,
+   "y0": 2.921,
+   "x1": 4.327,
+   "y1": 5.946,
+   "Lx": 4.327,
+   "Ly": 3.025,
+   "area": 11.33,
+   "area_poly": 11.334,
+   "rect": false,
+   "pts": [
+    [
+     0.0,
+     2.921
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     4.327,
+     5.946
+    ],
+    [
+     2.925,
+     5.946
+    ],
+    [
+     2.925,
+     5.346
+    ],
+    [
+     0.0,
+     5.346
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 4.327,
+   "ay": 3.025,
+   "rep_nota": "Forma de L: se toma el rectángulo envolvente 4.327 × 3.025 (conservador; el claro corto real es 2.425 en la parte izquierda).",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 4.327,
+     "frac_muro": 0.005,
+     "apoyo": "NERV. PRINCIPAL NP-02",
+     "cont": "CONTINUO",
+     "vecinos": "F80001",
+     "vacio": "",
+     "nps": [
+      "NP-02"
+     ]
+    },
+    "superior": {
+     "L": 4.327,
+     "frac_muro": 0.333,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80005, F80006",
+     "vacio": "",
+     "nps": [],
+     "ovr": true
+    },
+    "izquierdo": {
+     "L": 3.025,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "F80005",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 3.025,
+     "frac_muro": 0.007,
+     "apoyo": "NERV. PRINCIPAL NP-21",
+     "cont": "CONTINUO",
+     "vecinos": "F80004",
+     "vacio": "",
+     "nps": [
+      "NP-21"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80004",
+   "level": "N+3.00",
+   "x0": 4.327,
+   "y0": 2.921,
+   "x1": 5.923,
+   "y1": 5.946,
+   "Lx": 1.596,
+   "Ly": 3.025,
+   "area": 4.83,
+   "area_poly": 4.828,
+   "rect": true,
+   "pts": [
+    [
+     5.923,
+     5.946
+    ],
+    [
+     4.327,
+     5.946
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     5.923,
+     2.921
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 230.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 1.596,
+   "ay": 3.025,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 1.596,
+     "frac_muro": 0.0,
+     "apoyo": "NERV. PRINCIPAL NP-03",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": [
+      "NP-03"
+     ]
+    },
+    "superior": {
+     "L": 1.596,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80008",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 3.025,
+     "frac_muro": 0.007,
+     "apoyo": "NERV. PRINCIPAL NP-21",
+     "cont": "CONTINUO",
+     "vecinos": "F80003",
+     "vacio": "",
+     "nps": [
+      "NP-21"
+     ]
+    },
+    "derecho": {
+     "L": 3.025,
+     "frac_muro": 0.007,
+     "apoyo": "NERV. PRINCIPAL NP-29",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": [
+      "NP-29"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80005",
+   "level": "N+3.00",
+   "x0": 0.0,
+   "y0": 5.346,
+   "x1": 2.925,
+   "y1": 6.948,
+   "Lx": 2.925,
+   "Ly": 1.602,
+   "area": 4.69,
+   "area_poly": 4.686,
+   "rect": true,
+   "pts": [
+    [
+     0.0,
+     5.346
+    ],
+    [
+     2.925,
+     5.346
+    ],
+    [
+     2.925,
+     6.948
+    ],
+    [
+     0.0,
+     6.948
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 2.925,
+   "ay": 1.602,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 2.925,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80003",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 2.925,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80007",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 1.602,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 1.602,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80003, F80006",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80006",
+   "level": "N+3.00",
+   "x0": 2.925,
+   "y0": 5.946,
+   "x1": 4.327,
+   "y1": 6.948,
+   "Lx": 1.402,
+   "Ly": 1.002,
+   "area": 1.4,
+   "area_poly": 1.405,
+   "rect": true,
+   "pts": [
+    [
+     2.925,
+     6.948
+    ],
+    [
+     2.925,
+     5.946
+    ],
+    [
+     4.327,
+     5.946
+    ],
+    [
+     4.327,
+     6.948
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 1.402,
+   "ay": 1.002,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 1.402,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80003",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 1.402,
+     "frac_muro": 0.014,
+     "apoyo": "NERV. PRINCIPAL NP-04",
+     "cont": "CONTINUO",
+     "vecinos": "F80007",
+     "vacio": "",
+     "nps": [
+      "NP-04"
+     ]
+    },
+    "izquierdo": {
+     "L": 1.002,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80005",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 1.002,
+     "frac_muro": 0.02,
+     "apoyo": "NERV. PRINCIPAL NP-22",
+     "cont": "CONTINUO",
+     "vecinos": "F80008",
+     "vacio": "",
+     "nps": [
+      "NP-22"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80007",
+   "level": "N+3.00",
+   "x0": 0.0,
+   "y0": 6.948,
+   "x1": 4.327,
+   "y1": 7.871,
+   "Lx": 4.327,
+   "Ly": 0.923,
+   "area": 3.99,
+   "area_poly": 3.994,
+   "rect": true,
+   "pts": [
+    [
+     0.0,
+     6.948
+    ],
+    [
+     4.327,
+     6.948
+    ],
+    [
+     4.327,
+     7.871
+    ],
+    [
+     0.0,
+     7.871
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 4.327,
+   "ay": 0.923,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 4.327,
+     "frac_muro": 0.681,
+     "apoyo": "NERV. PRINCIPAL NP-04",
+     "cont": "CONTINUO",
+     "vecinos": "F80005, F80006",
+     "vacio": "",
+     "nps": [
+      "NP-04"
+     ]
+    },
+    "superior": {
+     "L": 4.327,
+     "frac_muro": 0.005,
+     "apoyo": "NERV. PRINCIPAL NP-06",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "Vacío doble altura (sala)",
+     "nps": [
+      "NP-06"
+     ]
+    },
+    "izquierdo": {
+     "L": 0.923,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 0.923,
+     "frac_muro": 0.0,
+     "apoyo": "NERV. PRINCIPAL NP-22",
+     "cont": "CONTINUO",
+     "vecinos": "F80008",
+     "vacio": "",
+     "nps": [
+      "NP-22"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80008",
+   "level": "N+3.00",
+   "x0": 3.029,
+   "y0": 5.946,
+   "x1": 7.35,
+   "y1": 17.446,
+   "Lx": 4.321,
+   "Ly": 11.5,
+   "area": 17.9,
+   "area_poly": 17.9,
+   "rect": false,
+   "pts": [
+    [
+     4.327,
+     14.021
+    ],
+    [
+     4.327,
+     5.946
+    ],
+    [
+     5.923,
+     5.946
+    ],
+    [
+     5.923,
+     6.948
+    ],
+    [
+     5.46,
+     6.948
+    ],
+    [
+     5.46,
+     8.91
+    ],
+    [
+     7.35,
+     8.91
+    ],
+    [
+     7.35,
+     9.95
+    ],
+    [
+     5.422,
+     9.95
+    ],
+    [
+     5.422,
+     15.447
+    ],
+    [
+     4.925,
+     15.447
+    ],
+    [
+     4.925,
+     17.446
+    ],
+    [
+     3.029,
+     17.446
+    ],
+    [
+     3.029,
+     15.846
+    ],
+    [
+     3.427,
+     15.846
+    ],
+    [
+     3.427,
+     14.021
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 1.995,
+   "ay": 3.425,
+   "rep_nota": "Parte x 3.427–5.422, y 14.021–17.446: es la de mayor claro corto. El pasillo de 1.10 m y la llegada de escalera tienen claros menores.",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 4.321,
+     "frac_muro": 0.674,
+     "apoyo": "NERV. PRINCIPAL NP-10 / sigue el pasillo",
+     "cont": "DISCONTINUO",
+     "vecinos": "F80003, F80004, F80006",
+     "vacio": "",
+     "nps": [],
+     "ovr": true
+    },
+    "superior": {
+     "L": 4.321,
+     "frac_muro": 0.566,
+     "apoyo": "NERV. PRINCIPAL NP-15",
+     "cont": "CONTINUO",
+     "vecinos": "F80013, F80015, F80016, F80017, F80018",
+     "vacio": "",
+     "nps": [
+      "NP-15"
+     ],
+     "ovr": true
+    },
+    "izquierdo": {
+     "L": 11.5,
+     "frac_muro": 0.002,
+     "apoyo": "NERV. PRINCIPAL NP-18, NP-19",
+     "cont": "CONTINUO",
+     "vecinos": "F80006, F80007, F80010, F80014",
+     "vacio": "Vacío doble altura (sala)",
+     "nps": [
+      "NP-18"
+     ],
+     "ovr": true
+    },
+    "derecho": {
+     "L": 11.5,
+     "frac_muro": 0.009,
+     "apoyo": "MURO / NERV. PRINCIPAL NP-26",
+     "cont": "CONTINUO",
+     "vecinos": "F80009, F80011, F80015",
+     "vacio": "Escalera curva (cubo)",
+     "nps": [
+      "NP-30"
+     ],
+     "ovr": true
+    }
+   }
+  },
+  {
+   "name": "F80009",
+   "level": "N+3.00",
+   "x0": 5.422,
+   "y0": 9.95,
+   "x1": 8.85,
+   "y1": 15.447,
+   "Lx": 3.428,
+   "Ly": 5.497,
+   "area": 18.84,
+   "area_poly": 18.844,
+   "rect": true,
+   "pts": [
+    [
+     8.85,
+     15.447
+    ],
+    [
+     5.422,
+     15.447
+    ],
+    [
+     5.422,
+     9.95
+    ],
+    [
+     8.85,
+     9.95
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 175.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 3.428,
+   "ay": 5.497,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 3.428,
+     "frac_muro": 0.211,
+     "apoyo": "NERV. PRINCIPAL NP-08",
+     "cont": "CONTINUO",
+     "vecinos": "F80008",
+     "vacio": "Escalera curva (cubo)",
+     "nps": [
+      "NP-08"
+     ]
+    },
+    "superior": {
+     "L": 3.428,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80011",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 5.497,
+     "frac_muro": 0.004,
+     "apoyo": "NERV. PRINCIPAL NP-26",
+     "cont": "CONTINUO",
+     "vecinos": "F80008",
+     "vacio": "Escalera curva (cubo)",
+     "nps": [
+      "NP-26"
+     ]
+    },
+    "derecho": {
+     "L": 5.497,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "Escalera curva (cubo)",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80010",
+   "level": "N+3.00",
+   "x0": 0.0,
+   "y0": 14.021,
+   "x1": 3.427,
+   "y1": 15.846,
+   "Lx": 3.427,
+   "Ly": 1.825,
+   "area": 6.25,
+   "area_poly": 6.254,
+   "rect": true,
+   "pts": [
+    [
+     3.427,
+     14.021
+    ],
+    [
+     3.427,
+     15.846
+    ],
+    [
+     0.0,
+     15.846
+    ],
+    [
+     0.0,
+     14.021
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 240.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 3.427,
+   "ay": 1.825,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 3.427,
+     "frac_muro": 0.006,
+     "apoyo": "NERV. PRINCIPAL NP-10",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "Vacío doble altura (sala)",
+     "nps": [
+      "NP-10"
+     ]
+    },
+    "superior": {
+     "L": 3.427,
+     "frac_muro": 0.006,
+     "apoyo": "NERV. PRINCIPAL NP-12",
+     "cont": "CONTINUO",
+     "vecinos": "F80008, F80014",
+     "vacio": "",
+     "nps": [
+      "NP-12"
+     ]
+    },
+    "izquierdo": {
+     "L": 1.825,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80012",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 1.825,
+     "frac_muro": 0.0,
+     "apoyo": "NERV. PRINCIPAL NP-19",
+     "cont": "CONTINUO",
+     "vecinos": "F80008",
+     "vacio": "",
+     "nps": [
+      "NP-19"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80011",
+   "level": "N+3.00",
+   "x0": 5.422,
+   "y0": 15.447,
+   "x1": 8.85,
+   "y1": 15.846,
+   "Lx": 3.428,
+   "Ly": 0.399,
+   "area": 1.37,
+   "area_poly": 1.368,
+   "rect": true,
+   "pts": [
+    [
+     8.85,
+     15.846
+    ],
+    [
+     5.422,
+     15.846
+    ],
+    [
+     5.422,
+     15.447
+    ],
+    [
+     8.85,
+     15.447
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 230.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 3.428,
+   "ay": 0.399,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 3.428,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80009",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 3.428,
+     "frac_muro": 0.006,
+     "apoyo": "NERV. PRINCIPAL NP-13",
+     "cont": "CONTINUO",
+     "vecinos": "F80013, F80015",
+     "vacio": "",
+     "nps": [
+      "NP-13"
+     ]
+    },
+    "izquierdo": {
+     "L": 0.399,
+     "frac_muro": 0.05,
+     "apoyo": "NERV. PRINCIPAL NP-27",
+     "cont": "CONTINUO",
+     "vecinos": "F80013",
+     "vacio": "",
+     "nps": [
+      "NP-27"
+     ]
+    },
+    "derecho": {
+     "L": 0.399,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80012",
+   "level": "N+3.00",
+   "x0": -2.0,
+   "y0": 14.021,
+   "x1": 0.0,
+   "y1": 17.446,
+   "Lx": 2.0,
+   "Ly": 3.425,
+   "area": 6.85,
+   "area_poly": 6.85,
+   "rect": true,
+   "pts": [
+    [
+     0.0,
+     14.021
+    ],
+    [
+     0.0,
+     17.446
+    ],
+    [
+     -2.0,
+     17.446
+    ],
+    [
+     -2.0,
+     14.021
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 210.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 2.0,
+   "ay": 3.425,
+   "rep_nota": "",
+   "modo": "VOLADO",
+   "volado": {
+    "raiz": "derecho",
+    "Lv": 2.0,
+    "borde_libre": "izquierdo",
+    "carga_borde": 333.7
+   },
+   "bordes": {
+    "inferior": {
+     "L": 2.0,
+     "frac_muro": 0.01,
+     "apoyo": "NERV. PRINCIPAL NP-09",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": [
+      "NP-09"
+     ]
+    },
+    "superior": {
+     "L": 2.0,
+     "frac_muro": 0.01,
+     "apoyo": "NERV. PRINCIPAL NP-14",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": [
+      "NP-14"
+     ]
+    },
+    "izquierdo": {
+     "L": 3.425,
+     "frac_muro": 0.0,
+     "apoyo": "NERV. PRINCIPAL NP-17",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": [
+      "NP-17"
+     ]
+    },
+    "derecho": {
+     "L": 3.425,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80010, F80014",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80013",
+   "level": "N+3.00",
+   "x0": 4.925,
+   "y0": 15.447,
+   "x1": 5.822,
+   "y1": 17.446,
+   "Lx": 0.897,
+   "Ly": 1.999,
+   "area": 1.63,
+   "area_poly": 1.634,
+   "rect": false,
+   "pts": [
+    [
+     5.422,
+     15.447
+    ],
+    [
+     5.422,
+     15.846
+    ],
+    [
+     5.822,
+     15.846
+    ],
+    [
+     5.822,
+     17.446
+    ],
+    [
+     4.925,
+     17.446
+    ],
+    [
+     4.925,
+     15.447
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 0.897,
+   "ay": 1.999,
+   "rep_nota": "Forma de L: rectángulo envolvente.",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 0.897,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80008, F80009, F80011",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 0.897,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80018",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 1.999,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80008",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 1.999,
+     "frac_muro": 0.02,
+     "apoyo": "NERV. PRINCIPAL NP-28",
+     "cont": "CONTINUO",
+     "vecinos": "F80011, F80015",
+     "vacio": "",
+     "nps": [
+      "NP-28"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80014",
+   "level": "N+3.00",
+   "x0": 0.0,
+   "y0": 15.846,
+   "x1": 3.029,
+   "y1": 17.446,
+   "Lx": 3.029,
+   "Ly": 1.6,
+   "area": 4.85,
+   "area_poly": 4.846,
+   "rect": true,
+   "pts": [
+    [
+     3.029,
+     15.846
+    ],
+    [
+     3.029,
+     17.446
+    ],
+    [
+     0.0,
+     17.446
+    ],
+    [
+     0.0,
+     15.846
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 230.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 3.029,
+   "ay": 1.6,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 3.029,
+     "frac_muro": 0.007,
+     "apoyo": "NERV. PRINCIPAL NP-12",
+     "cont": "CONTINUO",
+     "vecinos": "F80010",
+     "vacio": "",
+     "nps": [
+      "NP-12"
+     ]
+    },
+    "superior": {
+     "L": 3.029,
+     "frac_muro": 0.007,
+     "apoyo": "NERV. PRINCIPAL NP-15",
+     "cont": "CONTINUO",
+     "vecinos": "F80016",
+     "vacio": "",
+     "nps": [
+      "NP-15"
+     ]
+    },
+    "izquierdo": {
+     "L": 1.6,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80012",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 1.6,
+     "frac_muro": 0.0,
+     "apoyo": "NERV. PRINCIPAL NP-18",
+     "cont": "CONTINUO",
+     "vecinos": "F80008",
+     "vacio": "",
+     "nps": [
+      "NP-18"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80015",
+   "level": "N+3.00",
+   "x0": 5.822,
+   "y0": 15.846,
+   "x1": 8.85,
+   "y1": 17.446,
+   "Lx": 3.028,
+   "Ly": 1.6,
+   "area": 4.84,
+   "area_poly": 4.845,
+   "rect": true,
+   "pts": [
+    [
+     8.85,
+     17.446
+    ],
+    [
+     5.822,
+     17.446
+    ],
+    [
+     5.822,
+     15.846
+    ],
+    [
+     8.85,
+     15.846
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 230.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 3.028,
+   "ay": 1.6,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 3.028,
+     "frac_muro": 0.007,
+     "apoyo": "NERV. PRINCIPAL NP-13",
+     "cont": "CONTINUO",
+     "vecinos": "F80011",
+     "vacio": "",
+     "nps": [
+      "NP-13"
+     ]
+    },
+    "superior": {
+     "L": 3.028,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80018",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 1.6,
+     "frac_muro": 0.012,
+     "apoyo": "NERV. PRINCIPAL NP-28",
+     "cont": "CONTINUO",
+     "vecinos": "F80013",
+     "vacio": "",
+     "nps": [
+      "NP-28"
+     ]
+    },
+    "derecho": {
+     "L": 1.6,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80016",
+   "level": "N+3.00",
+   "x0": 0.0,
+   "y0": 17.446,
+   "x1": 4.426,
+   "y1": 21.446,
+   "Lx": 4.426,
+   "Ly": 4.0,
+   "area": 17.7,
+   "area_poly": 17.704,
+   "rect": true,
+   "pts": [
+    [
+     0.0,
+     17.446
+    ],
+    [
+     4.426,
+     17.446
+    ],
+    [
+     4.426,
+     21.446
+    ],
+    [
+     0.0,
+     21.446
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 4.426,
+   "ay": 4.0,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 4.426,
+     "frac_muro": 0.005,
+     "apoyo": "NERV. PRINCIPAL NP-15",
+     "cont": "CONTINUO",
+     "vecinos": "F80008, F80014",
+     "vacio": "",
+     "nps": [
+      "NP-15"
+     ]
+    },
+    "superior": {
+     "L": 4.426,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80019",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 4.0,
+     "frac_muro": 0.005,
+     "apoyo": "NERV. PRINCIPAL NP-24",
+     "cont": "CONTINUO",
+     "vecinos": "F80017",
+     "vacio": "",
+     "nps": [
+      "NP-24"
+     ]
+    }
+   }
+  },
+  {
+   "name": "F80017",
+   "level": "N+3.00",
+   "x0": 4.426,
+   "y0": 17.446,
+   "x1": 4.925,
+   "y1": 21.446,
+   "Lx": 0.499,
+   "Ly": 4.0,
+   "area": 2.0,
+   "area_poly": 1.996,
+   "rect": true,
+   "pts": [
+    [
+     4.925,
+     17.446
+    ],
+    [
+     4.925,
+     21.446
+    ],
+    [
+     4.426,
+     21.446
+    ],
+    [
+     4.426,
+     17.446
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 0.499,
+   "ay": 4.0,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 0.499,
+     "frac_muro": 0.04,
+     "apoyo": "NERV. PRINCIPAL NP-15",
+     "cont": "CONTINUO",
+     "vecinos": "F80008",
+     "vacio": "",
+     "nps": [
+      "NP-15"
+     ]
+    },
+    "superior": {
+     "L": 0.499,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80019",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 4.0,
+     "frac_muro": 0.005,
+     "apoyo": "NERV. PRINCIPAL NP-24",
+     "cont": "CONTINUO",
+     "vecinos": "F80016",
+     "vacio": "",
+     "nps": [
+      "NP-24"
+     ]
+    },
+    "derecho": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80018",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80018",
+   "level": "N+3.00",
+   "x0": 4.925,
+   "y0": 17.446,
+   "x1": 8.85,
+   "y1": 21.446,
+   "Lx": 3.925,
+   "Ly": 4.0,
+   "area": 15.7,
+   "area_poly": 15.7,
+   "rect": true,
+   "pts": [
+    [
+     8.85,
+     21.446
+    ],
+    [
+     4.925,
+     21.446
+    ],
+    [
+     4.925,
+     17.446
+    ],
+    [
+     8.85,
+     17.446
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 160.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 3.925,
+   "ay": 4.0,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 3.925,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80013, F80015",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 3.925,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80019, F80020",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80017",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80019",
+   "level": "N+3.00",
+   "x0": 0.0,
+   "y0": 21.446,
+   "x1": 7.25,
+   "y1": 23.446,
+   "Lx": 7.25,
+   "Ly": 2.0,
+   "area": 14.5,
+   "area_poly": 14.5,
+   "rect": true,
+   "pts": [
+    [
+     0.0,
+     23.446
+    ],
+    [
+     0.0,
+     21.446
+    ],
+    [
+     7.25,
+     21.446
+    ],
+    [
+     7.25,
+     23.446
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 210.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 7.25,
+   "ay": 2.0,
+   "rep_nota": "",
+   "modo": "VOLADO",
+   "volado": {
+    "raiz": "inferior",
+    "Lv": 2.0,
+    "borde_libre": "superior",
+    "carga_borde": 333.7
+   },
+   "bordes": {
+    "inferior": {
+     "L": 7.25,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80016, F80017, F80018",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 7.25,
+     "frac_muro": 0.006,
+     "apoyo": "NERV. PRINCIPAL NP-16",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": [
+      "NP-16"
+     ]
+    },
+    "izquierdo": {
+     "L": 2.0,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80021",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 2.0,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80020",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80020",
+   "level": "N+3.00",
+   "x0": 7.25,
+   "y0": 21.446,
+   "x1": 8.85,
+   "y1": 24.371,
+   "Lx": 1.6,
+   "Ly": 2.925,
+   "area": 4.68,
+   "area_poly": 4.68,
+   "rect": true,
+   "pts": [
+    [
+     7.25,
+     24.371
+    ],
+    [
+     7.25,
+     21.446
+    ],
+    [
+     8.85,
+     21.446
+    ],
+    [
+     8.85,
+     24.371
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 225.0,
+    "Carga Viva Máxima": 190.0,
+    "Carga Viva Instantanea": 100.0,
+    "Carga Viva Media": 80.0
+   },
+   "ax": 1.6,
+   "ay": 2.925,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 1.6,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80018",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 1.6,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 2.925,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80019",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 2.925,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80021",
+   "level": "N+3.00",
+   "x0": -1.6,
+   "y0": 21.446,
+   "x1": 0.0,
+   "y1": 24.371,
+   "Lx": 1.6,
+   "Ly": 2.925,
+   "area": 4.68,
+   "area_poly": 4.68,
+   "rect": true,
+   "pts": [
+    [
+     0.0,
+     21.446
+    ],
+    [
+     0.0,
+     24.371
+    ],
+    [
+     -1.6,
+     24.371
+    ],
+    [
+     -1.6,
+     21.446
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 270.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "ax": 1.6,
+   "ay": 2.925,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 1.6,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 1.6,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 2.925,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 2.925,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80019",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80023",
+   "level": "N+6.00",
+   "x0": 4.327,
+   "y0": 2.921,
+   "x1": 5.923,
+   "y1": 5.946,
+   "Lx": 1.596,
+   "Ly": 3.025,
+   "area": 4.83,
+   "area_poly": 4.828,
+   "rect": true,
+   "pts": [
+    [
+     4.327,
+     5.946
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     5.923,
+     2.921
+    ],
+    [
+     5.923,
+     5.946
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 270.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "ax": 1.596,
+   "ay": 3.025,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 1.596,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 1.596,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80032",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 3.025,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80024",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 3.025,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80024",
+   "level": "N+6.00",
+   "x0": 0.0,
+   "y0": 2.921,
+   "x1": 4.327,
+   "y1": 7.871,
+   "Lx": 4.327,
+   "Ly": 4.95,
+   "area": 21.42,
+   "area_poly": 21.419,
+   "rect": true,
+   "pts": [
+    [
+     0.0,
+     2.921
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     4.327,
+     7.871
+    ],
+    [
+     0.0,
+     7.871
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 315.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "ax": 4.327,
+   "ay": 4.95,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 4.327,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F2",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 4.327,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "Pergolado sobre doble altura (vigas VP-15x40 @0.75 + cristal)",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 4.95,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 4.95,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80023, F80032",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80025",
+   "level": "N+6.00",
+   "x0": 5.422,
+   "y0": 9.95,
+   "x1": 8.85,
+   "y1": 15.846,
+   "Lx": 3.428,
+   "Ly": 5.896,
+   "area": 20.21,
+   "area_poly": 20.211,
+   "rect": true,
+   "pts": [
+    [
+     8.85,
+     15.846
+    ],
+    [
+     5.422,
+     15.846
+    ],
+    [
+     5.422,
+     9.95
+    ],
+    [
+     8.85,
+     9.95
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 300.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "ax": 3.428,
+   "ay": 5.896,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 3.428,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "F80032",
+     "vacio": "Vacío sobre escalera",
+     "nps": []
+    },
+    "superior": {
+     "L": 3.428,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80026, F80032",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 5.896,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80032",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 5.896,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80026",
+   "level": "N+6.00",
+   "x0": 5.822,
+   "y0": 15.846,
+   "x1": 8.85,
+   "y1": 16.697,
+   "Lx": 3.028,
+   "Ly": 0.851,
+   "area": 2.58,
+   "area_poly": 2.577,
+   "rect": true,
+   "pts": [
+    [
+     5.822,
+     15.846
+    ],
+    [
+     8.85,
+     15.846
+    ],
+    [
+     8.85,
+     16.697
+    ],
+    [
+     5.822,
+     16.697
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 295.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "ax": 3.028,
+   "ay": 0.851,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 3.028,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80025",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 3.028,
+     "frac_muro": 0.013,
+     "apoyo": "NERV. PRINCIPAL NP-31",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "Hueco 0.30 m (tragaluz), Hueco/tragaluz (F80028)",
+     "nps": [
+      "NP-31"
+     ]
+    },
+    "izquierdo": {
+     "L": 0.851,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80032",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 0.851,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80027",
+   "level": "N+6.00",
+   "x0": 0.0,
+   "y0": 15.846,
+   "x1": 3.029,
+   "y1": 16.997,
+   "Lx": 3.029,
+   "Ly": 1.151,
+   "area": 3.49,
+   "area_poly": 3.486,
+   "rect": true,
+   "pts": [
+    [
+     3.029,
+     16.997
+    ],
+    [
+     0.0,
+     16.997
+    ],
+    [
+     0.0,
+     15.846
+    ],
+    [
+     3.029,
+     15.846
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 295.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "ax": 3.029,
+   "ay": 1.151,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 3.029,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80010",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 3.029,
+     "frac_muro": 0.013,
+     "apoyo": "NERV. PRINCIPAL NP-32",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "Hueco 0.30 m (tragaluz), Hueco/tragaluz (F80029)",
+     "nps": [
+      "NP-32"
+     ]
+    },
+    "izquierdo": {
+     "L": 1.151,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 1.151,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80032",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80028",
+   "level": "N+6.00",
+   "x0": 5.822,
+   "y0": 16.697,
+   "x1": 8.85,
+   "y1": 17.446,
+   "Lx": 3.028,
+   "Ly": 0.749,
+   "area": 0.6,
+   "area_poly": 2.268,
+   "rect": true,
+   "pts": [
+    [
+     5.822,
+     16.697
+    ],
+    [
+     8.85,
+     16.697
+    ],
+    [
+     8.85,
+     17.446
+    ],
+    [
+     5.822,
+     17.446
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 295.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "ax": 3.028,
+   "ay": 0.749,
+   "rep_nota": "",
+   "modo": "HUECO",
+   "bordes": {
+    "inferior": {
+     "L": 3.028,
+     "frac_muro": 0.013,
+     "apoyo": "NERV. PRINCIPAL NP-31",
+     "cont": "CONTINUO",
+     "vecinos": "F80026",
+     "vacio": "Hueco 0.30 m (tragaluz)",
+     "nps": [
+      "NP-31"
+     ]
+    },
+    "superior": {
+     "L": 3.028,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80031",
+     "vacio": "Hueco 0.30 m (tragaluz)",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 0.749,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80032",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 0.749,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "Hueco 0.30 m (tragaluz)",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80029",
+   "level": "N+6.00",
+   "x0": 0.0,
+   "y0": 16.997,
+   "x1": 3.029,
+   "y1": 17.446,
+   "Lx": 3.029,
+   "Ly": 0.449,
+   "area": 0.53,
+   "area_poly": 1.36,
+   "rect": true,
+   "pts": [
+    [
+     3.029,
+     17.446
+    ],
+    [
+     0.0,
+     17.446
+    ],
+    [
+     0.0,
+     16.997
+    ],
+    [
+     3.029,
+     16.997
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 295.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "ax": 3.029,
+   "ay": 0.449,
+   "rep_nota": "",
+   "modo": "HUECO",
+   "bordes": {
+    "inferior": {
+     "L": 3.029,
+     "frac_muro": 0.013,
+     "apoyo": "NERV. PRINCIPAL NP-32",
+     "cont": "CONTINUO",
+     "vecinos": "F80027",
+     "vacio": "Hueco 0.30 m (tragaluz)",
+     "nps": [
+      "NP-32"
+     ]
+    },
+    "superior": {
+     "L": 3.029,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80030",
+     "vacio": "Hueco 0.30 m (tragaluz)",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 0.449,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "Hueco 0.30 m (tragaluz)",
+     "nps": []
+    },
+    "derecho": {
+     "L": 0.449,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80032",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80030",
+   "level": "N+6.00",
+   "x0": 0.0,
+   "y0": 17.446,
+   "x1": 4.426,
+   "y1": 21.446,
+   "Lx": 4.426,
+   "Ly": 4.0,
+   "area": 17.7,
+   "area_poly": 17.704,
+   "rect": true,
+   "pts": [
+    [
+     4.426,
+     17.446
+    ],
+    [
+     4.426,
+     21.446
+    ],
+    [
+     0.0,
+     21.446
+    ],
+    [
+     0.0,
+     17.446
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 310.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "ax": 4.426,
+   "ay": 4.0,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 4.426,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "F80032",
+     "vacio": "Hueco 0.30 m (tragaluz), Hueco/tragaluz (F80029)",
+     "nps": []
+    },
+    "superior": {
+     "L": 4.426,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80031",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80031",
+   "level": "N+6.00",
+   "x0": 4.426,
+   "y0": 17.446,
+   "x1": 8.85,
+   "y1": 21.446,
+   "Lx": 4.424,
+   "Ly": 4.0,
+   "area": 17.7,
+   "area_poly": 17.696,
+   "rect": true,
+   "pts": [
+    [
+     4.426,
+     17.446
+    ],
+    [
+     8.85,
+     17.446
+    ],
+    [
+     8.85,
+     21.446
+    ],
+    [
+     4.426,
+     21.446
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {
+    "Sobrecarga": 310.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "ax": 4.424,
+   "ay": 4.0,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 4.424,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "F80032",
+     "vacio": "Hueco 0.30 m (tragaluz), Hueco/tragaluz (F80028)",
+     "nps": []
+    },
+    "superior": {
+     "L": 4.424,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80030",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 4.0,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F80032",
+   "level": "N+6.00",
+   "x0": 3.029,
+   "y0": 5.946,
+   "x1": 5.923,
+   "y1": 17.446,
+   "Lx": 2.894,
+   "Ly": 11.5,
+   "area": 18.96,
+   "area_poly": 18.958,
+   "rect": false,
+   "pts": [
+    [
+     4.327,
+     14.021
+    ],
+    [
+     4.327,
+     5.946
+    ],
+    [
+     5.923,
+     5.946
+    ],
+    [
+     5.923,
+     9.95
+    ],
+    [
+     5.422,
+     9.95
+    ],
+    [
+     5.422,
+     15.846
+    ],
+    [
+     5.822,
+     15.846
+    ],
+    [
+     5.822,
+     17.446
+    ],
+    [
+     3.029,
+     17.446
+    ],
+    [
+     3.029,
+     15.846
+    ],
+    [
+     3.427,
+     15.846
+    ],
+    [
+     3.427,
+     14.021
+    ]
+   ],
+   "seccion": "Slab1",
+   "loads": {
+    "Sobrecarga": 315.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "ax": 1.995,
+   "ay": 3.425,
+   "rep_nota": "Parte x 3.427–5.422, y 14.021–17.446: la de mayor claro corto. El resto es pasillo de 1.10–1.60 m.",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 2.894,
+     "frac_muro": 0.558,
+     "apoyo": "MURO / vacío del pergolado",
+     "cont": "DISCONTINUO",
+     "vecinos": "F80023, F80024",
+     "vacio": "",
+     "nps": [],
+     "ovr": true
+    },
+    "superior": {
+     "L": 2.894,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80030, F80031",
+     "vacio": "Hueco/tragaluz (F80028)",
+     "nps": [],
+     "ovr": true
+    },
+    "izquierdo": {
+     "L": 11.5,
+     "frac_muro": 0.148,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80024, F80027, F80010",
+     "vacio": "Pergolado sobre doble altura (vigas VP-15x40 @0.75 + cristal), Hueco/tragaluz (F80029)",
+     "nps": [],
+     "ovr": true
+    },
+    "derecho": {
+     "L": 11.5,
+     "frac_muro": 0.098,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80025, F80026",
+     "vacio": "Vacío sobre escalera, Hueco 0.30 m (tragaluz), Hueco/tragaluz (F80028)",
+     "nps": [
+      "NP-34"
+     ],
+     "ovr": true
+    }
+   }
+  },
+  {
+   "name": "F80010",
+   "level": "N+6.00",
+   "x0": 0.0,
+   "y0": 14.021,
+   "x1": 3.427,
+   "y1": 15.846,
+   "Lx": 3.427,
+   "Ly": 1.825,
+   "area": 6.25,
+   "area_poly": 6.254,
+   "rect": true,
+   "pts": [
+    [
+     3.427,
+     14.021
+    ],
+    [
+     3.427,
+     15.846
+    ],
+    [
+     0.0,
+     15.846
+    ],
+    [
+     0.0,
+     14.021
+    ]
+   ],
+   "seccion": "Slab1",
+   "loads": {
+    "Sobrecarga": 300.0,
+    "Carga Viva Máxima": 100.0,
+    "Carga Viva Instantanea": 70.0,
+    "Carga Viva Media": 15.0
+   },
+   "ax": 3.427,
+   "ay": 1.825,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 3.427,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "Pergolado sobre doble altura (vigas VP-15x40 @0.75 + cristal)",
+     "nps": []
+    },
+    "superior": {
+     "L": 3.427,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80027, F80032",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 1.825,
+     "frac_muro": 0.022,
+     "apoyo": "NERV. PRINCIPAL NP-33",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": [
+      "NP-33"
+     ]
+    },
+    "derecho": {
+     "L": 1.825,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80032",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  },
+  {
+   "name": "F2",
+   "level": "N+6.00",
+   "x0": 0.0,
+   "y0": 1.919,
+   "x1": 4.327,
+   "y1": 2.921,
+   "Lx": 4.327,
+   "Ly": 1.002,
+   "area": 4.34,
+   "area_poly": 4.336,
+   "rect": true,
+   "pts": [
+    [
+     4.327,
+     1.919
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     0.0,
+     2.921
+    ],
+    [
+     0.0,
+     1.919
+    ]
+   ],
+   "seccion": "LR-25",
+   "loads": {},
+   "ax": 4.327,
+   "ay": 1.002,
+   "rep_nota": "",
+   "modo": "PERIMETRAL",
+   "bordes": {
+    "inferior": {
+     "L": 4.327,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "superior": {
+     "L": 4.327,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "CONTINUO",
+     "vecinos": "F80024",
+     "vacio": "",
+     "nps": []
+    },
+    "izquierdo": {
+     "L": 1.002,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    },
+    "derecho": {
+     "L": 1.002,
+     "frac_muro": 1.0,
+     "apoyo": "MURO",
+     "cont": "DISCONTINUO",
+     "vecinos": "",
+     "vacio": "",
+     "nps": []
+    }
+   }
+  }
+ ],
+ "tramos": [
+  {
+   "id": 1,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 1.919,
+   "s0": 0.0,
+   "s1": 4.327,
+   "L": 4.327,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    "C1"
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "FIRME",
+     "prop": "C1"
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 4.327,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 2 (y = 1.919)",
+   "x0": 0.0,
+   "y0": 1.919,
+   "x1": 4.327,
+   "y1": 1.919,
+   "np": "NP-01"
+  },
+  {
+   "id": 2,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 2.921,
+   "s0": 0.0,
+   "s1": 4.327,
+   "L": 4.327,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    "C2"
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "FIRME",
+     "prop": "C2"
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 4.327,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 3 (y = 2.921)",
+   "x0": 0.0,
+   "y0": 2.921,
+   "x1": 4.327,
+   "y1": 2.921,
+   "np": "NP-02"
+  },
+  {
+   "id": 3,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 2.921,
+   "s0": 4.327,
+   "s1": 5.923,
+   "L": 1.596,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    "C2",
+    "C3"
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": "C2"
+    },
+    {
+     "tipo": "FIRME",
+     "prop": "C3"
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 1.596,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 3 (y = 2.921)",
+   "x0": 4.327,
+   "y0": 2.921,
+   "x1": 5.923,
+   "y1": 2.921,
+   "np": "NP-03"
+  },
+  {
+   "id": 4,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 5.346,
+   "s0": 0.0,
+   "s1": 1.075,
+   "L": 1.075,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 4 (y = 5.346)",
+   "x0": 0.0,
+   "y0": 5.346,
+   "x1": 1.075,
+   "y1": 5.346,
+   "np": "DM-01"
+  },
+  {
+   "id": 5,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 5.346,
+   "s0": 1.075,
+   "s1": 2.925,
+   "L": 1.85,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 4 (y = 5.346)",
+   "x0": 1.075,
+   "y0": 5.346,
+   "x1": 2.925,
+   "y1": 5.346,
+   "np": "DM-02"
+  },
+  {
+   "id": 6,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 5.946,
+   "s0": 2.925,
+   "s1": 3.648,
+   "L": 0.723,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 5 (y = 5.946)",
+   "x0": 2.925,
+   "y0": 5.946,
+   "x1": 3.648,
+   "y1": 5.946,
+   "np": "DM-03"
+  },
+  {
+   "id": 7,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 5.946,
+   "s0": 3.648,
+   "s1": 5.298,
+   "L": 1.65,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0.971,
+   "e2k_scm": 121.2,
+   "e2k_cv": 0.0,
+   "eje": "Eje 5 (y = 5.946)",
+   "x0": 3.648,
+   "y0": 5.946,
+   "x1": 5.298,
+   "y1": 5.946,
+   "np": "DM-04"
+  },
+  {
+   "id": 8,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 5.946,
+   "s0": 5.298,
+   "s1": 5.923,
+   "L": 0.625,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0.625,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 5 (y = 5.946)",
+   "x0": 5.298,
+   "y0": 5.946,
+   "x1": 5.923,
+   "y1": 5.946,
+   "np": "DM-05"
+  },
+  {
+   "id": 9,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 6.948,
+   "s0": 0.0,
+   "s1": 2.925,
+   "L": 2.925,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 6 (y = 6.948)",
+   "x0": 0.0,
+   "y0": 6.948,
+   "x1": 2.925,
+   "y1": 6.948,
+   "np": "DM-06"
+  },
+  {
+   "id": 10,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 6.948,
+   "s0": 2.925,
+   "s1": 4.327,
+   "L": 1.402,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    false
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "NERVADURA",
+     "recibe": "NP-22",
+     "a": 1.002
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 6 (y = 6.948)",
+   "x0": 2.925,
+   "y0": 6.948,
+   "x1": 4.327,
+   "y1": 6.948,
+   "np": "NP-04"
+  },
+  {
+   "id": 11,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 6.948,
+   "s0": 5.46,
+   "s1": 5.923,
+   "L": 0.463,
+   "tipo": "LIBRE",
+   "f": [
+    false,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "LIBRE"
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "VOLADO",
+   "muro_arriba": 0,
+   "e2k_scm": 50.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 6 (y = 6.948)",
+   "x0": 5.46,
+   "y0": 6.948,
+   "x1": 5.923,
+   "y1": 6.948,
+   "np": "NP-05"
+  },
+  {
+   "id": 12,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 6.948,
+   "s0": 5.923,
+   "s1": 6.272,
+   "L": 0.349,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0.349,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 6 (y = 6.948)",
+   "x0": 5.923,
+   "y0": 6.948,
+   "x1": 6.272,
+   "y1": 6.948,
+   "np": "DM-07"
+  },
+  {
+   "id": 13,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 6.948,
+   "s0": 6.272,
+   "s1": 8.5,
+   "L": 2.228,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 2.228,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 6 (y = 6.948)",
+   "x0": 6.272,
+   "y0": 6.948,
+   "x1": 8.5,
+   "y1": 6.948,
+   "np": "DM-08"
+  },
+  {
+   "id": 14,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 6.948,
+   "s0": 8.5,
+   "s1": 8.85,
+   "L": 0.35,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0.35,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 6 (y = 6.948)",
+   "x0": 8.5,
+   "y0": 6.948,
+   "x1": 8.85,
+   "y1": 6.948,
+   "np": "DM-09"
+  },
+  {
+   "id": 15,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 7.871,
+   "s0": 0.0,
+   "s1": 4.327,
+   "L": 4.327,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    "C4"
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "FIRME",
+     "prop": "C4"
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 4.327,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 7 (y = 7.871)",
+   "x0": 0.0,
+   "y0": 7.871,
+   "x1": 4.327,
+   "y1": 7.871,
+   "np": "NP-06"
+  },
+  {
+   "id": 16,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 8.91,
+   "s0": 5.441,
+   "s1": 7.35,
+   "L": 1.909,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    false
+   ],
+   "prop": [
+    "C7",
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": "C7"
+    },
+    {
+     "tipo": "LIBRE"
+    }
+   ],
+   "cond": "VOLADO",
+   "muro_arriba": 0,
+   "e2k_scm": 189.4,
+   "e2k_cv": 34.1,
+   "eje": "y = 8.910",
+   "x0": 5.441,
+   "y0": 8.91,
+   "x1": 7.35,
+   "y1": 8.91,
+   "np": "NP-07"
+  },
+  {
+   "id": 17,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 9.95,
+   "s0": 5.422,
+   "s1": 8.144,
+   "L": 2.722,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    "C6",
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": "C6"
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 2.722,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 8 (y = 9.950)",
+   "x0": 5.422,
+   "y0": 9.95,
+   "x1": 8.144,
+   "y1": 9.95,
+   "np": "NP-08"
+  },
+  {
+   "id": 18,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 9.95,
+   "s0": 8.144,
+   "s1": 8.85,
+   "L": 0.706,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0.706,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 8 (y = 9.950)",
+   "x0": 8.144,
+   "y0": 9.95,
+   "x1": 8.85,
+   "y1": 9.95,
+   "np": "DM-10"
+  },
+  {
+   "id": 19,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 14.021,
+   "s0": -2.0,
+   "s1": 0.0,
+   "L": 2.0,
+   "tipo": "LIBRE",
+   "f": [
+    false,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "LIBRE"
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "BORDE DE VOLADO",
+   "muro_arriba": 0,
+   "e2k_scm": 333.7,
+   "e2k_cv": 0.0,
+   "eje": "y = 14.021",
+   "x0": -2.0,
+   "y0": 14.021,
+   "x1": 0.0,
+   "y1": 14.021,
+   "np": "NP-09"
+  },
+  {
+   "id": 20,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 14.021,
+   "s0": 0.0,
+   "s1": 4.327,
+   "L": 4.327,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    "C5"
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "FIRME",
+     "prop": "C5"
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 4.247,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 14.021",
+   "x0": 0.0,
+   "y0": 14.021,
+   "x1": 4.327,
+   "y1": 14.021,
+   "np": "NP-10"
+  },
+  {
+   "id": 21,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 14.247,
+   "s0": 5.441,
+   "s1": 8.85,
+   "L": 3.409,
+   "tipo": "LIBRE",
+   "f": [
+    false,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "NERVADURA",
+     "recibe": "NP-26",
+     "a": 4.297
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 2.603,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 14.247",
+   "x0": 5.441,
+   "y0": 14.247,
+   "x1": 8.85,
+   "y1": 14.247,
+   "np": "NP-11"
+  },
+  {
+   "id": 22,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 15.447,
+   "s0": 4.925,
+   "s1": 6.887,
+   "L": 1.962,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 11 (y = 15.447)",
+   "x0": 4.925,
+   "y0": 15.447,
+   "x1": 6.887,
+   "y1": 15.447,
+   "np": "DM-11"
+  },
+  {
+   "id": 23,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 15.447,
+   "s0": 6.887,
+   "s1": 8.85,
+   "L": 1.963,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 11 (y = 15.447)",
+   "x0": 6.887,
+   "y0": 15.447,
+   "x1": 8.85,
+   "y1": 15.447,
+   "np": "DM-12"
+  },
+  {
+   "id": 24,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 15.846,
+   "s0": 0.0,
+   "s1": 3.427,
+   "L": 3.427,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    "C8"
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "FIRME",
+     "prop": "C8"
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 3.427,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 15.846",
+   "x0": 0.0,
+   "y0": 15.846,
+   "x1": 3.427,
+   "y1": 15.846,
+   "np": "NP-12"
+  },
+  {
+   "id": 25,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 15.846,
+   "s0": 5.422,
+   "s1": 8.85,
+   "L": 3.428,
+   "tipo": "LIBRE",
+   "f": [
+    false,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "PUNTA",
+     "recibe": "NP-27",
+     "a": 0.399
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 3.428,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 15.846",
+   "x0": 5.422,
+   "y0": 15.846,
+   "x1": 8.85,
+   "y1": 15.846,
+   "np": "NP-13"
+  },
+  {
+   "id": 26,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": -2.0,
+   "s1": 0.0,
+   "L": 2.0,
+   "tipo": "LIBRE",
+   "f": [
+    false,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "LIBRE"
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "BORDE DE VOLADO",
+   "muro_arriba": 0,
+   "e2k_scm": 333.7,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": -2.0,
+   "y0": 17.446,
+   "x1": 0.0,
+   "y1": 17.446,
+   "np": "NP-14"
+  },
+  {
+   "id": 27,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": 0.0,
+   "s1": 4.925,
+   "L": 4.925,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 4.925,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": 0.0,
+   "y0": 17.446,
+   "x1": 4.925,
+   "y1": 17.446,
+   "np": "NP-15"
+  },
+  {
+   "id": 28,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": 4.925,
+   "s1": 6.887,
+   "L": 1.962,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 1.962,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": 4.925,
+   "y0": 17.446,
+   "x1": 6.887,
+   "y1": 17.446,
+   "np": "DM-13"
+  },
+  {
+   "id": 29,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": 6.887,
+   "s1": 8.85,
+   "L": 1.963,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 1.963,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": 6.887,
+   "y0": 17.446,
+   "x1": 8.85,
+   "y1": 17.446,
+   "np": "DM-14"
+  },
+  {
+   "id": 30,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": -1.6,
+   "s1": 0.0,
+   "L": 1.6,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": -1.6,
+   "y0": 21.446,
+   "x1": 0.0,
+   "y1": 21.446,
+   "np": "DM-15"
+  },
+  {
+   "id": 31,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 0.0,
+   "s1": 0.35,
+   "L": 0.35,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0.35,
+   "e2k_scm": 294.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 0.0,
+   "y0": 21.446,
+   "x1": 0.35,
+   "y1": 21.446,
+   "np": "DM-16"
+  },
+  {
+   "id": 32,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 0.35,
+   "s1": 4.575,
+   "L": 4.225,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 4.225,
+   "e2k_scm": 294.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 0.35,
+   "y0": 21.446,
+   "x1": 4.575,
+   "y1": 21.446,
+   "np": "DM-17"
+  },
+  {
+   "id": 33,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 4.575,
+   "s1": 4.925,
+   "L": 0.35,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0.35,
+   "e2k_scm": 294.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 4.575,
+   "y0": 21.446,
+   "x1": 4.925,
+   "y1": 21.446,
+   "np": "DM-18"
+  },
+  {
+   "id": 34,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 4.925,
+   "s1": 5.275,
+   "L": 0.35,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0.35,
+   "e2k_scm": 294.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 4.925,
+   "y0": 21.446,
+   "x1": 5.275,
+   "y1": 21.446,
+   "np": "DM-19"
+  },
+  {
+   "id": 35,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 5.275,
+   "s1": 7.25,
+   "L": 1.975,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 1.975,
+   "e2k_scm": 500.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 5.275,
+   "y0": 21.446,
+   "x1": 7.25,
+   "y1": 21.446,
+   "np": "DM-20"
+  },
+  {
+   "id": 36,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 7.25,
+   "s1": 8.146,
+   "L": 0.896,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0.896,
+   "e2k_scm": 206.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 7.25,
+   "y0": 21.446,
+   "x1": 8.146,
+   "y1": 21.446,
+   "np": "DM-21"
+  },
+  {
+   "id": 37,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 8.146,
+   "s1": 8.85,
+   "L": 0.704,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0.704,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 8.146,
+   "y0": 21.446,
+   "x1": 8.85,
+   "y1": 21.446,
+   "np": "DM-22"
+  },
+  {
+   "id": 38,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 23.446,
+   "s0": 0.0,
+   "s1": 7.25,
+   "L": 7.25,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "BORDE DE VOLADO",
+   "muro_arriba": 0,
+   "e2k_scm": 333.7,
+   "e2k_cv": 0.0,
+   "eje": "y = 23.446",
+   "x0": 0.0,
+   "y0": 23.446,
+   "x1": 7.25,
+   "y1": 23.446,
+   "np": "NP-16"
+  },
+  {
+   "id": 39,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 24.371,
+   "s0": -1.6,
+   "s1": -0.702,
+   "L": 0.898,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 15 (y = 24.371)",
+   "x0": -1.6,
+   "y0": 24.371,
+   "x1": -0.702,
+   "y1": 24.371,
+   "np": "DM-23"
+  },
+  {
+   "id": 40,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 24.371,
+   "s0": -0.702,
+   "s1": 0.0,
+   "L": 0.702,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 15 (y = 24.371)",
+   "x0": -0.702,
+   "y0": 24.371,
+   "x1": 0.0,
+   "y1": 24.371,
+   "np": "DM-24"
+  },
+  {
+   "id": 41,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 24.371,
+   "s0": 7.25,
+   "s1": 7.479,
+   "L": 0.229,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 333.7,
+   "e2k_cv": 0.0,
+   "eje": "Eje 15 (y = 24.371)",
+   "x0": 7.25,
+   "y0": 24.371,
+   "x1": 7.479,
+   "y1": 24.371,
+   "np": "DM-25"
+  },
+  {
+   "id": 42,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 24.371,
+   "s0": 7.479,
+   "s1": 8.701,
+   "L": 1.222,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 539.6,
+   "e2k_cv": 0.0,
+   "eje": "Eje 15 (y = 24.371)",
+   "x0": 7.479,
+   "y0": 24.371,
+   "x1": 8.701,
+   "y1": 24.371,
+   "np": "DM-26"
+  },
+  {
+   "id": 43,
+   "level": "N+3.00",
+   "ori": "H",
+   "c": 24.371,
+   "s0": 8.701,
+   "s1": 8.85,
+   "L": 0.149,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 333.7,
+   "e2k_cv": 0.0,
+   "eje": "Eje 15 (y = 24.371)",
+   "x0": 8.701,
+   "y0": 24.371,
+   "x1": 8.85,
+   "y1": 24.371,
+   "np": "DM-27"
+  },
+  {
+   "id": 44,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": -2.0,
+   "s0": 14.021,
+   "s1": 17.446,
+   "L": 3.425,
+   "tipo": "LIBRE",
+   "f": [
+    false,
+    false
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "LIBRE"
+    },
+    {
+     "tipo": "LIBRE"
+    }
+   ],
+   "cond": "BORDE DE VOLADO",
+   "muro_arriba": 0,
+   "e2k_scm": 333.7,
+   "e2k_cv": 0.0,
+   "eje": "x = -2.000",
+   "x0": -2.0,
+   "y0": 14.021,
+   "x1": -2.0,
+   "y1": 17.446,
+   "np": "NP-17"
+  },
+  {
+   "id": 45,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": -1.6,
+   "s0": 21.446,
+   "s1": 22.671,
+   "L": 1.225,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = -1.600",
+   "x0": -1.6,
+   "y0": 21.446,
+   "x1": -1.6,
+   "y1": 22.671,
+   "np": "DM-28"
+  },
+  {
+   "id": 46,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": -1.6,
+   "s0": 22.671,
+   "s1": 23.671,
+   "L": 1.0,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = -1.600",
+   "x0": -1.6,
+   "y0": 22.671,
+   "x1": -1.6,
+   "y1": 23.671,
+   "np": "DM-29"
+  },
+  {
+   "id": 47,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": -1.6,
+   "s0": 23.671,
+   "s1": 24.371,
+   "L": 0.7,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = -1.600",
+   "x0": -1.6,
+   "y0": 23.671,
+   "x1": -1.6,
+   "y1": 24.371,
+   "np": "DM-30"
+  },
+  {
+   "id": 48,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 0.0,
+   "s1": 1.919,
+   "L": 1.919,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 0.0,
+   "x1": 0.0,
+   "y1": 1.919,
+   "np": "DM-31"
+  },
+  {
+   "id": 49,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 1.919,
+   "s1": 2.921,
+   "L": 1.002,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 1.002,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 1.919,
+   "x1": 0.0,
+   "y1": 2.921,
+   "np": "DM-32"
+  },
+  {
+   "id": 50,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 2.921,
+   "s1": 5.346,
+   "L": 2.425,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 2.425,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 2.921,
+   "x1": 0.0,
+   "y1": 5.346,
+   "np": "DM-33"
+  },
+  {
+   "id": 51,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 5.346,
+   "s1": 6.948,
+   "L": 1.602,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 1.602,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 5.346,
+   "x1": 0.0,
+   "y1": 6.948,
+   "np": "DM-34"
+  },
+  {
+   "id": 52,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 6.948,
+   "s1": 7.871,
+   "L": 0.923,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0.923,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 6.948,
+   "x1": 0.0,
+   "y1": 7.871,
+   "np": "DM-35"
+  },
+  {
+   "id": 53,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 7.871,
+   "s1": 9.95,
+   "L": 2.079,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 2.079,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 7.871,
+   "x1": 0.0,
+   "y1": 9.95,
+   "np": "DM-36"
+  },
+  {
+   "id": 54,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 9.95,
+   "s1": 11.986,
+   "L": 2.036,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 2.036,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 9.95,
+   "x1": 0.0,
+   "y1": 11.986,
+   "np": "DM-37"
+  },
+  {
+   "id": 55,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 11.986,
+   "s1": 14.021,
+   "L": 2.035,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 2.035,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 11.986,
+   "x1": 0.0,
+   "y1": 14.021,
+   "np": "DM-38"
+  },
+  {
+   "id": 56,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 14.021,
+   "s1": 15.846,
+   "L": 1.825,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 14.021,
+   "x1": 0.0,
+   "y1": 15.846,
+   "np": "DM-39"
+  },
+  {
+   "id": 57,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 15.846,
+   "s1": 17.446,
+   "L": 1.6,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 1.6,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 15.846,
+   "x1": 0.0,
+   "y1": 17.446,
+   "np": "DM-40"
+  },
+  {
+   "id": 58,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 17.446,
+   "s1": 19.447,
+   "L": 2.001,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 2.001,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 17.446,
+   "x1": 0.0,
+   "y1": 19.447,
+   "np": "DM-41"
+  },
+  {
+   "id": 59,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 19.447,
+   "s1": 21.446,
+   "L": 1.999,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 1.999,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 19.447,
+   "x1": 0.0,
+   "y1": 21.446,
+   "np": "DM-42"
+  },
+  {
+   "id": 60,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 21.446,
+   "s1": 24.371,
+   "L": 2.925,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 228.2,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 21.446,
+   "x1": 0.0,
+   "y1": 24.371,
+   "np": "DM-43"
+  },
+  {
+   "id": 61,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 2.925,
+   "s0": 5.346,
+   "s1": 5.946,
+   "L": 0.6,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje B (x = 2.925)",
+   "x0": 2.925,
+   "y0": 5.346,
+   "x1": 2.925,
+   "y1": 5.946,
+   "np": "DM-44"
+  },
+  {
+   "id": 62,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 2.925,
+   "s0": 5.946,
+   "s1": 6.046,
+   "L": 0.1,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje B (x = 2.925)",
+   "x0": 2.925,
+   "y0": 5.946,
+   "x1": 2.925,
+   "y1": 6.046,
+   "np": "DM-45"
+  },
+  {
+   "id": 63,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 2.925,
+   "s0": 6.046,
+   "s1": 6.948,
+   "L": 0.902,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje B (x = 2.925)",
+   "x0": 2.925,
+   "y0": 6.046,
+   "x1": 2.925,
+   "y1": 6.948,
+   "np": "DM-46"
+  },
+  {
+   "id": 64,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 3.029,
+   "s0": 15.846,
+   "s1": 17.446,
+   "L": 1.6,
+   "tipo": "LIBRE",
+   "f": [
+    false,
+    false
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "NERVADURA",
+     "recibe": "NP-12",
+     "a": 3.029
+    },
+    {
+     "tipo": "NERVADURA",
+     "recibe": "NP-15",
+     "a": 3.029
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 1.6,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 3.029",
+   "x0": 3.029,
+   "y0": 15.846,
+   "x1": 3.029,
+   "y1": 17.446,
+   "np": "NP-18"
+  },
+  {
+   "id": 65,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 3.427,
+   "s0": 14.021,
+   "s1": 15.846,
+   "L": 1.825,
+   "tipo": "LIBRE",
+   "f": [
+    false,
+    true
+   ],
+   "prop": [
+    null,
+    "C8"
+   ],
+   "ext": [
+    {
+     "tipo": "NERVADURA",
+     "recibe": "NP-10",
+     "a": 3.427
+    },
+    {
+     "tipo": "FIRME",
+     "prop": "C8"
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 1.825,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje C (x = 3.427)",
+   "x0": 3.427,
+   "y0": 14.021,
+   "x1": 3.427,
+   "y1": 15.846,
+   "np": "NP-19"
+  },
+  {
+   "id": 66,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 4.327,
+   "s0": 1.919,
+   "s1": 2.921,
+   "L": 1.002,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    "C1",
+    "C2"
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": "C1"
+    },
+    {
+     "tipo": "FIRME",
+     "prop": "C2"
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 1.002,
+   "e2k_scm": 294.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 4.327",
+   "x0": 4.327,
+   "y0": 1.919,
+   "x1": 4.327,
+   "y1": 2.921,
+   "np": "NP-20"
+  },
+  {
+   "id": 67,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 4.327,
+   "s0": 2.921,
+   "s1": 5.946,
+   "L": 3.025,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    "C2",
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": "C2"
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 3.025,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 4.327",
+   "x0": 4.327,
+   "y0": 2.921,
+   "x1": 4.327,
+   "y1": 5.946,
+   "np": "NP-21"
+  },
+  {
+   "id": 68,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 4.327,
+   "s0": 5.946,
+   "s1": 7.871,
+   "L": 1.925,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    "C4"
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "FIRME",
+     "prop": "C4"
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 1.925,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 4.327",
+   "x0": 4.327,
+   "y0": 5.946,
+   "x1": 4.327,
+   "y1": 7.871,
+   "np": "NP-22"
+  },
+  {
+   "id": 69,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 4.327,
+   "s0": 7.871,
+   "s1": 14.021,
+   "L": 6.15,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    "C4",
+    "C5"
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": "C4"
+    },
+    {
+     "tipo": "FIRME",
+     "prop": "C5"
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 0,
+   "e2k_scm": 50.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 4.327",
+   "x0": 4.327,
+   "y0": 7.871,
+   "x1": 4.327,
+   "y1": 14.021,
+   "np": "NP-23"
+  },
+  {
+   "id": 70,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 4.426,
+   "s0": 17.446,
+   "s1": 21.446,
+   "L": 4.0,
+   "tipo": "LIBRE",
+   "f": [
+    false,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "NERVADURA",
+     "recibe": "NP-15",
+     "a": 4.426
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 4.0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje D (x = 4.426)",
+   "x0": 4.426,
+   "y0": 17.446,
+   "x1": 4.426,
+   "y1": 21.446,
+   "np": "NP-24"
+  },
+  {
+   "id": 71,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 4.925,
+   "s0": 15.447,
+   "s1": 16.396,
+   "L": 0.949,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje E (x = 4.925)",
+   "x0": 4.925,
+   "y0": 15.447,
+   "x1": 4.925,
+   "y1": 16.396,
+   "np": "DM-47"
+  },
+  {
+   "id": 72,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 4.925,
+   "s0": 16.396,
+   "s1": 17.446,
+   "L": 1.05,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 206.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje E (x = 4.925)",
+   "x0": 4.925,
+   "y0": 16.396,
+   "x1": 4.925,
+   "y1": 17.446,
+   "np": "DM-48"
+  },
+  {
+   "id": 73,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 4.925,
+   "s0": 17.446,
+   "s1": 18.146,
+   "L": 0.7,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.1,
+   "e2k_cv": 0.0,
+   "eje": "Eje E (x = 4.925)",
+   "x0": 4.925,
+   "y0": 17.446,
+   "x1": 4.925,
+   "y1": 18.146,
+   "np": "DM-49"
+  },
+  {
+   "id": 74,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 4.925,
+   "s0": 18.146,
+   "s1": 19.2,
+   "L": 1.054,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 206.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje E (x = 4.925)",
+   "x0": 4.925,
+   "y0": 18.146,
+   "x1": 4.925,
+   "y1": 19.2,
+   "np": "DM-50"
+  },
+  {
+   "id": 75,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 4.925,
+   "s0": 19.2,
+   "s1": 21.446,
+   "L": 2.246,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje E (x = 4.925)",
+   "x0": 4.925,
+   "y0": 19.2,
+   "x1": 4.925,
+   "y1": 21.446,
+   "np": "DM-51"
+  },
+  {
+   "id": 76,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 5.441,
+   "s0": 6.948,
+   "s1": 8.91,
+   "L": 1.962,
+   "tipo": "LIBRE",
+   "f": [
+    false,
+    true
+   ],
+   "prop": [
+    null,
+    "C7"
+   ],
+   "ext": [
+    {
+     "tipo": "PUNTA",
+     "recibe": "NP-05",
+     "a": 0.0
+    },
+    {
+     "tipo": "FIRME",
+     "prop": "C7"
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 0,
+   "e2k_scm": 50.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje F (x = 5.441)",
+   "x0": 5.441,
+   "y0": 6.948,
+   "x1": 5.441,
+   "y1": 8.91,
+   "np": "NP-25"
+  },
+  {
+   "id": 77,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 5.441,
+   "s0": 9.95,
+   "s1": 15.447,
+   "L": 5.497,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    "C6",
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": "C6"
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 5.497,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje F (x = 5.441)",
+   "x0": 5.441,
+   "y0": 9.95,
+   "x1": 5.441,
+   "y1": 15.447,
+   "np": "NP-26"
+  },
+  {
+   "id": 78,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 5.441,
+   "s0": 15.447,
+   "s1": 15.846,
+   "L": 0.399,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    false
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "LIBRE"
+    }
+   ],
+   "cond": "VOLADO",
+   "muro_arriba": 0.399,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje F (x = 5.441)",
+   "x0": 5.441,
+   "y0": 15.447,
+   "x1": 5.441,
+   "y1": 15.846,
+   "np": "NP-27"
+  },
+  {
+   "id": 79,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 5.822,
+   "s0": 15.846,
+   "s1": 17.446,
+   "L": 1.6,
+   "tipo": "LIBRE",
+   "f": [
+    false,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "NERVADURA",
+     "recibe": "NP-13",
+     "a": 0.4
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 1.6,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 5.822",
+   "x0": 5.822,
+   "y0": 15.846,
+   "x1": 5.822,
+   "y1": 17.446,
+   "np": "NP-28"
+  },
+  {
+   "id": 80,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 5.923,
+   "s0": 2.921,
+   "s1": 5.946,
+   "L": 3.025,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    "C3",
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": "C3"
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 3.025,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje G (x = 5.923)",
+   "x0": 5.923,
+   "y0": 2.921,
+   "x1": 5.923,
+   "y1": 5.946,
+   "np": "NP-29"
+  },
+  {
+   "id": 81,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 5.923,
+   "s0": 5.946,
+   "s1": 6.948,
+   "L": 1.002,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 1.002,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje G (x = 5.923)",
+   "x0": 5.923,
+   "y0": 5.946,
+   "x1": 5.923,
+   "y1": 6.948,
+   "np": "DM-52"
+  },
+  {
+   "id": 82,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 7.25,
+   "s0": 21.446,
+   "s1": 24.371,
+   "L": 2.925,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 105.5,
+   "e2k_cv": 0.0,
+   "eje": "Eje H (x = 7.250)",
+   "x0": 7.25,
+   "y0": 21.446,
+   "x1": 7.25,
+   "y1": 24.371,
+   "np": "DM-53"
+  },
+  {
+   "id": 83,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 7.35,
+   "s0": 8.91,
+   "s1": 9.95,
+   "L": 1.04,
+   "tipo": "LIBRE",
+   "f": [
+    false,
+    false
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "LIBRE"
+    },
+    {
+     "tipo": "NERVADURA",
+     "recibe": "NP-08",
+     "a": 1.928
+    }
+   ],
+   "cond": "VOLADO",
+   "muro_arriba": 0,
+   "e2k_scm": 2290.0,
+   "e2k_cv": 420.0,
+   "eje": "x = 7.350",
+   "x0": 7.35,
+   "y0": 8.91,
+   "x1": 7.35,
+   "y1": 9.95,
+   "np": "NP-30"
+  },
+  {
+   "id": 84,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 0.0,
+   "s1": 2.316,
+   "L": 2.316,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 0.0,
+   "x1": 8.85,
+   "y1": 2.316,
+   "np": "DM-54"
+  },
+  {
+   "id": 85,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 2.316,
+   "s1": 4.632,
+   "L": 2.316,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 2.316,
+   "x1": 8.85,
+   "y1": 4.632,
+   "np": "DM-55"
+  },
+  {
+   "id": 86,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 4.632,
+   "s1": 6.948,
+   "L": 2.316,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 4.632,
+   "x1": 8.85,
+   "y1": 6.948,
+   "np": "DM-56"
+  },
+  {
+   "id": 87,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 6.948,
+   "s1": 8.449,
+   "L": 1.501,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 1.501,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 6.948,
+   "x1": 8.85,
+   "y1": 8.449,
+   "np": "DM-57"
+  },
+  {
+   "id": 88,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 8.449,
+   "s1": 9.95,
+   "L": 1.501,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 1.501,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 8.449,
+   "x1": 8.85,
+   "y1": 9.95,
+   "np": "DM-58"
+  },
+  {
+   "id": 89,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 9.95,
+   "s1": 12.1,
+   "L": 2.15,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 2.15,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 9.95,
+   "x1": 8.85,
+   "y1": 12.1,
+   "np": "DM-59"
+  },
+  {
+   "id": 90,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 12.1,
+   "s1": 14.247,
+   "L": 2.147,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 2.147,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 12.1,
+   "x1": 8.85,
+   "y1": 14.247,
+   "np": "DM-60"
+  },
+  {
+   "id": 91,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 14.247,
+   "s1": 15.447,
+   "L": 1.2,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 1.2,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 14.247,
+   "x1": 8.85,
+   "y1": 15.447,
+   "np": "DM-61"
+  },
+  {
+   "id": 92,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 15.447,
+   "s1": 17.446,
+   "L": 1.999,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 1.999,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 15.447,
+   "x1": 8.85,
+   "y1": 17.446,
+   "np": "DM-62"
+  },
+  {
+   "id": 93,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 17.446,
+   "s1": 19.446,
+   "L": 2.0,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 2.0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 17.446,
+   "x1": 8.85,
+   "y1": 19.446,
+   "np": "DM-63"
+  },
+  {
+   "id": 94,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 19.446,
+   "s1": 21.446,
+   "L": 2.0,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 2.0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 19.446,
+   "x1": 8.85,
+   "y1": 21.446,
+   "np": "DM-64"
+  },
+  {
+   "id": 95,
+   "level": "N+3.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 21.446,
+   "s1": 24.371,
+   "L": 2.925,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 958.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 21.446,
+   "x1": 8.85,
+   "y1": 24.371,
+   "np": "DM-65"
+  },
+  {
+   "id": 96,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 1.919,
+   "s0": 0.0,
+   "s1": 4.327,
+   "L": 4.327,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 2 (y = 1.919)",
+   "x0": 0.0,
+   "y0": 1.919,
+   "x1": 4.327,
+   "y1": 1.919,
+   "np": "DM-66"
+  },
+  {
+   "id": 97,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 2.921,
+   "s0": 0.0,
+   "s1": 0.925,
+   "L": 0.925,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 3 (y = 2.921)",
+   "x0": 0.0,
+   "y0": 2.921,
+   "x1": 0.925,
+   "y1": 2.921,
+   "np": "DM-67"
+  },
+  {
+   "id": 98,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 2.921,
+   "s0": 0.925,
+   "s1": 3.575,
+   "L": 2.65,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 3 (y = 2.921)",
+   "x0": 0.925,
+   "y0": 2.921,
+   "x1": 3.575,
+   "y1": 2.921,
+   "np": "DM-68"
+  },
+  {
+   "id": 99,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 2.921,
+   "s0": 3.575,
+   "s1": 4.327,
+   "L": 0.752,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 3 (y = 2.921)",
+   "x0": 3.575,
+   "y0": 2.921,
+   "x1": 4.327,
+   "y1": 2.921,
+   "np": "DM-69"
+  },
+  {
+   "id": 100,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 2.921,
+   "s0": 4.327,
+   "s1": 5.923,
+   "L": 1.596,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 3 (y = 2.921)",
+   "x0": 4.327,
+   "y0": 2.921,
+   "x1": 5.923,
+   "y1": 2.921,
+   "np": "DM-70"
+  },
+  {
+   "id": 101,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 5.946,
+   "s0": 4.327,
+   "s1": 5.298,
+   "L": 0.971,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 5 (y = 5.946)",
+   "x0": 4.327,
+   "y0": 5.946,
+   "x1": 5.298,
+   "y1": 5.946,
+   "np": "DM-71"
+  },
+  {
+   "id": 102,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 5.946,
+   "s0": 5.298,
+   "s1": 5.923,
+   "L": 0.625,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 5 (y = 5.946)",
+   "x0": 5.298,
+   "y0": 5.946,
+   "x1": 5.923,
+   "y1": 5.946,
+   "np": "DM-72"
+  },
+  {
+   "id": 103,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 6.948,
+   "s0": 5.923,
+   "s1": 6.272,
+   "L": 0.349,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 6 (y = 6.948)",
+   "x0": 5.923,
+   "y0": 6.948,
+   "x1": 6.272,
+   "y1": 6.948,
+   "np": "DM-73"
+  },
+  {
+   "id": 104,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 6.948,
+   "s0": 6.272,
+   "s1": 8.5,
+   "L": 2.228,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 6 (y = 6.948)",
+   "x0": 6.272,
+   "y0": 6.948,
+   "x1": 8.5,
+   "y1": 6.948,
+   "np": "DM-74"
+  },
+  {
+   "id": 105,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 6.948,
+   "s0": 8.5,
+   "s1": 8.85,
+   "L": 0.35,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 6 (y = 6.948)",
+   "x0": 8.5,
+   "y0": 6.948,
+   "x1": 8.85,
+   "y1": 6.948,
+   "np": "DM-75"
+  },
+  {
+   "id": 106,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 7.871,
+   "s0": 0.0,
+   "s1": 2.163,
+   "L": 2.163,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 7 (y = 7.871)",
+   "x0": 0.0,
+   "y0": 7.871,
+   "x1": 2.163,
+   "y1": 7.871,
+   "np": "DM-76"
+  },
+  {
+   "id": 107,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 7.871,
+   "s0": 2.163,
+   "s1": 4.327,
+   "L": 2.164,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 7 (y = 7.871)",
+   "x0": 2.163,
+   "y0": 7.871,
+   "x1": 4.327,
+   "y1": 7.871,
+   "np": "DM-77"
+  },
+  {
+   "id": 108,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 9.95,
+   "s0": 5.422,
+   "s1": 6.28,
+   "L": 0.858,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 42.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 8 (y = 9.950)",
+   "x0": 5.422,
+   "y0": 9.95,
+   "x1": 6.28,
+   "y1": 9.95,
+   "np": "DM-78"
+  },
+  {
+   "id": 109,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 9.95,
+   "s0": 6.28,
+   "s1": 7.85,
+   "L": 1.57,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 8 (y = 9.950)",
+   "x0": 6.28,
+   "y0": 9.95,
+   "x1": 7.85,
+   "y1": 9.95,
+   "np": "DM-79"
+  },
+  {
+   "id": 110,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 9.95,
+   "s0": 7.85,
+   "s1": 8.144,
+   "L": 0.294,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 8 (y = 9.950)",
+   "x0": 7.85,
+   "y0": 9.95,
+   "x1": 8.144,
+   "y1": 9.95,
+   "np": "DM-80"
+  },
+  {
+   "id": 111,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 9.95,
+   "s0": 8.144,
+   "s1": 8.85,
+   "L": 0.706,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 8 (y = 9.950)",
+   "x0": 8.144,
+   "y0": 9.95,
+   "x1": 8.85,
+   "y1": 9.95,
+   "np": "DM-81"
+  },
+  {
+   "id": 112,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 14.021,
+   "s0": 0.0,
+   "s1": 1.714,
+   "L": 1.714,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 14.021",
+   "x0": 0.0,
+   "y0": 14.021,
+   "x1": 1.714,
+   "y1": 14.021,
+   "np": "DM-82"
+  },
+  {
+   "id": 113,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 14.021,
+   "s0": 1.714,
+   "s1": 3.427,
+   "L": 1.713,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 14.021",
+   "x0": 1.714,
+   "y0": 14.021,
+   "x1": 3.427,
+   "y1": 14.021,
+   "np": "DM-83"
+  },
+  {
+   "id": 114,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 14.021,
+   "s0": 3.427,
+   "s1": 4.247,
+   "L": 0.82,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 14.021",
+   "x0": 3.427,
+   "y0": 14.021,
+   "x1": 4.247,
+   "y1": 14.021,
+   "np": "DM-84"
+  },
+  {
+   "id": 115,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 14.247,
+   "s0": 6.247,
+   "s1": 8.85,
+   "L": 2.603,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 14.247",
+   "x0": 6.247,
+   "y0": 14.247,
+   "x1": 8.85,
+   "y1": 14.247,
+   "np": "DM-85"
+  },
+  {
+   "id": 116,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 15.846,
+   "s0": 0.0,
+   "s1": 1.514,
+   "L": 1.514,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 15.846",
+   "x0": 0.0,
+   "y0": 15.846,
+   "x1": 1.514,
+   "y1": 15.846,
+   "np": "DM-86"
+  },
+  {
+   "id": 117,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 15.846,
+   "s0": 1.514,
+   "s1": 3.029,
+   "L": 1.515,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 15.846",
+   "x0": 1.514,
+   "y0": 15.846,
+   "x1": 3.029,
+   "y1": 15.846,
+   "np": "DM-87"
+  },
+  {
+   "id": 118,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 15.846,
+   "s0": 3.029,
+   "s1": 3.427,
+   "L": 0.398,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 15.846",
+   "x0": 3.029,
+   "y0": 15.846,
+   "x1": 3.427,
+   "y1": 15.846,
+   "np": "DM-88"
+  },
+  {
+   "id": 119,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 15.846,
+   "s0": 5.422,
+   "s1": 5.822,
+   "L": 0.4,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 15.846",
+   "x0": 5.422,
+   "y0": 15.846,
+   "x1": 5.822,
+   "y1": 15.846,
+   "np": "DM-89"
+  },
+  {
+   "id": 120,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 15.846,
+   "s0": 5.822,
+   "s1": 7.336,
+   "L": 1.514,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 15.846",
+   "x0": 5.822,
+   "y0": 15.846,
+   "x1": 7.336,
+   "y1": 15.846,
+   "np": "DM-90"
+  },
+  {
+   "id": 121,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 15.846,
+   "s0": 7.336,
+   "s1": 8.85,
+   "L": 1.514,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 15.846",
+   "x0": 7.336,
+   "y0": 15.846,
+   "x1": 8.85,
+   "y1": 15.846,
+   "np": "DM-91"
+  },
+  {
+   "id": 122,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 16.697,
+   "s0": 5.822,
+   "s1": 8.85,
+   "L": 3.028,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 16.697",
+   "x0": 5.822,
+   "y0": 16.697,
+   "x1": 8.85,
+   "y1": 16.697,
+   "np": "NP-31"
+  },
+  {
+   "id": 123,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 16.997,
+   "s0": 0.0,
+   "s1": 3.029,
+   "L": 3.029,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "y = 16.997",
+   "x0": 0.0,
+   "y0": 16.997,
+   "x1": 3.029,
+   "y1": 16.997,
+   "np": "NP-32"
+  },
+  {
+   "id": 124,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": 0.0,
+   "s1": 2.129,
+   "L": 2.129,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": 0.0,
+   "y0": 17.446,
+   "x1": 2.129,
+   "y1": 17.446,
+   "np": "DM-92"
+  },
+  {
+   "id": 125,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": 2.129,
+   "s1": 3.029,
+   "L": 0.9,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": 2.129,
+   "y0": 17.446,
+   "x1": 3.029,
+   "y1": 17.446,
+   "np": "DM-93"
+  },
+  {
+   "id": 126,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": 3.029,
+   "s1": 3.429,
+   "L": 0.4,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": 3.029,
+   "y0": 17.446,
+   "x1": 3.429,
+   "y1": 17.446,
+   "np": "DM-94"
+  },
+  {
+   "id": 127,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": 3.429,
+   "s1": 4.426,
+   "L": 0.997,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": 3.429,
+   "y0": 17.446,
+   "x1": 4.426,
+   "y1": 17.446,
+   "np": "DM-95"
+  },
+  {
+   "id": 128,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": 4.426,
+   "s1": 5.422,
+   "L": 0.996,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": 4.426,
+   "y0": 17.446,
+   "x1": 5.422,
+   "y1": 17.446,
+   "np": "DM-96"
+  },
+  {
+   "id": 129,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": 5.422,
+   "s1": 5.822,
+   "L": 0.4,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": 5.422,
+   "y0": 17.446,
+   "x1": 5.822,
+   "y1": 17.446,
+   "np": "DM-97"
+  },
+  {
+   "id": 130,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": 5.822,
+   "s1": 6.722,
+   "L": 0.9,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": 5.822,
+   "y0": 17.446,
+   "x1": 6.722,
+   "y1": 17.446,
+   "np": "DM-98"
+  },
+  {
+   "id": 131,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": 6.722,
+   "s1": 6.887,
+   "L": 0.165,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": 6.722,
+   "y0": 17.446,
+   "x1": 6.887,
+   "y1": 17.446,
+   "np": "DM-99"
+  },
+  {
+   "id": 132,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 17.446,
+   "s0": 6.887,
+   "s1": 8.85,
+   "L": 1.963,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje 12 (y = 17.446)",
+   "x0": 6.887,
+   "y0": 17.446,
+   "x1": 8.85,
+   "y1": 17.446,
+   "np": "DM-100"
+  },
+  {
+   "id": 133,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 0.0,
+   "s1": 0.925,
+   "L": 0.925,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 40.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 0.0,
+   "y0": 21.446,
+   "x1": 0.925,
+   "y1": 21.446,
+   "np": "DM-101"
+  },
+  {
+   "id": 134,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 0.925,
+   "s1": 2.927,
+   "L": 2.002,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 40.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 0.925,
+   "y0": 21.446,
+   "x1": 2.927,
+   "y1": 21.446,
+   "np": "DM-102"
+  },
+  {
+   "id": 135,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 2.927,
+   "s1": 4.426,
+   "L": 1.499,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 40.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 2.927,
+   "y0": 21.446,
+   "x1": 4.426,
+   "y1": 21.446,
+   "np": "DM-103"
+  },
+  {
+   "id": 136,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 4.426,
+   "s1": 5.925,
+   "L": 1.499,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 40.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 4.426,
+   "y0": 21.446,
+   "x1": 5.925,
+   "y1": 21.446,
+   "np": "DM-104"
+  },
+  {
+   "id": 137,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 5.925,
+   "s1": 7.925,
+   "L": 2.0,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 40.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 5.925,
+   "y0": 21.446,
+   "x1": 7.925,
+   "y1": 21.446,
+   "np": "DM-105"
+  },
+  {
+   "id": 138,
+   "level": "N+6.00",
+   "ori": "H",
+   "c": 21.446,
+   "s0": 7.925,
+   "s1": 8.85,
+   "L": 0.925,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 40.0,
+   "eje": "Eje 14 (y = 21.446)",
+   "x0": 7.925,
+   "y0": 21.446,
+   "x1": 8.85,
+   "y1": 21.446,
+   "np": "DM-106"
+  },
+  {
+   "id": 139,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 1.919,
+   "s1": 2.921,
+   "L": 1.002,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 202.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 1.919,
+   "x1": 0.0,
+   "y1": 2.921,
+   "np": "DM-107"
+  },
+  {
+   "id": 140,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 2.921,
+   "s1": 5.346,
+   "L": 2.425,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 2.921,
+   "x1": 0.0,
+   "y1": 5.346,
+   "np": "DM-108"
+  },
+  {
+   "id": 141,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 5.346,
+   "s1": 6.948,
+   "L": 1.602,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 5.346,
+   "x1": 0.0,
+   "y1": 6.948,
+   "np": "DM-109"
+  },
+  {
+   "id": 142,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 6.948,
+   "s1": 7.871,
+   "L": 0.923,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 6.948,
+   "x1": 0.0,
+   "y1": 7.871,
+   "np": "DM-110"
+  },
+  {
+   "id": 143,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 7.871,
+   "s1": 9.95,
+   "L": 2.079,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 7.871,
+   "x1": 0.0,
+   "y1": 9.95,
+   "np": "DM-111"
+  },
+  {
+   "id": 144,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 9.95,
+   "s1": 11.986,
+   "L": 2.036,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 9.95,
+   "x1": 0.0,
+   "y1": 11.986,
+   "np": "DM-112"
+  },
+  {
+   "id": 145,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 11.986,
+   "s1": 14.021,
+   "L": 2.035,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 11.986,
+   "x1": 0.0,
+   "y1": 14.021,
+   "np": "DM-113"
+  },
+  {
+   "id": 146,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 14.021,
+   "s1": 15.846,
+   "L": 1.825,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 14.021,
+   "x1": 0.0,
+   "y1": 15.846,
+   "np": "NP-33"
+  },
+  {
+   "id": 147,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 15.846,
+   "s1": 17.446,
+   "L": 1.6,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 15.846,
+   "x1": 0.0,
+   "y1": 17.446,
+   "np": "DM-114"
+  },
+  {
+   "id": 148,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 17.446,
+   "s1": 19.447,
+   "L": 2.001,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 17.446,
+   "x1": 0.0,
+   "y1": 19.447,
+   "np": "DM-115"
+  },
+  {
+   "id": 149,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 0.0,
+   "s0": 19.447,
+   "s1": 21.446,
+   "L": 1.999,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje A (x = 0.000)",
+   "x0": 0.0,
+   "y0": 19.447,
+   "x1": 0.0,
+   "y1": 21.446,
+   "np": "DM-116"
+  },
+  {
+   "id": 150,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 3.029,
+   "s0": 15.846,
+   "s1": 17.446,
+   "L": 1.6,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 3.029",
+   "x0": 3.029,
+   "y0": 15.846,
+   "x1": 3.029,
+   "y1": 17.446,
+   "np": "DM-117"
+  },
+  {
+   "id": 151,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 3.427,
+   "s0": 14.021,
+   "s1": 14.796,
+   "L": 0.775,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje C (x = 3.427)",
+   "x0": 3.427,
+   "y0": 14.021,
+   "x1": 3.427,
+   "y1": 14.796,
+   "np": "DM-118"
+  },
+  {
+   "id": 152,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 3.427,
+   "s0": 14.796,
+   "s1": 15.846,
+   "L": 1.05,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje C (x = 3.427)",
+   "x0": 3.427,
+   "y0": 14.796,
+   "x1": 3.427,
+   "y1": 15.846,
+   "np": "DM-119"
+  },
+  {
+   "id": 153,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 4.327,
+   "s0": 1.919,
+   "s1": 2.921,
+   "L": 1.002,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 4.327",
+   "x0": 4.327,
+   "y0": 1.919,
+   "x1": 4.327,
+   "y1": 2.921,
+   "np": "DM-120"
+  },
+  {
+   "id": 154,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 4.327,
+   "s0": 2.921,
+   "s1": 5.046,
+   "L": 2.125,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 4.327",
+   "x0": 4.327,
+   "y0": 2.921,
+   "x1": 4.327,
+   "y1": 5.046,
+   "np": "DM-121"
+  },
+  {
+   "id": 155,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 4.327,
+   "s0": 5.046,
+   "s1": 5.946,
+   "L": 0.9,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 4.327",
+   "x0": 4.327,
+   "y0": 5.046,
+   "x1": 4.327,
+   "y1": 5.946,
+   "np": "DM-122"
+  },
+  {
+   "id": 156,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 4.327,
+   "s0": 5.946,
+   "s1": 6.996,
+   "L": 1.05,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 4.327",
+   "x0": 4.327,
+   "y0": 5.946,
+   "x1": 4.327,
+   "y1": 6.996,
+   "np": "DM-123"
+  },
+  {
+   "id": 157,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 4.327,
+   "s0": 6.996,
+   "s1": 7.871,
+   "L": 0.875,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 4.327",
+   "x0": 4.327,
+   "y0": 6.996,
+   "x1": 4.327,
+   "y1": 7.871,
+   "np": "DM-124"
+  },
+  {
+   "id": 158,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 4.426,
+   "s0": 17.446,
+   "s1": 19.447,
+   "L": 2.001,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje D (x = 4.426)",
+   "x0": 4.426,
+   "y0": 17.446,
+   "x1": 4.426,
+   "y1": 19.447,
+   "np": "DM-125"
+  },
+  {
+   "id": 159,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 4.426,
+   "s0": 19.447,
+   "s1": 21.446,
+   "L": 1.999,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje D (x = 4.426)",
+   "x0": 4.426,
+   "y0": 19.447,
+   "x1": 4.426,
+   "y1": 21.446,
+   "np": "DM-126"
+  },
+  {
+   "id": 160,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 5.422,
+   "s0": 9.95,
+   "s1": 11.0,
+   "L": 1.05,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje F (x = 5.422)",
+   "x0": 5.422,
+   "y0": 9.95,
+   "x1": 5.422,
+   "y1": 11.0,
+   "np": "DM-127"
+  },
+  {
+   "id": 161,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 5.422,
+   "s0": 11.0,
+   "s1": 14.872,
+   "L": 3.872,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje F (x = 5.422)",
+   "x0": 5.422,
+   "y0": 11.0,
+   "x1": 5.422,
+   "y1": 14.872,
+   "np": "DM-128"
+  },
+  {
+   "id": 162,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 5.422,
+   "s0": 14.872,
+   "s1": 15.846,
+   "L": 0.974,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje F (x = 5.422)",
+   "x0": 5.422,
+   "y0": 14.872,
+   "x1": 5.422,
+   "y1": 15.846,
+   "np": "DM-129"
+  },
+  {
+   "id": 163,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 5.822,
+   "s0": 15.846,
+   "s1": 17.446,
+   "L": 1.6,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "x = 5.822",
+   "x0": 5.822,
+   "y0": 15.846,
+   "x1": 5.822,
+   "y1": 17.446,
+   "np": "DM-130"
+  },
+  {
+   "id": 164,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 5.923,
+   "s0": 2.921,
+   "s1": 4.433,
+   "L": 1.512,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje G (x = 5.923)",
+   "x0": 5.923,
+   "y0": 2.921,
+   "x1": 5.923,
+   "y1": 4.433,
+   "np": "DM-131"
+  },
+  {
+   "id": 165,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 5.923,
+   "s0": 4.433,
+   "s1": 5.946,
+   "L": 1.513,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje G (x = 5.923)",
+   "x0": 5.923,
+   "y0": 4.433,
+   "x1": 5.923,
+   "y1": 5.946,
+   "np": "DM-132"
+  },
+  {
+   "id": 166,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 5.923,
+   "s0": 5.946,
+   "s1": 6.948,
+   "L": 1.002,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje G (x = 5.923)",
+   "x0": 5.923,
+   "y0": 5.946,
+   "x1": 5.923,
+   "y1": 6.948,
+   "np": "DM-133"
+  },
+  {
+   "id": 167,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 5.923,
+   "s0": 6.948,
+   "s1": 9.95,
+   "L": 3.002,
+   "tipo": "LIBRE",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    {
+     "tipo": "FIRME",
+     "prop": null
+    },
+    {
+     "tipo": "FIRME",
+     "prop": null
+    }
+   ],
+   "cond": "APOYADA",
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje G (x = 5.923)",
+   "x0": 5.923,
+   "y0": 6.948,
+   "x1": 5.923,
+   "y1": 9.95,
+   "np": "NP-34"
+  },
+  {
+   "id": 168,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 6.948,
+   "s1": 8.449,
+   "L": 1.501,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 6.948,
+   "x1": 8.85,
+   "y1": 8.449,
+   "np": "DM-134"
+  },
+  {
+   "id": 169,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 8.449,
+   "s1": 9.95,
+   "L": 1.501,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 0.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 8.449,
+   "x1": 8.85,
+   "y1": 9.95,
+   "np": "DM-135"
+  },
+  {
+   "id": 170,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 9.95,
+   "s1": 12.1,
+   "L": 2.15,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 9.95,
+   "x1": 8.85,
+   "y1": 12.1,
+   "np": "DM-136"
+  },
+  {
+   "id": 171,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 12.1,
+   "s1": 13.779,
+   "L": 1.679,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 12.1,
+   "x1": 8.85,
+   "y1": 13.779,
+   "np": "DM-137"
+  },
+  {
+   "id": 172,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 13.779,
+   "s1": 14.247,
+   "L": 0.468,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 13.779,
+   "x1": 8.85,
+   "y1": 14.247,
+   "np": "DM-138"
+  },
+  {
+   "id": 173,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 14.247,
+   "s1": 15.447,
+   "L": 1.2,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 14.247,
+   "x1": 8.85,
+   "y1": 15.447,
+   "np": "DM-139"
+  },
+  {
+   "id": 174,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 15.447,
+   "s1": 15.846,
+   "L": 0.399,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 15.447,
+   "x1": 8.85,
+   "y1": 15.846,
+   "np": "DM-140"
+  },
+  {
+   "id": 175,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 15.846,
+   "s1": 17.446,
+   "L": 1.6,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 15.846,
+   "x1": 8.85,
+   "y1": 17.446,
+   "np": "DM-141"
+  },
+  {
+   "id": 176,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 17.446,
+   "s1": 19.446,
+   "L": 2.0,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 17.446,
+   "x1": 8.85,
+   "y1": 19.446,
+   "np": "DM-142"
+  },
+  {
+   "id": 177,
+   "level": "N+6.00",
+   "ori": "V",
+   "c": 8.85,
+   "s0": 19.446,
+   "s1": 21.446,
+   "L": 2.0,
+   "tipo": "MURO",
+   "f": [
+    true,
+    true
+   ],
+   "prop": [
+    null,
+    null
+   ],
+   "ext": [
+    null,
+    null
+   ],
+   "muro_arriba": 0,
+   "e2k_scm": 101.0,
+   "e2k_cv": 0.0,
+   "eje": "Eje J (x = 8.850)",
+   "x0": 8.85,
+   "y0": 19.446,
+   "x1": 8.85,
+   "y1": 21.446,
+   "np": "DM-143"
+  }
+ ],
+ "trib": [
+  {
+   "tramo": "NP-20",
+   "tablero": "F80001",
+   "level": "N+3.00",
+   "area": 0.251
+  },
+  {
+   "tramo": "NP-02",
+   "tablero": "F80001",
+   "level": "N+3.00",
+   "area": 1.9168
+  },
+  {
+   "tramo": "DM-32",
+   "tablero": "F80001",
+   "level": "N+3.00",
+   "area": 0.251
+  },
+  {
+   "tramo": "NP-01",
+   "tablero": "F80001",
+   "level": "N+3.00",
+   "area": 1.9168
+  },
+  {
+   "tramo": "NP-02",
+   "tablero": "F80003",
+   "level": "N+3.00",
+   "area": 3.7943
+  },
+  {
+   "tramo": "NP-21",
+   "tablero": "F80003",
+   "level": "N+3.00",
+   "area": 2.2754
+  },
+  {
+   "tramo": "DM-03",
+   "tablero": "F80003",
+   "level": "N+3.00",
+   "area": 0.5723
+  },
+  {
+   "tramo": "DM-04",
+   "tablero": "F80003",
+   "level": "N+3.00",
+   "area": 0.2305
+  },
+  {
+   "tramo": "DM-44",
+   "tablero": "F80003",
+   "level": "N+3.00",
+   "area": 0.18
+  },
+  {
+   "tramo": "DM-01",
+   "tablero": "F80003",
+   "level": "N+3.00",
+   "area": 0.5778
+  },
+  {
+   "tramo": "DM-02",
+   "tablero": "F80003",
+   "level": "N+3.00",
+   "area": 2.2337
+  },
+  {
+   "tramo": "DM-33",
+   "tablero": "F80003",
+   "level": "N+3.00",
+   "area": 1.4702
+  },
+  {
+   "tramo": "DM-04",
+   "tablero": "F80004",
+   "level": "N+3.00",
+   "area": 0.4415
+  },
+  {
+   "tramo": "DM-05",
+   "tablero": "F80004",
+   "level": "N+3.00",
+   "area": 0.1953
+  },
+  {
+   "tramo": "NP-21",
+   "tablero": "F80004",
+   "level": "N+3.00",
+   "area": 1.7771
+  },
+  {
+   "tramo": "NP-03",
+   "tablero": "F80004",
+   "level": "N+3.00",
+   "area": 0.6368
+  },
+  {
+   "tramo": "NP-29",
+   "tablero": "F80004",
+   "level": "N+3.00",
+   "area": 1.7771
+  },
+  {
+   "tramo": "DM-01",
+   "tablero": "F80005",
+   "level": "N+3.00",
+   "area": 0.5403
+  },
+  {
+   "tramo": "DM-02",
+   "tablero": "F80005",
+   "level": "N+3.00",
+   "area": 1.161
+  },
+  {
+   "tramo": "DM-44",
+   "tablero": "F80005",
+   "level": "N+3.00",
+   "area": 0.18
+  },
+  {
+   "tramo": "DM-45",
+   "tablero": "F80005",
+   "level": "N+3.00",
+   "area": 0.065
+  },
+  {
+   "tramo": "DM-46",
+   "tablero": "F80005",
+   "level": "N+3.00",
+   "area": 0.3966
+  },
+  {
+   "tramo": "DM-06",
+   "tablero": "F80005",
+   "level": "N+3.00",
+   "area": 1.7013
+  },
+  {
+   "tramo": "DM-34",
+   "tablero": "F80005",
+   "level": "N+3.00",
+   "area": 0.6416
+  },
+  {
+   "tramo": "DM-45",
+   "tablero": "F80006",
+   "level": "N+3.00",
+   "area": 0.005
+  },
+  {
+   "tramo": "DM-46",
+   "tablero": "F80006",
+   "level": "N+3.00",
+   "area": 0.246
+  },
+  {
+   "tramo": "DM-03",
+   "tablero": "F80006",
+   "level": "N+3.00",
+   "area": 0.2367
+  },
+  {
+   "tramo": "DM-04",
+   "tablero": "F80006",
+   "level": "N+3.00",
+   "area": 0.2147
+  },
+  {
+   "tramo": "NP-22",
+   "tablero": "F80006",
+   "level": "N+3.00",
+   "area": 0.251
+  },
+  {
+   "tramo": "NP-04",
+   "tablero": "F80006",
+   "level": "N+3.00",
+   "area": 0.4514
+  },
+  {
+   "tramo": "DM-06",
+   "tablero": "F80007",
+   "level": "N+3.00",
+   "area": 1.2434
+  },
+  {
+   "tramo": "NP-04",
+   "tablero": "F80007",
+   "level": "N+3.00",
+   "area": 0.5405
+  },
+  {
+   "tramo": "NP-22",
+   "tablero": "F80007",
+   "level": "N+3.00",
+   "area": 0.213
+  },
+  {
+   "tramo": "NP-06",
+   "tablero": "F80007",
+   "level": "N+3.00",
+   "area": 1.7839
+  },
+  {
+   "tramo": "DM-35",
+   "tablero": "F80007",
+   "level": "N+3.00",
+   "area": 0.213
+  },
+  {
+   "tramo": "NP-22",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 1.0041
+  },
+  {
+   "tramo": "NP-23",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 3.9563
+  },
+  {
+   "tramo": "DM-04",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.4415
+  },
+  {
+   "tramo": "DM-05",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.1953
+  },
+  {
+   "tramo": "DM-52",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.374
+  },
+  {
+   "tramo": "NP-05",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.1072
+  },
+  {
+   "tramo": "NP-25",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 1.1115
+  },
+  {
+   "tramo": "NP-07",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.8476
+  },
+  {
+   "tramo": "NP-30",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.2704
+  },
+  {
+   "tramo": "NP-08",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.8871
+  },
+  {
+   "tramo": "NP-26",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 3.5278
+  },
+  {
+   "tramo": "DM-11",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.1235
+  },
+  {
+   "tramo": "DM-47",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.8203
+  },
+  {
+   "tramo": "DM-48",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.546
+  },
+  {
+   "tramo": "NP-15",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.8987
+  },
+  {
+   "tramo": "NP-18",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.9882
+  },
+  {
+   "tramo": "NP-12",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.0792
+  },
+  {
+   "tramo": "NP-19",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 1.3163
+  },
+  {
+   "tramo": "NP-10",
+   "tablero": "F80008",
+   "level": "N+3.00",
+   "area": 0.405
+  },
+  {
+   "tramo": "DM-11",
+   "tablero": "F80009",
+   "level": "N+3.00",
+   "area": 1.0731
+  },
+  {
+   "tramo": "DM-12",
+   "tablero": "F80009",
+   "level": "N+3.00",
+   "area": 1.8647
+  },
+  {
+   "tramo": "NP-26",
+   "tablero": "F80009",
+   "level": "N+3.00",
+   "area": 6.4841
+  },
+  {
+   "tramo": "NP-08",
+   "tablero": "F80009",
+   "level": "N+3.00",
+   "area": 2.6886
+  },
+  {
+   "tramo": "DM-10",
+   "tablero": "F80009",
+   "level": "N+3.00",
+   "area": 0.2492
+  },
+  {
+   "tramo": "DM-59",
+   "tablero": "F80009",
+   "level": "N+3.00",
+   "area": 2.2162
+  },
+  {
+   "tramo": "DM-60",
+   "tablero": "F80009",
+   "level": "N+3.00",
+   "area": 3.5479
+  },
+  {
+   "tramo": "DM-61",
+   "tablero": "F80009",
+   "level": "N+3.00",
+   "area": 0.72
+  },
+  {
+   "tramo": "NP-19",
+   "tablero": "F80010",
+   "level": "N+3.00",
+   "area": 0.8327
+  },
+  {
+   "tramo": "NP-12",
+   "tablero": "F80010",
+   "level": "N+3.00",
+   "area": 2.2945
+  },
+  {
+   "tramo": "DM-39",
+   "tablero": "F80010",
+   "level": "N+3.00",
+   "area": 0.8327
+  },
+  {
+   "tramo": "NP-10",
+   "tablero": "F80010",
+   "level": "N+3.00",
+   "area": 2.2945
+  },
+  {
+   "tramo": "NP-13",
+   "tablero": "F80011",
+   "level": "N+3.00",
+   "area": 0.6441
+  },
+  {
+   "tramo": "NP-27",
+   "tablero": "F80011",
+   "level": "N+3.00",
+   "area": 0.0398
+  },
+  {
+   "tramo": "DM-11",
+   "tablero": "F80011",
+   "level": "N+3.00",
+   "area": 0.2724
+  },
+  {
+   "tramo": "DM-12",
+   "tablero": "F80011",
+   "level": "N+3.00",
+   "area": 0.3717
+  },
+  {
+   "tramo": "DM-62",
+   "tablero": "F80011",
+   "level": "N+3.00",
+   "area": 0.0398
+  },
+  {
+   "tramo": "DM-39",
+   "tablero": "F80012",
+   "level": "N+3.00",
+   "area": 3.65
+  },
+  {
+   "tramo": "DM-40",
+   "tablero": "F80012",
+   "level": "N+3.00",
+   "area": 3.2
+  },
+  {
+   "tramo": "NP-27",
+   "tablero": "F80013",
+   "level": "N+3.00",
+   "area": 0.0683
+  },
+  {
+   "tramo": "NP-13",
+   "tablero": "F80013",
+   "level": "N+3.00",
+   "area": 0.08
+  },
+  {
+   "tramo": "NP-28",
+   "tablero": "F80013",
+   "level": "N+3.00",
+   "area": 0.5358
+  },
+  {
+   "tramo": "DM-13",
+   "tablero": "F80013",
+   "level": "N+3.00",
+   "area": 0.2012
+  },
+  {
+   "tramo": "DM-47",
+   "tablero": "F80013",
+   "level": "N+3.00",
+   "area": 0.3137
+  },
+  {
+   "tramo": "DM-48",
+   "tablero": "F80013",
+   "level": "N+3.00",
+   "area": 0.3703
+  },
+  {
+   "tramo": "DM-11",
+   "tablero": "F80013",
+   "level": "N+3.00",
+   "area": 0.0618
+  },
+  {
+   "tramo": "NP-18",
+   "tablero": "F80014",
+   "level": "N+3.00",
+   "area": 0.64
+  },
+  {
+   "tramo": "NP-15",
+   "tablero": "F80014",
+   "level": "N+3.00",
+   "area": 1.7832
+  },
+  {
+   "tramo": "DM-40",
+   "tablero": "F80014",
+   "level": "N+3.00",
+   "area": 0.64
+  },
+  {
+   "tramo": "NP-12",
+   "tablero": "F80014",
+   "level": "N+3.00",
+   "area": 1.7832
+  },
+  {
+   "tramo": "DM-13",
+   "tablero": "F80015",
+   "level": "N+3.00",
+   "area": 0.532
+  },
+  {
+   "tramo": "DM-14",
+   "tablero": "F80015",
+   "level": "N+3.00",
+   "area": 1.2504
+  },
+  {
+   "tramo": "NP-28",
+   "tablero": "F80015",
+   "level": "N+3.00",
+   "area": 0.64
+  },
+  {
+   "tramo": "NP-13",
+   "tablero": "F80015",
+   "level": "N+3.00",
+   "area": 1.7824
+  },
+  {
+   "tramo": "DM-62",
+   "tablero": "F80015",
+   "level": "N+3.00",
+   "area": 0.64
+  },
+  {
+   "tramo": "NP-15",
+   "tablero": "F80016",
+   "level": "N+3.00",
+   "area": 4.852
+  },
+  {
+   "tramo": "NP-24",
+   "tablero": "F80016",
+   "level": "N+3.00",
+   "area": 4.0
+  },
+  {
+   "tramo": "DM-16",
+   "tablero": "F80016",
+   "level": "N+3.00",
+   "area": 0.0612
+  },
+  {
+   "tramo": "DM-17",
+   "tablero": "F80016",
+   "level": "N+3.00",
+   "area": 4.7908
+  },
+  {
+   "tramo": "DM-41",
+   "tablero": "F80016",
+   "level": "N+3.00",
+   "area": 2.002
+  },
+  {
+   "tramo": "DM-42",
+   "tablero": "F80016",
+   "level": "N+3.00",
+   "area": 1.998
+  },
+  {
+   "tramo": "DM-49",
+   "tablero": "F80017",
+   "level": "N+3.00",
+   "area": 0.1435
+  },
+  {
+   "tramo": "DM-50",
+   "tablero": "F80017",
+   "level": "N+3.00",
+   "area": 0.263
+  },
+  {
+   "tramo": "DM-51",
+   "tablero": "F80017",
+   "level": "N+3.00",
+   "area": 0.5293
+  },
+  {
+   "tramo": "DM-17",
+   "tablero": "F80017",
+   "level": "N+3.00",
+   "area": 0.0111
+  },
+  {
+   "tramo": "DM-18",
+   "tablero": "F80017",
+   "level": "N+3.00",
+   "area": 0.0511
+  },
+  {
+   "tramo": "NP-24",
+   "tablero": "F80017",
+   "level": "N+3.00",
+   "area": 0.9357
+  },
+  {
+   "tramo": "NP-15",
+   "tablero": "F80017",
+   "level": "N+3.00",
+   "area": 0.0623
+  },
+  {
+   "tramo": "DM-19",
+   "tablero": "F80018",
+   "level": "N+3.00",
+   "area": 0.0613
+  },
+  {
+   "tramo": "DM-20",
+   "tablero": "F80018",
+   "level": "N+3.00",
+   "area": 2.5102
+  },
+  {
+   "tramo": "DM-21",
+   "tablero": "F80018",
+   "level": "N+3.00",
+   "area": 1.0322
+  },
+  {
+   "tramo": "DM-22",
+   "tablero": "F80018",
+   "level": "N+3.00",
+   "area": 0.2478
+  },
+  {
+   "tramo": "DM-49",
+   "tablero": "F80018",
+   "level": "N+3.00",
+   "area": 0.245
+  },
+  {
+   "tramo": "DM-50",
+   "tablero": "F80018",
+   "level": "N+3.00",
+   "area": 1.2933
+  },
+  {
+   "tramo": "DM-51",
+   "tablero": "F80018",
+   "level": "N+3.00",
+   "area": 2.4603
+  },
+  {
+   "tramo": "DM-13",
+   "tablero": "F80018",
+   "level": "N+3.00",
+   "area": 1.9247
+  },
+  {
+   "tramo": "DM-14",
+   "tablero": "F80018",
+   "level": "N+3.00",
+   "area": 1.9267
+  },
+  {
+   "tramo": "DM-63",
+   "tablero": "F80018",
+   "level": "N+3.00",
+   "area": 1.9993
+  },
+  {
+   "tramo": "DM-64",
+   "tablero": "F80018",
+   "level": "N+3.00",
+   "area": 1.9993
+  },
+  {
+   "tramo": "DM-43",
+   "tablero": "F80019",
+   "level": "N+3.00",
+   "area": 1.0
+  },
+  {
+   "tramo": "DM-16",
+   "tablero": "F80019",
+   "level": "N+3.00",
+   "area": 0.0613
+  },
+  {
+   "tramo": "DM-17",
+   "tablero": "F80019",
+   "level": "N+3.00",
+   "area": 4.0138
+  },
+  {
+   "tramo": "DM-18",
+   "tablero": "F80019",
+   "level": "N+3.00",
+   "area": 0.35
+  },
+  {
+   "tramo": "DM-19",
+   "tablero": "F80019",
+   "level": "N+3.00",
+   "area": 0.35
+  },
+  {
+   "tramo": "DM-20",
+   "tablero": "F80019",
+   "level": "N+3.00",
+   "area": 1.475
+  },
+  {
+   "tramo": "DM-53",
+   "tablero": "F80019",
+   "level": "N+3.00",
+   "area": 1.0
+  },
+  {
+   "tramo": "NP-16",
+   "tablero": "F80019",
+   "level": "N+3.00",
+   "area": 6.25
+  },
+  {
+   "tramo": "DM-53",
+   "tablero": "F80020",
+   "level": "N+3.00",
+   "area": 1.7
+  },
+  {
+   "tramo": "DM-21",
+   "tablero": "F80020",
+   "level": "N+3.00",
+   "area": 0.3922
+  },
+  {
+   "tramo": "DM-22",
+   "tablero": "F80020",
+   "level": "N+3.00",
+   "area": 0.2478
+  },
+  {
+   "tramo": "DM-65",
+   "tablero": "F80020",
+   "level": "N+3.00",
+   "area": 1.7
+  },
+  {
+   "tramo": "DM-25",
+   "tablero": "F80020",
+   "level": "N+3.00",
+   "area": 0.0262
+  },
+  {
+   "tramo": "DM-26",
+   "tablero": "F80020",
+   "level": "N+3.00",
+   "area": 0.6027
+  },
+  {
+   "tramo": "DM-27",
+   "tablero": "F80020",
+   "level": "N+3.00",
+   "area": 0.0111
+  },
+  {
+   "tramo": "DM-43",
+   "tablero": "F80021",
+   "level": "N+3.00",
+   "area": 1.7
+  },
+  {
+   "tramo": "DM-23",
+   "tablero": "F80021",
+   "level": "N+3.00",
+   "area": 0.3936
+  },
+  {
+   "tramo": "DM-24",
+   "tablero": "F80021",
+   "level": "N+3.00",
+   "area": 0.2464
+  },
+  {
+   "tramo": "DM-28",
+   "tablero": "F80021",
+   "level": "N+3.00",
+   "area": 0.66
+  },
+  {
+   "tramo": "DM-29",
+   "tablero": "F80021",
+   "level": "N+3.00",
+   "area": 0.795
+  },
+  {
+   "tramo": "DM-30",
+   "tablero": "F80021",
+   "level": "N+3.00",
+   "area": 0.245
+  },
+  {
+   "tramo": "DM-15",
+   "tablero": "F80021",
+   "level": "N+3.00",
+   "area": 0.64
+  },
+  {
+   "tramo": "DM-121",
+   "tablero": "F80023",
+   "level": "N+6.00",
+   "area": 1.3773
+  },
+  {
+   "tramo": "DM-122",
+   "tablero": "F80023",
+   "level": "N+6.00",
+   "area": 0.3998
+  },
+  {
+   "tramo": "DM-70",
+   "tablero": "F80023",
+   "level": "N+6.00",
+   "area": 0.6368
+  },
+  {
+   "tramo": "DM-131",
+   "tablero": "F80023",
+   "level": "N+6.00",
+   "area": 0.8882
+  },
+  {
+   "tramo": "DM-132",
+   "tablero": "F80023",
+   "level": "N+6.00",
+   "area": 0.889
+  },
+  {
+   "tramo": "DM-71",
+   "tablero": "F80023",
+   "level": "N+6.00",
+   "area": 0.4415
+  },
+  {
+   "tramo": "DM-72",
+   "tablero": "F80023",
+   "level": "N+6.00",
+   "area": 0.1953
+  },
+  {
+   "tramo": "DM-67",
+   "tablero": "F80024",
+   "level": "N+6.00",
+   "area": 0.4278
+  },
+  {
+   "tramo": "DM-68",
+   "tablero": "F80024",
+   "level": "N+6.00",
+   "area": 3.9702
+  },
+  {
+   "tramo": "DM-69",
+   "tablero": "F80024",
+   "level": "N+6.00",
+   "area": 0.2828
+  },
+  {
+   "tramo": "DM-121",
+   "tablero": "F80024",
+   "level": "N+6.00",
+   "area": 2.2578
+  },
+  {
+   "tramo": "DM-122",
+   "tablero": "F80024",
+   "level": "N+6.00",
+   "area": 1.918
+  },
+  {
+   "tramo": "DM-123",
+   "tablero": "F80024",
+   "level": "N+6.00",
+   "area": 1.47
+  },
+  {
+   "tramo": "DM-124",
+   "tablero": "F80024",
+   "level": "N+6.00",
+   "area": 0.3828
+  },
+  {
+   "tramo": "DM-76",
+   "tablero": "F80024",
+   "level": "N+6.00",
+   "area": 2.3393
+  },
+  {
+   "tramo": "DM-77",
+   "tablero": "F80024",
+   "level": "N+6.00",
+   "area": 2.3414
+  },
+  {
+   "tramo": "DM-108",
+   "tablero": "F80024",
+   "level": "N+6.00",
+   "area": 2.9061
+  },
+  {
+   "tramo": "DM-109",
+   "tablero": "F80024",
+   "level": "N+6.00",
+   "area": 2.6965
+  },
+  {
+   "tramo": "DM-110",
+   "tablero": "F80024",
+   "level": "N+6.00",
+   "area": 0.426
+  },
+  {
+   "tramo": "DM-89",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 0.08
+  },
+  {
+   "tramo": "DM-90",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 1.7117
+  },
+  {
+   "tramo": "DM-91",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 1.1461
+  },
+  {
+   "tramo": "DM-127",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 0.5512
+  },
+  {
+   "tramo": "DM-128",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 6.1424
+  },
+  {
+   "tramo": "DM-129",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 0.4743
+  },
+  {
+   "tramo": "DM-78",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 0.3681
+  },
+  {
+   "tramo": "DM-79",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 2.0697
+  },
+  {
+   "tramo": "DM-80",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 0.2508
+  },
+  {
+   "tramo": "DM-81",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 0.2492
+  },
+  {
+   "tramo": "DM-136",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 2.2162
+  },
+  {
+   "tramo": "DM-137",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 2.8778
+  },
+  {
+   "tramo": "DM-138",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 0.7955
+  },
+  {
+   "tramo": "DM-139",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 1.1988
+  },
+  {
+   "tramo": "DM-140",
+   "tablero": "F80025",
+   "level": "N+6.00",
+   "area": 0.0796
+  },
+  {
+   "tramo": "DM-90",
+   "tablero": "F80026",
+   "level": "N+6.00",
+   "area": 0.5537
+  },
+  {
+   "tramo": "DM-91",
+   "tablero": "F80026",
+   "level": "N+6.00",
+   "area": 0.5537
+  },
+  {
+   "tramo": "DM-141",
+   "tablero": "F80026",
+   "level": "N+6.00",
+   "area": 0.1811
+  },
+  {
+   "tramo": "NP-31",
+   "tablero": "F80026",
+   "level": "N+6.00",
+   "area": 1.1074
+  },
+  {
+   "tramo": "DM-130",
+   "tablero": "F80026",
+   "level": "N+6.00",
+   "area": 0.1811
+  },
+  {
+   "tramo": "NP-32",
+   "tablero": "F80027",
+   "level": "N+6.00",
+   "area": 1.412
+  },
+  {
+   "tramo": "DM-114",
+   "tablero": "F80027",
+   "level": "N+6.00",
+   "area": 0.3312
+  },
+  {
+   "tramo": "DM-86",
+   "tablero": "F80027",
+   "level": "N+6.00",
+   "area": 0.7057
+  },
+  {
+   "tramo": "DM-87",
+   "tablero": "F80027",
+   "level": "N+6.00",
+   "area": 0.7063
+  },
+  {
+   "tramo": "DM-117",
+   "tablero": "F80027",
+   "level": "N+6.00",
+   "area": 0.3312
+  },
+  {
+   "tramo": "NP-31",
+   "tablero": "F80028",
+   "level": "N+6.00",
+   "area": 0.2266
+  },
+  {
+   "tramo": "DM-141",
+   "tablero": "F80028",
+   "level": "N+6.00",
+   "area": 0.0503
+  },
+  {
+   "tramo": "DM-98",
+   "tablero": "F80028",
+   "level": "N+6.00",
+   "area": 0.0691
+  },
+  {
+   "tramo": "DM-99",
+   "tablero": "F80028",
+   "level": "N+6.00",
+   "area": 0.0122
+  },
+  {
+   "tramo": "DM-100",
+   "tablero": "F80028",
+   "level": "N+6.00",
+   "area": 0.1425
+  },
+  {
+   "tramo": "DM-130",
+   "tablero": "F80028",
+   "level": "N+6.00",
+   "area": 0.101
+  },
+  {
+   "tramo": "DM-92",
+   "tablero": "F80029",
+   "level": "N+6.00",
+   "area": 0.1548
+  },
+  {
+   "tramo": "DM-93",
+   "tablero": "F80029",
+   "level": "N+6.00",
+   "area": 0.0693
+  },
+  {
+   "tramo": "DM-114",
+   "tablero": "F80029",
+   "level": "N+6.00",
+   "area": 0.0282
+  },
+  {
+   "tramo": "NP-32",
+   "tablero": "F80029",
+   "level": "N+6.00",
+   "area": 0.2269
+  },
+  {
+   "tramo": "DM-117",
+   "tablero": "F80029",
+   "level": "N+6.00",
+   "area": 0.0483
+  },
+  {
+   "tramo": "DM-125",
+   "tablero": "F80030",
+   "level": "N+6.00",
+   "area": 2.002
+  },
+  {
+   "tramo": "DM-126",
+   "tablero": "F80030",
+   "level": "N+6.00",
+   "area": 1.998
+  },
+  {
+   "tramo": "DM-101",
+   "tablero": "F80030",
+   "level": "N+6.00",
+   "area": 0.4278
+  },
+  {
+   "tramo": "DM-102",
+   "tablero": "F80030",
+   "level": "N+6.00",
+   "area": 3.3007
+  },
+  {
+   "tramo": "DM-103",
+   "tablero": "F80030",
+   "level": "N+6.00",
+   "area": 1.1235
+  },
+  {
+   "tramo": "DM-115",
+   "tablero": "F80030",
+   "level": "N+6.00",
+   "area": 2.002
+  },
+  {
+   "tramo": "DM-116",
+   "tablero": "F80030",
+   "level": "N+6.00",
+   "area": 1.998
+  },
+  {
+   "tramo": "DM-92",
+   "tablero": "F80030",
+   "level": "N+6.00",
+   "area": 2.258
+  },
+  {
+   "tramo": "DM-93",
+   "tablero": "F80030",
+   "level": "N+6.00",
+   "area": 1.6182
+  },
+  {
+   "tramo": "DM-94",
+   "tablero": "F80030",
+   "level": "N+6.00",
+   "area": 0.4788
+  },
+  {
+   "tramo": "DM-95",
+   "tablero": "F80030",
+   "level": "N+6.00",
+   "area": 0.497
+  },
+  {
+   "tramo": "DM-96",
+   "tablero": "F80031",
+   "level": "N+6.00",
+   "area": 0.496
+  },
+  {
+   "tramo": "DM-97",
+   "tablero": "F80031",
+   "level": "N+6.00",
+   "area": 0.4784
+  },
+  {
+   "tramo": "DM-98",
+   "tablero": "F80031",
+   "level": "N+6.00",
+   "area": 1.6176
+  },
+  {
+   "tramo": "DM-99",
+   "tablero": "F80031",
+   "level": "N+6.00",
+   "area": 0.3293
+  },
+  {
+   "tramo": "DM-100",
+   "tablero": "F80031",
+   "level": "N+6.00",
+   "area": 1.9267
+  },
+  {
+   "tramo": "DM-142",
+   "tablero": "F80031",
+   "level": "N+6.00",
+   "area": 2.0
+  },
+  {
+   "tramo": "DM-143",
+   "tablero": "F80031",
+   "level": "N+6.00",
+   "area": 2.0
+  },
+  {
+   "tramo": "DM-104",
+   "tablero": "F80031",
+   "level": "N+6.00",
+   "area": 1.1235
+  },
+  {
+   "tramo": "DM-105",
+   "tablero": "F80031",
+   "level": "N+6.00",
+   "area": 3.2967
+  },
+  {
+   "tramo": "DM-106",
+   "tablero": "F80031",
+   "level": "N+6.00",
+   "area": 0.4278
+  },
+  {
+   "tramo": "DM-125",
+   "tablero": "F80031",
+   "level": "N+6.00",
+   "area": 2.002
+  },
+  {
+   "tramo": "DM-126",
+   "tablero": "F80031",
+   "level": "N+6.00",
+   "area": 1.998
+  },
+  {
+   "tramo": "DM-123",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.5195
+  },
+  {
+   "tramo": "DM-124",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.6982
+  },
+  {
+   "tramo": "SIN DALA",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 3.8879
+  },
+  {
+   "tramo": "DM-71",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.4415
+  },
+  {
+   "tramo": "DM-72",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.1953
+  },
+  {
+   "tramo": "DM-133",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.4812
+  },
+  {
+   "tramo": "NP-34",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 2.2701
+  },
+  {
+   "tramo": "DM-78",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.1255
+  },
+  {
+   "tramo": "DM-127",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.5749
+  },
+  {
+   "tramo": "DM-128",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 2.5029
+  },
+  {
+   "tramo": "DM-129",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.9716
+  },
+  {
+   "tramo": "DM-89",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.08
+  },
+  {
+   "tramo": "DM-130",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 1.1793
+  },
+  {
+   "tramo": "DM-94",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.08
+  },
+  {
+   "tramo": "DM-95",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.8958
+  },
+  {
+   "tramo": "DM-96",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.8944
+  },
+  {
+   "tramo": "DM-97",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.08
+  },
+  {
+   "tramo": "DM-117",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 1.1801
+  },
+  {
+   "tramo": "DM-88",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.0792
+  },
+  {
+   "tramo": "DM-118",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.3759
+  },
+  {
+   "tramo": "DM-119",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 1.0396
+  },
+  {
+   "tramo": "DM-84",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.3362
+  },
+  {
+   "tramo": "SIN DALA",
+   "tablero": "F80032",
+   "level": "N+6.00",
+   "area": 0.0688
+  },
+  {
+   "tramo": "DM-118",
+   "tablero": "F80010",
+   "level": "N+6.00",
+   "area": 0.3003
+  },
+  {
+   "tramo": "DM-119",
+   "tablero": "F80010",
+   "level": "N+6.00",
+   "area": 0.5323
+  },
+  {
+   "tramo": "DM-86",
+   "tablero": "F80010",
+   "level": "N+6.00",
+   "area": 0.9652
+  },
+  {
+   "tramo": "DM-87",
+   "tablero": "F80010",
+   "level": "N+6.00",
+   "area": 1.2501
+  },
+  {
+   "tramo": "DM-88",
+   "tablero": "F80010",
+   "level": "N+6.00",
+   "area": 0.0792
+  },
+  {
+   "tramo": "NP-33",
+   "tablero": "F80010",
+   "level": "N+6.00",
+   "area": 0.8327
+  },
+  {
+   "tramo": "DM-82",
+   "tablero": "F80010",
+   "level": "N+6.00",
+   "area": 1.1477
+  },
+  {
+   "tramo": "DM-83",
+   "tablero": "F80010",
+   "level": "N+6.00",
+   "area": 1.1468
+  },
+  {
+   "tramo": "DM-120",
+   "tablero": "F2",
+   "level": "N+6.00",
+   "area": 0.251
+  },
+  {
+   "tramo": "DM-67",
+   "tablero": "F2",
+   "level": "N+6.00",
+   "area": 0.3379
+  },
+  {
+   "tramo": "DM-68",
+   "tablero": "F2",
+   "level": "N+6.00",
+   "area": 1.3277
+  },
+  {
+   "tramo": "DM-69",
+   "tablero": "F2",
+   "level": "N+6.00",
+   "area": 0.2513
+  },
+  {
+   "tramo": "DM-107",
+   "tablero": "F2",
+   "level": "N+6.00",
+   "area": 0.251
+  },
+  {
+   "tramo": "DM-66",
+   "tablero": "F2",
+   "level": "N+6.00",
+   "area": 1.9168
+  }
+ ],
+ "transfer": [
+  {
+   "de": "NP-04",
+   "extremo": 1,
+   "a": "NP-22",
+   "pos": 1.002
+  },
+  {
+   "de": "NP-11",
+   "extremo": 0,
+   "a": "NP-26",
+   "pos": 4.297
+  },
+  {
+   "de": "NP-13",
+   "extremo": 0,
+   "a": "NP-27",
+   "pos": 0.399
+  },
+  {
+   "de": "NP-18",
+   "extremo": 0,
+   "a": "NP-12",
+   "pos": 3.029
+  },
+  {
+   "de": "NP-18",
+   "extremo": 1,
+   "a": "NP-15",
+   "pos": 3.029
+  },
+  {
+   "de": "NP-19",
+   "extremo": 0,
+   "a": "NP-10",
+   "pos": 3.427
+  },
+  {
+   "de": "NP-24",
+   "extremo": 0,
+   "a": "NP-15",
+   "pos": 4.426
+  },
+  {
+   "de": "NP-25",
+   "extremo": 0,
+   "a": "NP-05",
+   "pos": 0.0
+  },
+  {
+   "de": "NP-28",
+   "extremo": 0,
+   "a": "NP-13",
+   "pos": 0.4
+  },
+  {
+   "de": "NP-30",
+   "extremo": 1,
+   "a": "NP-08",
+   "pos": 1.928
+  }
+ ],
+ "castillos_prop": [
+  {
+   "id": "C1",
+   "level": "N+3.00",
+   "x": 4.327,
+   "y": 1.919,
+   "ref": "x=4.327-2",
+   "razon": "Esquina libre al frente de la cochera: ahí rematan las nervaduras de y = 1.919 y de x = 4.327. Ya hay castillo en el primer nivel."
+  },
+  {
+   "id": "C2",
+   "level": "N+3.00",
+   "x": 4.327,
+   "y": 2.921,
+   "ref": "x=4.327-3",
+   "razon": "Cochera: cruce de x = 4.327 con y = 2.921, bajo esquina de muro del primer nivel. Ya hay castillo en el primer nivel."
+  },
+  {
+   "id": "C3",
+   "level": "N+3.00",
+   "x": 5.923,
+   "y": 2.921,
+   "ref": "G-3",
+   "razon": "Esquina libre de la cochera (lado pickup): ahí rematan y = 2.921 y el eje G. Ya hay castillo en el primer nivel."
+  },
+  {
+   "id": "C4",
+   "level": "N+3.00",
+   "x": 4.327,
+   "y": 7.871,
+   "ref": "x=4.327-7",
+   "razon": "Esquina sur del vacío de doble altura: recibe la nervadura del eje 7. Ya hay castillo en el primer nivel."
+  },
+  {
+   "id": "C5",
+   "level": "N+3.00",
+   "x": 4.327,
+   "y": 14.021,
+   "ref": "x=4.327-y=14.021",
+   "razon": "Esquina norte del vacío de doble altura: sin él x = 4.327 queda en volado de 8 m. Ya hay castillo en el primer nivel."
+  },
+  {
+   "id": "C6",
+   "level": "N+3.00",
+   "x": 5.422,
+   "y": 9.95,
+   "ref": "F-8",
+   "razon": "Esquina escalera/cocina (F-8): recibe la nervadura del eje F que carga muro de planta alta. Ya hay castillo en el primer nivel."
+  },
+  {
+   "id": "C7",
+   "level": "N+3.00",
+   "x": 5.441,
+   "y": 8.91,
+   "ref": "F-y=8.910",
+   "razon": "Llegada de la escalera: amarra el anillo x = 5.44 / y = 8.91. NO hay castillo arriba: es propuesta nueva, revisar con arquitectura."
+  },
+  {
+   "id": "C8",
+   "level": "N+3.00",
+   "x": 3.427,
+   "y": 15.846,
+   "ref": "C-y=15.846",
+   "razon": "Esquina C-10 (arq.): ahí remata y = 15.846 que carga muro de planta alta. Ya hay castillo en el primer nivel."
+  }
+ ],
+ "castillos_sin_cont": [
+  {
+   "level": "N+3.00",
+   "x": 0.925,
+   "y": 2.921,
+   "ref": "x=0.925-3"
+  },
+  {
+   "level": "N+3.00",
+   "x": 1.514,
+   "y": 15.846,
+   "ref": "x=1.514-y=15.846"
+  },
+  {
+   "level": "N+3.00",
+   "x": 1.714,
+   "y": 14.021,
+   "ref": "x=1.714-y=14.021"
+  },
+  {
+   "level": "N+3.00",
+   "x": 2.129,
+   "y": 17.446,
+   "ref": "x=2.129-12"
+  },
+  {
+   "level": "N+3.00",
+   "x": 2.163,
+   "y": 7.871,
+   "ref": "x=2.163-7"
+  },
+  {
+   "level": "N+3.00",
+   "x": 3.029,
+   "y": 15.846,
+   "ref": "x=3.029-y=15.846"
+  },
+  {
+   "level": "N+3.00",
+   "x": 3.029,
+   "y": 17.446,
+   "ref": "x=3.029-12"
+  },
+  {
+   "level": "N+3.00",
+   "x": 3.427,
+   "y": 14.021,
+   "ref": "C-y=14.021"
+  },
+  {
+   "level": "N+3.00",
+   "x": 3.427,
+   "y": 14.796,
+   "ref": "C-y=14.796"
+  },
+  {
+   "level": "N+3.00",
+   "x": 3.427,
+   "y": 15.846,
+   "ref": "C-y=15.846"
+  },
+  {
+   "level": "N+3.00",
+   "x": 3.429,
+   "y": 17.446,
+   "ref": "C-12"
+  },
+  {
+   "level": "N+3.00",
+   "x": 3.575,
+   "y": 2.921,
+   "ref": "x=3.575-3"
+  },
+  {
+   "level": "N+3.00",
+   "x": 4.327,
+   "y": 1.919,
+   "ref": "x=4.327-2"
+  },
+  {
+   "level": "N+3.00",
+   "x": 4.327,
+   "y": 2.921,
+   "ref": "x=4.327-3"
+  },
+  {
+   "level": "N+3.00",
+   "x": 4.327,
+   "y": 5.046,
+   "ref": "x=4.327-y=5.046"
+  },
+  {
+   "level": "N+3.00",
+   "x": 4.327,
+   "y": 6.996,
+   "ref": "x=4.327-y=6.996"
+  },
+  {
+   "level": "N+3.00",
+   "x": 4.327,
+   "y": 7.871,
+   "ref": "x=4.327-7"
+  },
+  {
+   "level": "N+3.00",
+   "x": 4.327,
+   "y": 14.021,
+   "ref": "x=4.327-y=14.021"
+  },
+  {
+   "level": "N+3.00",
+   "x": 4.426,
+   "y": 17.446,
+   "ref": "D-12"
+  },
+  {
+   "level": "N+3.00",
+   "x": 4.426,
+   "y": 19.447,
+   "ref": "D-13"
+  },
+  {
+   "level": "N+3.00",
+   "x": 5.422,
+   "y": 9.95,
+   "ref": "F-8"
+  },
+  {
+   "level": "N+3.00",
+   "x": 5.422,
+   "y": 11.0,
+   "ref": "F-y=11.000"
+  },
+  {
+   "level": "N+3.00",
+   "x": 5.422,
+   "y": 14.872,
+   "ref": "F-y=14.872"
+  },
+  {
+   "level": "N+3.00",
+   "x": 5.422,
+   "y": 15.846,
+   "ref": "F-y=15.846"
+  },
+  {
+   "level": "N+3.00",
+   "x": 5.822,
+   "y": 15.846,
+   "ref": "x=5.822-y=15.846"
+  },
+  {
+   "level": "N+3.00",
+   "x": 5.923,
+   "y": 2.921,
+   "ref": "G-3"
+  },
+  {
+   "level": "N+3.00",
+   "x": 5.923,
+   "y": 4.433,
+   "ref": "G-y=4.433"
+  },
+  {
+   "level": "N+3.00",
+   "x": 6.247,
+   "y": 14.247,
+   "ref": "x=6.247-y=14.247"
+  },
+  {
+   "level": "N+3.00",
+   "x": 6.28,
+   "y": 9.95,
+   "ref": "x=6.280-8"
+  },
+  {
+   "level": "N+3.00",
+   "x": 7.336,
+   "y": 15.846,
+   "ref": "x=7.336-y=15.846"
+  },
+  {
+   "level": "N+3.00",
+   "x": 7.85,
+   "y": 9.95,
+   "ref": "x=7.850-8"
+  }
+ ],
+ "vacios": {
+  "N+3.00": [
+   {
+    "nombre": "Vacío doble altura (sala)",
+    "coords": [
+     [
+      4.247,
+      7.946
+     ],
+     [
+      4.247,
+      13.946
+     ],
+     [
+      0.075,
+      13.946
+     ],
+     [
+      0.075,
+      7.946
+     ],
+     [
+      4.247,
+      7.946
+     ]
+    ],
+    "fuente": "001_PLANO_CROCHA_R3.0.dxf capa 004_Vacios, PLANTA PRIMER NIVEL",
+    "area": 25.03
+   },
+   {
+    "nombre": "Escalera curva (cubo)",
+    "coords": [
+     [
+      8.85,
+      9.95
+     ],
+     [
+      8.85,
+      6.948
+     ],
+     [
+      5.46,
+      6.948
+     ],
+     [
+      5.422,
+      9.95
+     ],
+     [
+      5.46,
+      9.95
+     ],
+     [
+      5.46,
+      8.91
+     ],
+     [
+      7.35,
+      8.91
+     ],
+     [
+      7.35,
+      9.95
+     ],
+     [
+      8.85,
+      9.95
+     ]
+    ],
+    "fuente": "001_PLANO_CROCHA_R3.0.dxf capa 005_Escalera; hueco sin tablero en el E2K",
+    "area": 8.27
+   }
+  ],
+  "N+6.00": [
+   {
+    "nombre": "Pergolado sobre doble altura (vigas VP-15x40 @0.75 + cristal)",
+    "coords": [
+     [
+      4.427,
+      7.946
+     ],
+     [
+      4.427,
+      13.946
+     ],
+     [
+      0.075,
+      13.946
+     ],
+     [
+      0.075,
+      7.946
+     ],
+     [
+      4.427,
+      7.946
+     ]
+    ],
+    "fuente": "001_PLANO_CROCHA_R3.0.dxf capa 004_Vacios, PLANTA DE AZOTEA; E2K vigas VP-15x40",
+    "area": 26.11
+   },
+   {
+    "nombre": "Vacío sobre escalera",
+    "coords": [
+     [
+      8.775,
+      7.023
+     ],
+     [
+      8.775,
+      9.875
+     ],
+     [
+      5.998,
+      9.875
+     ],
+     [
+      5.998,
+      7.023
+     ],
+     [
+      8.775,
+      7.023
+     ]
+    ],
+    "fuente": "001_PLANO_CROCHA_R3.0.dxf capa 004_Vacios, PLANTA DE AZOTEA",
+    "area": 7.92
+   },
+   {
+    "nombre": "Hueco 0.30 m (tragaluz)",
+    "coords": [
+     [
+      5.998,
+      17.072
+     ],
+     [
+      8.775,
+      17.072
+     ],
+     [
+      8.775,
+      17.372
+     ],
+     [
+      5.998,
+      17.372
+     ],
+     [
+      5.998,
+      17.072
+     ]
+    ],
+    "fuente": "AREAS_TRIBUTARIAS_R3.2.dxf capa TRIB_HUECO / E2K áreas A1-A3",
+    "area": 0.83
+   },
+   {
+    "nombre": "Hueco 0.30 m (tragaluz)",
+    "coords": [
+     [
+      5.998,
+      16.772
+     ],
+     [
+      8.775,
+      16.772
+     ],
+     [
+      8.775,
+      17.072
+     ],
+     [
+      5.998,
+      17.072
+     ],
+     [
+      5.998,
+      16.772
+     ]
+    ],
+    "fuente": "AREAS_TRIBUTARIAS_R3.2.dxf capa TRIB_HUECO / E2K áreas A1-A3",
+    "area": 0.83
+   },
+   {
+    "nombre": "Hueco 0.30 m (tragaluz)",
+    "coords": [
+     [
+      0.075,
+      17.072
+     ],
+     [
+      2.85,
+      17.072
+     ],
+     [
+      2.85,
+      17.372
+     ],
+     [
+      0.075,
+      17.372
+     ],
+     [
+      0.075,
+      17.072
+     ]
+    ],
+    "fuente": "AREAS_TRIBUTARIAS_R3.2.dxf capa TRIB_HUECO / E2K áreas A1-A3",
+    "area": 0.83
+   }
+  ]
+ },
+ "lineloads": [
+  {
+   "beam": "B50063",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 4.327,
+   "y0": 5.946,
+   "x1": 5.298,
+   "y1": 5.946,
+   "w": 206.0,
+   "L": 0.971
+  },
+  {
+   "beam": "B50066",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 5.46,
+   "y0": 6.948,
+   "x1": 5.923,
+   "y1": 6.948,
+   "w": 50.0,
+   "L": 0.463
+  },
+  {
+   "beam": "B50069",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 5.46,
+   "y0": 8.91,
+   "x1": 7.35,
+   "y1": 8.91,
+   "w": 50.0,
+   "L": 1.89
+  },
+  {
+   "beam": "B50069",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 5.495,
+   "y0": 8.91,
+   "x1": 7.35,
+   "y1": 8.91,
+   "w": 144.0,
+   "L": 1.855
+  },
+  {
+   "beam": "B50069",
+   "level": "N+3.00",
+   "lc": "Carga Viva Máxima",
+   "x0": 5.495,
+   "y0": 8.91,
+   "x1": 7.35,
+   "y1": 8.91,
+   "w": 35.1,
+   "L": 1.855
+  },
+  {
+   "beam": "B50069",
+   "level": "N+3.00",
+   "lc": "Carga Viva Instantanea",
+   "x0": 5.495,
+   "y0": 8.91,
+   "x1": 7.35,
+   "y1": 8.91,
+   "w": 18.5,
+   "L": 1.855
+  },
+  {
+   "beam": "B50069",
+   "level": "N+3.00",
+   "lc": "Carga Viva Media",
+   "x0": 5.495,
+   "y0": 8.91,
+   "x1": 7.35,
+   "y1": 8.91,
+   "w": 14.8,
+   "L": 1.855
+  },
+  {
+   "beam": "B50071",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": -2.0,
+   "y0": 14.021,
+   "x1": 0.0,
+   "y1": 14.021,
+   "w": 333.7,
+   "L": 2.0
+  },
+  {
+   "beam": "B50079",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": -0.0,
+   "y0": 21.446,
+   "x1": 5.275,
+   "y1": 21.446,
+   "w": 294.0,
+   "L": 5.275
+  },
+  {
+   "beam": "B50079",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 5.275,
+   "y0": 21.446,
+   "x1": 7.25,
+   "y1": 21.446,
+   "w": 500.0,
+   "L": 1.975
+  },
+  {
+   "beam": "B50079",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 7.25,
+   "y0": 21.446,
+   "x1": 8.146,
+   "y1": 21.446,
+   "w": 206.0,
+   "L": 0.896
+  },
+  {
+   "beam": "B50084",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 7.25,
+   "y0": 24.371,
+   "x1": 7.479,
+   "y1": 24.371,
+   "w": 333.7,
+   "L": 0.229
+  },
+  {
+   "beam": "B50084",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 7.479,
+   "y0": 24.371,
+   "x1": 8.701,
+   "y1": 24.371,
+   "w": 539.7,
+   "L": 1.221
+  },
+  {
+   "beam": "B50084",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 8.701,
+   "y0": 24.371,
+   "x1": 8.85,
+   "y1": 24.371,
+   "w": 333.7,
+   "L": 0.149
+  },
+  {
+   "beam": "B50085",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": -2.0,
+   "y0": 14.021,
+   "x1": -2.0,
+   "y1": 17.446,
+   "w": 333.7,
+   "L": 3.425
+  },
+  {
+   "beam": "B50087",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 0.0,
+   "y0": 21.446,
+   "x1": 0.0,
+   "y1": 23.446,
+   "w": 333.7,
+   "L": 2.0
+  },
+  {
+   "beam": "B50091",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 4.327,
+   "y0": 1.919,
+   "x1": 4.327,
+   "y1": 2.921,
+   "w": 294.0,
+   "L": 1.002
+  },
+  {
+   "beam": "B50091",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 4.327,
+   "y0": 7.871,
+   "x1": 4.327,
+   "y1": 14.021,
+   "w": 50.0,
+   "L": 6.15
+  },
+  {
+   "beam": "B50093",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 4.925,
+   "y0": 16.396,
+   "x1": 4.925,
+   "y1": 17.446,
+   "w": 206.0,
+   "L": 1.05
+  },
+  {
+   "beam": "B50093",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 4.925,
+   "y0": 18.146,
+   "x1": 4.925,
+   "y1": 19.2,
+   "w": 206.0,
+   "L": 1.054
+  },
+  {
+   "beam": "B50095",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 5.46,
+   "y0": 6.948,
+   "x1": 5.46,
+   "y1": 8.91,
+   "w": 50.0,
+   "L": 1.962
+  },
+  {
+   "beam": "B50098",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 7.25,
+   "y0": 23.446,
+   "x1": 7.25,
+   "y1": 24.371,
+   "w": 333.7,
+   "L": 0.925
+  },
+  {
+   "beam": "B50099",
+   "level": "N+3.00",
+   "lc": "Carga Viva Instantanea",
+   "x0": 7.35,
+   "y0": 8.91,
+   "x1": 7.35,
+   "y1": 9.95,
+   "w": 220.0,
+   "L": 1.04
+  },
+  {
+   "beam": "B50099",
+   "level": "N+3.00",
+   "lc": "Carga Viva Media",
+   "x0": 7.35,
+   "y0": 8.91,
+   "x1": 7.35,
+   "y1": 9.95,
+   "w": 176.842,
+   "L": 1.04
+  },
+  {
+   "beam": "B50099",
+   "level": "N+3.00",
+   "lc": "Carga Viva Máxima",
+   "x0": 7.35,
+   "y0": 8.91,
+   "x1": 7.35,
+   "y1": 9.95,
+   "w": 420.0,
+   "L": 1.04
+  },
+  {
+   "beam": "B50099",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 7.35,
+   "y0": 8.91,
+   "x1": 7.35,
+   "y1": 9.95,
+   "w": 2290.0,
+   "L": 1.04
+  },
+  {
+   "beam": "B50068",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 0.0,
+   "y0": 7.871,
+   "x1": 4.327,
+   "y1": 7.871,
+   "w": 101.0,
+   "L": 4.327
+  },
+  {
+   "beam": "B50120",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 0.0,
+   "y0": 14.021,
+   "x1": 4.327,
+   "y1": 14.021,
+   "w": 101.0,
+   "L": 4.327
+  },
+  {
+   "beam": "B50140",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 4.327,
+   "y0": 7.871,
+   "x1": 4.327,
+   "y1": 14.021,
+   "w": 101.0,
+   "L": 6.15
+  },
+  {
+   "beam": "B50058",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 0.0,
+   "y0": 1.919,
+   "x1": 4.327,
+   "y1": 1.919,
+   "w": 101.0,
+   "L": 4.327
+  },
+  {
+   "beam": "B10",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 4.327,
+   "y0": 1.919,
+   "x1": 4.327,
+   "y1": 2.921,
+   "w": 101.0,
+   "L": 1.002
+  },
+  {
+   "beam": "B13",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": -2.0,
+   "y0": 17.446,
+   "x1": 0.0,
+   "y1": 17.446,
+   "w": 333.7,
+   "L": 2.0
+  },
+  {
+   "beam": "B24",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 0.0,
+   "y0": 23.446,
+   "x1": 3.625,
+   "y1": 23.446,
+   "w": 333.7,
+   "L": 3.625
+  },
+  {
+   "beam": "B25",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 3.625,
+   "y0": 23.446,
+   "x1": 7.25,
+   "y1": 23.446,
+   "w": 333.7,
+   "L": 3.625
+  },
+  {
+   "beam": "B16",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 0.0,
+   "y0": 1.919,
+   "x1": 0.0,
+   "y1": 2.921,
+   "w": 101.0,
+   "L": 1.002
+  },
+  {
+   "beam": "B50129",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 0.0,
+   "y0": 21.446,
+   "x1": 8.85,
+   "y1": 21.446,
+   "w": 101.0,
+   "L": 8.85
+  },
+  {
+   "beam": "B50129",
+   "level": "N+6.00",
+   "lc": "Carga Viva Máxima",
+   "x0": 0.0,
+   "y0": 21.446,
+   "x1": 7.85,
+   "y1": 21.446,
+   "w": 40.0,
+   "L": 7.85
+  },
+  {
+   "beam": "B50129",
+   "level": "N+6.00",
+   "lc": "Carga Viva Instantanea",
+   "x0": 0.0,
+   "y0": 21.446,
+   "x1": 7.85,
+   "y1": 21.446,
+   "w": 20.0,
+   "L": 7.85
+  },
+  {
+   "beam": "B50129",
+   "level": "N+6.00",
+   "lc": "Carga Viva Media",
+   "x0": 0.0,
+   "y0": 21.446,
+   "x1": 7.85,
+   "y1": 21.446,
+   "w": 16.8421,
+   "L": 7.85
+  },
+  {
+   "beam": "B50129",
+   "level": "N+6.00",
+   "lc": "Carga Viva Máxima",
+   "x0": 7.85,
+   "y0": 21.446,
+   "x1": 8.85,
+   "y1": 21.446,
+   "w": 40.0,
+   "L": 1.0
+  },
+  {
+   "beam": "B50129",
+   "level": "N+6.00",
+   "lc": "Carga Viva Instantanea",
+   "x0": 7.85,
+   "y0": 21.446,
+   "x1": 8.85,
+   "y1": 21.446,
+   "w": 20.0,
+   "L": 1.0
+  },
+  {
+   "beam": "B50129",
+   "level": "N+6.00",
+   "lc": "Carga Viva Media",
+   "x0": 7.85,
+   "y0": 21.446,
+   "x1": 8.85,
+   "y1": 21.446,
+   "w": 16.8421,
+   "L": 1.0
+  },
+  {
+   "beam": "B4",
+   "level": "N+3.00",
+   "lc": "Sobrecarga",
+   "x0": 8.85,
+   "y0": 21.446,
+   "x1": 8.85,
+   "y1": 24.371,
+   "w": 958.0,
+   "L": 2.925
+  },
+  {
+   "beam": "B2",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 0.0,
+   "y0": 14.021,
+   "x1": 0.0,
+   "y1": 21.446,
+   "w": 101.0,
+   "L": 7.425
+  },
+  {
+   "beam": "B6",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 0.0,
+   "y0": 1.919,
+   "x1": 0.0,
+   "y1": 7.871,
+   "w": 101.0,
+   "L": 5.952
+  },
+  {
+   "beam": "B17",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 5.923,
+   "y0": 2.921,
+   "x1": 5.923,
+   "y1": 5.946,
+   "w": 101.0,
+   "L": 3.025
+  },
+  {
+   "beam": "B18",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 5.923,
+   "y0": 5.946,
+   "x1": 5.923,
+   "y1": 9.95,
+   "w": 101.0,
+   "L": 4.004
+  },
+  {
+   "beam": "B23",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 8.85,
+   "y0": 9.95,
+   "x1": 8.85,
+   "y1": 21.446,
+   "w": 101.0,
+   "L": 11.496
+  },
+  {
+   "beam": "B27",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 5.923,
+   "y0": 9.95,
+   "x1": 8.85,
+   "y1": 9.95,
+   "w": 101.0,
+   "L": 2.927
+  },
+  {
+   "beam": "B29",
+   "level": "N+6.00",
+   "lc": "Sobrecarga",
+   "x0": 4.327,
+   "y0": 2.921,
+   "x1": 5.923,
+   "y1": 2.921,
+   "w": 101.0,
+   "L": 1.596
+  }
+ ],
+ "plantas": {
+  "N+3.00": {
+   "muros": [
+    [
+     [
+      0.0,
+      5.346
+     ],
+     [
+      2.925,
+      5.346
+     ]
+    ],
+    [
+     [
+      2.925,
+      5.946
+     ],
+     [
+      5.923,
+      5.946
+     ]
+    ],
+    [
+     [
+      0.0,
+      6.948
+     ],
+     [
+      2.925,
+      6.948
+     ]
+    ],
+    [
+     [
+      5.923,
+      6.948
+     ],
+     [
+      8.85,
+      6.948
+     ]
+    ],
+    [
+     [
+      8.145,
+      9.95
+     ],
+     [
+      8.85,
+      9.95
+     ]
+    ],
+    [
+     [
+      4.925,
+      15.447
+     ],
+     [
+      8.85,
+      15.447
+     ]
+    ],
+    [
+     [
+      4.925,
+      17.446
+     ],
+     [
+      8.85,
+      17.446
+     ]
+    ],
+    [
+     [
+      -1.6,
+      21.446
+     ],
+     [
+      8.85,
+      21.446
+     ]
+    ],
+    [
+     [
+      -1.6,
+      24.371
+     ],
+     [
+      0.0,
+      24.371
+     ]
+    ],
+    [
+     [
+      7.25,
+      24.371
+     ],
+     [
+      8.85,
+      24.371
+     ]
+    ],
+    [
+     [
+      -1.6,
+      21.446
+     ],
+     [
+      -1.6,
+      24.371
+     ]
+    ],
+    [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      0.0,
+      24.371
+     ]
+    ],
+    [
+     [
+      2.925,
+      5.346
+     ],
+     [
+      2.925,
+      6.948
+     ]
+    ],
+    [
+     [
+      4.925,
+      15.447
+     ],
+     [
+      4.925,
+      21.446
+     ]
+    ],
+    [
+     [
+      5.923,
+      5.946
+     ],
+     [
+      5.923,
+      6.948
+     ]
+    ],
+    [
+     [
+      7.25,
+      21.446
+     ],
+     [
+      7.25,
+      24.371
+     ]
+    ],
+    [
+     [
+      8.85,
+      0.0
+     ],
+     [
+      8.85,
+      24.371
+     ]
+    ]
+   ],
+   "castillos": [
+    [
+     -1.6,
+     21.446
+    ],
+    [
+     -1.6,
+     22.671
+    ],
+    [
+     -1.6,
+     23.671
+    ],
+    [
+     -1.6,
+     24.371
+    ],
+    [
+     -0.702,
+     24.371
+    ],
+    [
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     1.919
+    ],
+    [
+     0.0,
+     2.921
+    ],
+    [
+     0.0,
+     5.346
+    ],
+    [
+     0.0,
+     6.948
+    ],
+    [
+     0.0,
+     7.871
+    ],
+    [
+     0.0,
+     9.95
+    ],
+    [
+     0.0,
+     11.986
+    ],
+    [
+     0.0,
+     14.021
+    ],
+    [
+     0.0,
+     15.846
+    ],
+    [
+     0.0,
+     17.446
+    ],
+    [
+     0.0,
+     19.447
+    ],
+    [
+     0.0,
+     21.446
+    ],
+    [
+     0.0,
+     24.371
+    ],
+    [
+     0.35,
+     21.446
+    ],
+    [
+     1.075,
+     5.346
+    ],
+    [
+     2.925,
+     5.346
+    ],
+    [
+     2.925,
+     6.046
+    ],
+    [
+     2.925,
+     6.948
+    ],
+    [
+     3.648,
+     5.946
+    ],
+    [
+     4.575,
+     21.446
+    ],
+    [
+     4.925,
+     15.447
+    ],
+    [
+     4.925,
+     16.396
+    ],
+    [
+     4.925,
+     17.446
+    ],
+    [
+     4.925,
+     18.146
+    ],
+    [
+     4.925,
+     19.2
+    ],
+    [
+     4.925,
+     21.446
+    ],
+    [
+     5.275,
+     21.446
+    ],
+    [
+     5.298,
+     5.946
+    ],
+    [
+     5.923,
+     5.946
+    ],
+    [
+     5.923,
+     6.948
+    ],
+    [
+     6.272,
+     6.948
+    ],
+    [
+     6.887,
+     15.447
+    ],
+    [
+     6.887,
+     17.446
+    ],
+    [
+     7.25,
+     21.446
+    ],
+    [
+     7.25,
+     24.371
+    ],
+    [
+     7.479,
+     24.371
+    ],
+    [
+     8.144,
+     9.95
+    ],
+    [
+     8.146,
+     21.446
+    ],
+    [
+     8.5,
+     6.948
+    ],
+    [
+     8.701,
+     24.371
+    ],
+    [
+     8.85,
+     0.0
+    ],
+    [
+     8.85,
+     2.316
+    ],
+    [
+     8.85,
+     4.632
+    ],
+    [
+     8.85,
+     6.948
+    ],
+    [
+     8.85,
+     8.449
+    ],
+    [
+     8.85,
+     9.95
+    ],
+    [
+     8.85,
+     12.1
+    ],
+    [
+     8.85,
+     14.247
+    ],
+    [
+     8.85,
+     15.447
+    ],
+    [
+     8.85,
+     17.446
+    ],
+    [
+     8.85,
+     19.446
+    ],
+    [
+     8.85,
+     21.446
+    ],
+    [
+     8.85,
+     24.371
+    ]
+   ]
+  },
+  "N+6.00": {
+   "muros": [
+    [
+     [
+      0.0,
+      1.919
+     ],
+     [
+      4.327,
+      1.919
+     ]
+    ],
+    [
+     [
+      0.0,
+      2.921
+     ],
+     [
+      5.923,
+      2.921
+     ]
+    ],
+    [
+     [
+      4.327,
+      5.946
+     ],
+     [
+      5.923,
+      5.946
+     ]
+    ],
+    [
+     [
+      5.923,
+      6.948
+     ],
+     [
+      8.85,
+      6.948
+     ]
+    ],
+    [
+     [
+      0.0,
+      7.871
+     ],
+     [
+      4.327,
+      7.871
+     ]
+    ],
+    [
+     [
+      5.422,
+      9.95
+     ],
+     [
+      8.85,
+      9.95
+     ]
+    ],
+    [
+     [
+      0.0,
+      14.021
+     ],
+     [
+      4.247,
+      14.021
+     ]
+    ],
+    [
+     [
+      6.247,
+      14.247
+     ],
+     [
+      8.85,
+      14.247
+     ]
+    ],
+    [
+     [
+      0.0,
+      15.846
+     ],
+     [
+      3.427,
+      15.846
+     ]
+    ],
+    [
+     [
+      5.422,
+      15.846
+     ],
+     [
+      8.85,
+      15.846
+     ]
+    ],
+    [
+     [
+      0.0,
+      17.446
+     ],
+     [
+      8.85,
+      17.446
+     ]
+    ],
+    [
+     [
+      0.0,
+      21.446
+     ],
+     [
+      8.85,
+      21.446
+     ]
+    ],
+    [
+     [
+      0.0,
+      1.919
+     ],
+     [
+      0.0,
+      14.021
+     ]
+    ],
+    [
+     [
+      0.0,
+      15.846
+     ],
+     [
+      0.0,
+      21.446
+     ]
+    ],
+    [
+     [
+      3.029,
+      15.846
+     ],
+     [
+      3.029,
+      17.446
+     ]
+    ],
+    [
+     [
+      3.427,
+      14.021
+     ],
+     [
+      3.427,
+      15.846
+     ]
+    ],
+    [
+     [
+      4.327,
+      1.919
+     ],
+     [
+      4.327,
+      7.871
+     ]
+    ],
+    [
+     [
+      4.426,
+      17.446
+     ],
+     [
+      4.426,
+      21.446
+     ]
+    ],
+    [
+     [
+      5.422,
+      9.95
+     ],
+     [
+      5.422,
+      15.846
+     ]
+    ],
+    [
+     [
+      5.822,
+      15.846
+     ],
+     [
+      5.822,
+      17.446
+     ]
+    ],
+    [
+     [
+      5.923,
+      2.921
+     ],
+     [
+      5.923,
+      6.948
+     ]
+    ],
+    [
+     [
+      8.85,
+      6.948
+     ],
+     [
+      8.85,
+      21.446
+     ]
+    ]
+   ],
+   "castillos": [
+    [
+     0.0,
+     1.919
+    ],
+    [
+     0.0,
+     2.921
+    ],
+    [
+     0.0,
+     5.346
+    ],
+    [
+     0.0,
+     6.948
+    ],
+    [
+     0.0,
+     7.871
+    ],
+    [
+     0.0,
+     9.95
+    ],
+    [
+     0.0,
+     11.986
+    ],
+    [
+     0.0,
+     14.021
+    ],
+    [
+     0.0,
+     15.846
+    ],
+    [
+     0.0,
+     17.446
+    ],
+    [
+     0.0,
+     19.447
+    ],
+    [
+     0.0,
+     21.446
+    ],
+    [
+     0.925,
+     2.921
+    ],
+    [
+     0.925,
+     21.446
+    ],
+    [
+     1.514,
+     15.846
+    ],
+    [
+     1.714,
+     14.021
+    ],
+    [
+     2.129,
+     17.446
+    ],
+    [
+     2.163,
+     7.871
+    ],
+    [
+     2.927,
+     21.446
+    ],
+    [
+     3.029,
+     15.846
+    ],
+    [
+     3.029,
+     17.446
+    ],
+    [
+     3.427,
+     14.021
+    ],
+    [
+     3.427,
+     14.796
+    ],
+    [
+     3.427,
+     15.846
+    ],
+    [
+     3.429,
+     17.446
+    ],
+    [
+     3.575,
+     2.921
+    ],
+    [
+     4.327,
+     1.919
+    ],
+    [
+     4.327,
+     2.921
+    ],
+    [
+     4.327,
+     5.046
+    ],
+    [
+     4.327,
+     5.946
+    ],
+    [
+     4.327,
+     6.996
+    ],
+    [
+     4.327,
+     7.871
+    ],
+    [
+     4.327,
+     14.021
+    ],
+    [
+     4.426,
+     17.446
+    ],
+    [
+     4.426,
+     19.447
+    ],
+    [
+     4.426,
+     21.446
+    ],
+    [
+     5.298,
+     5.946
+    ],
+    [
+     5.422,
+     9.95
+    ],
+    [
+     5.422,
+     11.0
+    ],
+    [
+     5.422,
+     14.872
+    ],
+    [
+     5.422,
+     15.846
+    ],
+    [
+     5.422,
+     17.446
+    ],
+    [
+     5.822,
+     15.846
+    ],
+    [
+     5.822,
+     17.446
+    ],
+    [
+     5.923,
+     2.921
+    ],
+    [
+     5.923,
+     4.433
+    ],
+    [
+     5.923,
+     5.946
+    ],
+    [
+     5.923,
+     6.948
+    ],
+    [
+     5.925,
+     21.446
+    ],
+    [
+     6.247,
+     14.247
+    ],
+    [
+     6.272,
+     6.948
+    ],
+    [
+     6.28,
+     9.95
+    ],
+    [
+     6.722,
+     17.446
+    ],
+    [
+     6.887,
+     17.446
+    ],
+    [
+     7.336,
+     15.846
+    ],
+    [
+     7.85,
+     9.95
+    ],
+    [
+     7.925,
+     21.446
+    ],
+    [
+     8.144,
+     9.95
+    ],
+    [
+     8.5,
+     6.948
+    ],
+    [
+     8.85,
+     6.948
+    ],
+    [
+     8.85,
+     8.449
+    ],
+    [
+     8.85,
+     9.95
+    ],
+    [
+     8.85,
+     12.1
+    ],
+    [
+     8.85,
+     13.779
+    ],
+    [
+     8.85,
+     14.247
+    ],
+    [
+     8.85,
+     15.447
+    ],
+    [
+     8.85,
+     17.446
+    ],
+    [
+     8.85,
+     19.446
+    ],
+    [
+     8.85,
+     21.446
+    ]
+   ]
+  }
+ }
+}
