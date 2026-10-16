@@ -23,12 +23,14 @@ def sheet_resumen(wb):
             ('Tableros que esperan a una nervadura principal', '=COUNTIF(%s,"VER PRINCIPALES*")' % est, '=COUNTA(%s)' % est, 'zero'),
             ('Tableros que NO CUMPLEN', '=COUNTIF(%s,"NO CUMPLE*")' % est, '=COUNTA(%s)' % est, 'zero'),
             ('Tableros donde h_eq < espesor mínimo (calcular flecha)', '=COUNTIF(%s,"REVISAR: calcular flecha*")' % est, '=COUNTA(%s)' % est, 'zero'),
-            ('Tableros que no cumplen 6.7.8.1.4 (se diseñan como losa sobre vigas)', '=COUNTIF(TABLEROS!$%s$%d:$%s$%d,"NO")' % (TC['g678'], T0, TC['g678'], T1), '=COUNTA(%s)-COUNTIF(%s,"HUECO*")' % (est, est), 'info'),
+            ('Tableros que no cumplen 6.7.8.1.4 (se diseñan como losa sobre vigas: recubrimiento de viga, sin ×1.1)', '=COUNTIFS(TABLEROS!$%s$%d:$%s$%d,"NO",TABLEROS!$%s$%d:$%s$%d,"PERIMETRAL")' % (TC['g678'], T0, TC['g678'], T1, TC['modo'], T0, TC['modo'], T1), '=COUNTIF(TABLEROS!$%s$%d:$%s$%d,"PERIMETRAL")' % (TC['modo'], T0, TC['modo'], T1), 'info'),
+            ('Tableros fuera de 3.4.2.1 c) (M⁻ del borde común con un vecino difieren > 50 %): confirmar con el modelo', '=COUNTIF(TABLEROS!$%s$%d:$%s$%d,"FUERA*")' % (TC['c342'], T0, TC['c342'], T1), '=COUNTIF(TABLEROS!$%s$%d:$%s$%d,"PERIMETRAL")' % (TC['modo'], T0, TC['modo'], T1), 'info'),
             ('Nervaduras principales que CUMPLEN con la sección propuesta', '=COUNTIF(%s,"CUMPLE*")' % pest, '=COUNTA(%s)-COUNTIF(%s,"BORDE*")' % (pest, pest), 'ok'),
             ('… de ellas, las que hay que PERALTAR respecto a la dala 15×25 del modelo', '=COUNTIF(PRINCIPALES!$%s$%d:$%s$%d,"PERALTAR*")' % (PC['cambio'], P0, PC['cambio'], P1), '=COUNTA(%s)-COUNTIF(%s,"BORDE*")' % (pest, pest), 'info'),
-            ('Nervaduras principales con muro encima donde hay que revisar la interacción muro-viga (H/L < 0.6)', '=COUNTIF(PRINCIPALES!$%s$%d:$%s$%d,"REVISAR*")' % (PC['m418'], P0, PC['m418'], P1), '=COUNTIF(PRINCIPALES!$%s$%d:$%s$%d,"<>—")' % (PC['m418'], P0, PC['m418'], P1), 'info'),
+            ('Nervaduras principales PENDIENTES del análisis de interacción muro-viga (NTC-M 4.1.18.2.1)', '=COUNTIF(%s,"PENDIENTE*")' % pest, '=COUNTA(%s)-COUNTIF(%s,"BORDE*")' % (pest, pest), 'zero'),
             ('Nervaduras principales que NO CUMPLEN', '=COUNTIF(%s,"NO CUMPLE*")' % pest, '=COUNTA(%s)-COUNTIF(%s,"BORDE*")' % (pest, pest), 'zero'),
-            ('Capa de compresión: temperatura, diafragma, recubrimiento, punzonamiento y flexión con 1 000 kg', '=COUNTIF(NERVADURA!$C$1:$C$400,"NO CUMPLE*")', 5, 'zero'),
+            ('Capa de compresión: temperatura, diafragma, recubrimiento, separación de la malla, punzonamiento, acero mínimo junto a la carga (6.7.6.1.2) y flexión con 1 000 kg', '=COUNTIF(%s,"NO CUMPLE*")' % N['CAPA_RNG'], 7, 'zero'),
+            ('Anclaje de las nervaduras en bordes discontinuos (barra inferior a 1.25 fy y bastón superior en la dala de 15 cm)', '=COUNTIF(%s,"NO CUMPLE*")+COUNTIF(%s,"NO CUMPLE*")' % (N['n_anc1'], N['n_anc2']), 2, 'zero'),
             ('Nervaduras principales sin apoyo', '=COUNTIF(%s,"SIN APOYO*")' % pest, '=COUNTA(%s)' % pest, 'zero'),
             ('Castillos propuestos aceptados', '=COUNTIF(APOYOS!$C$1:$C$400,"SÍ")', len(D['castillos_prop']), 'info')]
     for c, f1, f2, kind in rows:
@@ -47,11 +49,21 @@ def sheet_resumen(wb):
     S.gap()
     S.section('2. DECISIONES QUE TE TOCAN')
     for txt in ['1) CASTILLOS: la hoja propone bajar a cimentación los castillos C1…C8 (APOYOS sección B). Sin ellos, las nervaduras principales de la cochera, del vacío de doble altura y de la escalera quedan en volado de 4 a 8 m. Si una bajada queda aislada (sin muro en planta baja) es columna: mínimo 25×25 (NTC-Concreto 6.4.2.1.1, p. 138).',
-                '2) PRINCIPALES CON MURO ENCIMA: la casa es estructura Tipo I de mampostería (muros desplantados sobre vigas, NTC-M 1.6.1 c, p. 15). Esas vigas deben cumplir L/h ≤ 14, la flecha de 4.1.18.3 y 0.3 cm + L/480: la dala de 15×25 no alcanza en claros de más de 3.50 m. La tabla 4 da la sección propuesta (trabe descolgada); en PRINCIPALES puedes cambiar b y h y ver el resultado al momento.',
-                '3) CAPA DE COMPRESIÓN DE 5 cm: con la malla 6x6-6/6 cumple temperatura (0.0018), recubrimiento y flexión con 1 000 kg, pero queda 2% abajo de la cuantía de diafragma (0.0025, 6.8.6.4) y 1% abajo en punzonamiento con la carga directo sobre la capa. Lo resuelve una capa de 6 cm (casetón de 19 cm para seguir en h = 25) con malla 6x6-4/4, o contar el reparto del piso (NERVADURA sección 9).',
+                '2) PRINCIPALES CON MURO ENCIMA: la casa es estructura Tipo I de mampostería (muros desplantados sobre vigas, NTC-M 1.6.1 c, p. 15). Esas vigas deben cumplir 4.1.18.4 (L/h ≤ 14 si son rectangulares o I ≥ L³/1600 para la sección T, p. 46), la flecha de 4.1.18.3 con límite 0.3 cm + L/480 y f_CM ≤ F_R·f\'m (4.1.18.2). '
+                'Con eso la dala de 15×25 sólo queda en los tramos cortos; la tabla 4 da la sección propuesta (trabe descolgada) y en PRINCIPALES puedes cambiar b y h y ver el resultado al momento. Donde H/L < 0.6 (NP-15, NP-26) el procedimiento de 4.1.18.2 no aplica: queda PENDIENTE el análisis de interacción muro-viga (4.1.18.2.1, p. 44).',
+                '3) CAPA DE COMPRESIÓN DE 5 cm: con la malla 6x6-6/6 cumple temperatura (0.0018), recubrimiento interior y flexión con 1 000 kg, pero queda 2% abajo de la cuantía de diafragma (0.0025, 6.8.6.4), 1% abajo en punzonamiento con la carga directo sobre la capa y al 61% del acero mínimo alrededor de la carga concentrada (6.7.6.1.2). '
+                'Lo resuelve una capa de 6 cm (casetón de 19 cm para seguir en h = 25) con malla 6x6-4/4, que cumple las tres. Contar el reparto del piso (NERVADURA sección 11) sólo resuelve el punzonamiento.',
                 '4) SOBRECARGA: la hoja suma 20 + 20 kg/m² (NTC-Criterios 5.1.2.1). Si la sobrecarga del modelo ya trae la «carga adicional 0.04 t/m²» de Naim, ponlos en cero en DATOS sección 5.',
                 '5) MODELO: corregir en ETABS F80032 y F80010 de azotea a LR-25, ponerle cargas a F2 y meter las secciones propuestas de las principales; luego volver a correr y comparar reacciones contra la hoja MUROS.',
-                '6) PLANOS: concreto Clase 1A f\'c = 250 con agregado calizo de 1/2" (TMA ≤ 2/3 del recubrimiento), nota de control del ancho de nervadura (3.9.2), malla especificada y apuntalamiento del entrepiso al colar la azotea (NTC-Criterios 6.1.3.1).']:
+                '6) PLANOS: concreto Clase 1A f\'c = 250 con agregado calizo de 1/2" (TMA ≤ 2/3 del recubrimiento), nota de las precauciones de 3.9.2 (casetón de medida fija para b_w y silletas para el peralte del lecho superior), malla especificada y apuntalamiento del entrepiso al colar la azotea (NTC-Criterios 6.1.3.1).',
+                '7) TABLEROS CHICOS (6.7.8.1.4, p. 187): con casetón de 60 cm la losa sólo cuenta como encasetonada donde la separación libre (60 cm) no pasa de 1/6 del claro, o sea con claro corto ≥ 3.60 m. En los demás la norma pide diseñarla como losa apoyada en vigas (6.7.8.1.9, p. 188): '
+                'la hoja ya les pone a sus nervaduras recubrimiento de viga (4 cm, Tabla 4.14.16.a) y quita el ×1.1 de V_cR, y donde no alcanza sale NO CUMPLE. Opciones: casetón más chico en esos tableros (la nota de cada uno dice el tamaño máximo), colarlos macizos, o aceptar el criterio con justificación del Responsable.',
+                '8) MÉTODO DE COEFICIENTES (3.4.2.1 c, p. 64): donde un tablero chico colinda con uno grande, los M⁻ del borde común difieren más de 50 % y los coeficientes quedan fuera de su campo. La hoja distribuye 2/3 del desequilibrio con rigideces d³/a1 (3.4.3.1) y revisa con esos momentos; '
+                'conviene confirmar los momentos de esos tableros con el modelo de ETABS (método reconocido, 3.4.1.1). La lista está en TABLEROS, columna «3.4.2.1 c)».',
+                '9) ANCLAJE EN BORDES DISCONTINUOS: la barra inferior de cada nervadura debe desarrollar 1.25 fy en el paño (6.7.8.1.7) con ≥ 15 cm dentro del muro, y el bastón superior fy (6.7.7.4.1.1 b); con No. 4, L_dh = 25 cm (32 cm a 1.25 fy) y en la dala de 15 cm sólo hay 11 cm. '
+                'Opciones: dala o cadena de borde de ≥ 30–36 cm de ancho en esos bordes, barras con cabeza (14.4.4) o justificación del Responsable en planos (NERVADURA sección 10).',
+                '10) VOLADOS F80012 Y F80019 (NO CUMPLEN): sus nervaduras no son «viguetas» (6.7.8.1.4) y van como vigas con 4 cm de recubrimiento en las dos caras; además su cara superior queda sin techo (exposición A2, Tabla 4.3.1 c). En 10 cm de ancho cabe una sola varilla y el M⁻ del empotramiento (≈ 1.8 t·m por nervadura) pide una No. 8 que no cabe. '
+                'Opciones: nervaduras más anchas en los volados (casetón más chico o nervadura de 15–20 cm), volado macizo con su propio diseño, o volado más corto. La malla de la capa en esas zonas pide protección (piso o impermeabilizante; selector en DATOS) o capa más gruesa.']:
         S.bullet(txt)
     S.gap()
     S.section('3. TABLA DE NERVADURAS SECUNDARIAS (COMO LA DE NAIM)')
@@ -104,11 +116,12 @@ def sheet_resumen(wb):
     S.gap()
     S.section('6. CONDICIONES DE OBRA')
     for txt in ['• Castillos que se bajan a cimentación: refuerzo anclado en el cimiento con escuadra a 90° hacia adentro, empotramiento ≥ 40 cm en cimiento de piedra; traslapes sólo en el tercio medio de la planta baja con estribos @ 7.5 cm (NTC-M 4.1.16.3 a 4.1.16.5, p. 43; 4.2.7.5.2, p. 53). Dalas con 4 varillas y As ≥ 0.2(f\'c/fy)·b·h: la D-15x20 pide 3.57 cm² (2 No. 4 + 2 No. 3) (NTC-M 6.2.2.2, p. 62).',
-                '• Nervaduras principales sin muro abajo: se arman como trabe con recubrimiento de 4 cm, 2 No. 4 corridas como mínimo arriba y abajo y estribos cerrados No. 3 a 135° (gancho 8 cm), más cerrados en 2h junto a cada apoyo (NTC-Concreto 6.3.5.1.1, p. 122; 6.3.7.7, p. 134; 14.7.3.3, p. 375). Las que piden más de 25 cm quedan descolgadas.',
-                '• Toda nervadura secundaria lleva 1 No. 4 corrida abajo y 1 No. 4 corrida arriba; la inferior se ancla para 1.25 fy en el paño (6.7.6.1.3, p. 175; 6.7.8.1.7, p. 188). Bastones con el largo de TABLEROS medido desde el paño; en bordes discontinuos rematan con gancho de 90° dentro de la dala (6.7.7.4.1.1, p. 179).',
+                '• Nervaduras principales sin muro abajo: se arman como trabe con recubrimiento de 4 cm, 2 No. 4 corridas como mínimo arriba y abajo y estribos cerrados No. 3 a 135° (gancho 8 cm) con la separación de PRINCIPALES (columna «Cortante»). En las vigas perimetrales (NP-01 y NP-33) van más cerrados en 2h junto a cada apoyo (NTC-Concreto 6.3.5.1.1, p. 122; 6.3.7.7.7 y 6.3.7.7.8, p. 134; 14.7.3.3, p. 375). Las que piden más de 25 cm quedan descolgadas.',
+                '• Toda nervadura secundaria lleva 1 No. 4 corrida abajo y 1 No. 4 corrida arriba; la inferior se ancla para 1.25 fy en el paño (6.7.6.1.3, p. 175; 6.7.8.1.7, p. 188). Bastones con el largo de TABLEROS medido desde el paño. En bordes discontinuos el gancho no cabe en la dala de 15 cm: va la solución que escojas en la decisión 9 (dala o cadena de borde más ancha o barras con cabeza; 6.7.7.4.1.1, p. 179).',
                 '• Donde la hoja pide MACIZAR, se quita la hilera de casetones junto al apoyo en todo el ancho del tablero. En esquinas exteriores sobre muros se refuerza arriba y abajo en un quinto del claro largo (6.7.7.3.1, p. 178).',
-                '• En el borde común de dos tableros se arma con el mayor de los dos bastones (envolvente de 3.4.3.1).',
-                '• Traslapes clase B: No. 3 ≈ 50 cm, No. 4 ≈ 66 cm, fuera de las secciones de esfuerzo máximo y alternados; malla traslapada un cuadro + 5 cm (14.5.1.3, Tabla 14.5.2.1, 14.5.4.1).']:
+                '• En el borde común de dos tableros se arma con el mayor de los dos bastones; los momentos ya incluyen la distribución de 2/3 del desequilibrio (3.4.3.1, p. 64).',
+                '• Traslapes clase B: secundarias No. 3 ≈ 50 cm y No. 4 ≈ 66 cm; principales, lecho inferior No. 4 ≈ 66, No. 5 ≈ 83 y No. 8 ≈ 166 cm; principales con h ≥ 40 cm, lecho superior No. 4 ≈ 86 y No. 5 ≈ 108 cm (ψp = 1.3, Tabla 14.4.2.6, p. 354). '
+                'Fuera de las secciones de esfuerzo máximo y alternados; malla traslapada un cuadro + 5 cm (14.5.1.3, Tabla 14.5.2.1, 14.5.4.1).']:
         S.bullet(txt)
     add_cf(ws, 'C1:N%d' % S.r)
     ws.sheet_view.zoomScale = 85
@@ -170,13 +183,13 @@ def sheet_refs(wb):
         ('Cargas lineales de muros dentro de un tablero', NTCC, '3.4.4.1 a 3.4.4.3 y Tabla 3.4.4.2, pp. 65–66'),
         ("Bloque equivalente: f''c = 0.85f'c, β1 = 0.85 hasta f'c = 300, ε_cu = 0.003", NTCC, '3.6.1 d) y e), ec. 3.6.1, p. 68'),
         ('Factores de resistencia: flexión 0.65–0.90 según ε_t; cortante 0.75', NTCC, 'Tablas 3.8.2.1 y 3.8.2.2, p. 70 · 3.8.2.4, p. 71'),
-        ('Reducción de 20 mm en anchos < 200 mm salvo control anotado en planos', NTCC, '3.9.1 y 3.9.2, p. 74'),
-        ('Clase de exposición y recubrimientos (losas y viguetas 20 mm; vigas 40 mm; intemperie 40 mm)', NTCC, 'Tabla 4.3.1, p. 76 · 4.13.1.1 y 4.13.2.2, p. 83 · Tabla 4.13.3.1 y 4.13.3.2, p. 84 · Tabla 4.14.16.a, p. 85'),
+        ('Reducción de 20 mm en anchos < 200 mm y en el peralte del lecho superior ≤ 200 mm, salvo precauciones anotadas en planos', NTCC, '3.9.1 d) y e) y 3.9.2, p. 74'),
+        ('Clase de exposición (cara superior de volados sin techo: A2) y recubrimientos (losas y viguetas 20 mm; vigas 40 mm; intemperie 40 mm)', NTCC, 'Tabla 4.3.1 c) y 4.3.2, p. 76 · 4.13.1.1 y 4.13.2.2, p. 83 · Tabla 4.13.3.1 y 4.13.3.2, p. 84 · Tabla 4.14.16.a, p. 85'),
         ('Cuantía balanceada; ancho efectivo del patín; MR de sección rectangular y T', NTCC, 'ec. 5.2.1.3.1, p. 88 · Tabla 5.2.1.4.2, p. 89 · ecs. 5.2.2.1.1.1.a y b, p. 89 · 5.2.2.1.3.1, p. 90'),
         ("Cortante: V_cR con A_v,mín (0.5√f'c o 2p^(1/3)√f'c ≤ 1.25√f'c); sin refuerzo en el alma (2λs·p^(1/3)√f'c); límite de la sección; V_sR", NTCC, '5.5.2.1 y 5.5.2.2, p. 94 · 5.5.3.1.1 y 5.5.3.1.2, pp. 94–95 · 5.5.3.2.1, p. 95 · 5.5.3.6.1 y 5.5.3.8.1, p. 97'),
         ('Punzonamiento de la capa con la carga concentrada', NTCC, 'Tabla 5.6.2.1.1, p. 100'),
         ('Vigas (incluye nervaduras): claro, h/b ≤ 6, peralte mínimo L/16–L/8 y h ≥ 25 cm', NTCC, '6.3.1.2 b), 6.3.2.1 y 6.3.2.2, p. 117 · Tabla 6.3.3.1.1, p. 120 · 6.3.3.2.1 y 6.3.3.3.1, p. 121'),
-        ("Vigas: As mín = máx(0.80√f'c, 14)/fy·b_w·d, 2 barras corridas, excepción 4/3; As máx 0.90 As,b", NTCC, '6.3.5.1.1 a 6.3.5.1.3 y 6.3.5.2.1, p. 122'),
+        ("Vigas: As mín = máx(0.80√f'c, 14)/fy·b_w·d (con patín a tensión en viga isostática —volados— b_w = el menor de b_f y 2b_w), 2 barras corridas, excepción 4/3; As máx 0.90 As,b", NTCC, '6.3.5.1.1 a 6.3.5.1.3 y 6.3.5.2.1, p. 122'),
         ('Vigas: A_v,mín (casos exentos) y su valor', NTCC, '6.3.5.4.1 y Tabla 6.3.5.4.1, p. 123 · Tabla 6.3.5.4.4, p. 124'),
         ('Corte y anclaje del refuerzo de flexión; punto de inflexión', NTCC, '6.3.7.3.4 a 6.3.7.3.6, p. 127 · 6.3.7.3.10, p. 129'),
         ('Separación máxima de estribos; integridad estructural (2h en extremos)', NTCC, 'Tabla 6.3.7.6.2.2, p. 132 · 6.3.7.7, p. 134'),
@@ -184,7 +197,7 @@ def sheet_refs(wb):
         ('Espesor mínimo: Tabla 6.7.3.1.1 (sin vigas) y Tabla 6.7.3.1.2 (α_fm), +10% en borde discontinuo; flechas si no cumple', NTCC, 'Tabla 6.7.3.1.1, p. 167 · Tabla 6.7.3.1.2, 6.7.3.1.2.1 y 6.7.3.2.1, p. 168'),
         ('Losas controladas por tensión', NTCC, '6.7.3.3.1, p. 169'),
         ('Sección crítica de cortante a d del paño', NTCC, '6.7.4.3.2, p. 172'),
-        ('As mín de losa 0.0018·A_g; 1 No. 4 abajo y 1 No. 4 arriba corridas en toda nervadura', NTCC, '6.7.6.1.1 y 6.7.6.1.3, p. 175'),
+        ('As mín de losa 0.0018·A_g; acero mínimo alrededor de una carga concentrada (ec. 6.7.6.1.2, ancho b_losa); 1 No. 4 abajo y 1 No. 4 arriba corridas en toda nervadura', NTCC, '6.7.6.1.1 a 6.7.6.1.3, p. 175 · Tabla 6.7.4.2.2.3, p. 171'),
         ('Refuerzo de esquinas exteriores; bordes discontinuos', NTCC, '6.7.7.3.1, p. 178 · 6.7.7.4.1.1, p. 179'),
         ('Losas encasetonadas: b_w ≥ 10 cm, h ≤ 3.5b_w, separación libre ≤ 80 cm y ≤ claro/6; V_cR × 1.1; carga de 1 000 kg en 10×10 cm', NTCC, '6.7.8.1.2 a 6.7.8.1.6, p. 187'),
         ('Losas encasetonadas: barra inferior continua para 1.25 fy; refuerzo de la capa; si no cumple, losa sobre vigas; capa ≥ máx(a_c/13, 50 mm)', NTCC, '6.7.8.1.7 a 6.7.8.1.9 y 6.7.8.3.1, p. 188'),
@@ -195,7 +208,7 @@ def sheet_refs(wb):
         ('Contracción y temperatura: cuantía 0.0018 (ya no 660x₁/(fy(x₁+100)))', NTCC, '13.8.2.1.1, p. 345'),
         ('Separación libre mínima: máx(25 mm, d_b, 1.5·TMA)', NTCC, '14.2.1, p. 347'),
         ('Ganchos y dobleces (90°: 12d_b; estribos 135°: 6d_b ≥ 80 mm)', NTCC, 'Tabla 14.3.1, p. 349 · 14.3.4 y Tabla 14.3.2, p. 350'),
-        ('Longitud de desarrollo L_d, gancho L_dh y traslapes clase B; traslape de malla', NTCC, '14.4.2.1, p. 352 · Tabla 14.4.2.4, p. 353 · ec. 14.4.3.1, p. 355 · Tabla 14.5.2.1, p. 367 · 14.5.4.1, p. 369'),
+        ('Longitud de desarrollo L_d (No. 6 y menores / No. 7 a 11; «otros casos»), factor ψp de barra superior, gancho L_dh y traslapes clase B; traslape de malla', NTCC, '14.4.2.1, p. 352 · Tabla 14.4.2.4, p. 353 · Tabla 14.4.2.6, p. 354 · 14.4.3.1 a) a c), p. 355 · 14.4.10.2, p. 366 · Tabla 14.5.2.1, p. 367 · 14.5.4.1, p. 369'),
         ('Estribo cerrado mínimo No. 3; separación ≤ 16d_b long. y 48d_b del estribo', NTCC, '14.7.3.2 y 14.7.3.3, p. 375'),
     ])
     block(NTCCA + ' — NUMERAL Y PÁGINA IMPRESA', [

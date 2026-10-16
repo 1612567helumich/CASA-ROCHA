@@ -13,9 +13,9 @@ TC = {}
 BLKS = ('Pc', 'Nc', 'Pl', 'Nl')
 _tcols = ['key', 'nivel', 'modo', 'dest', 'Lx', 'Ly', 'ax', 'ay', 'a1', 'a2', 'm', 'dirc', 'ln1', 'ln2', 'bfc', 'bfl', 'rb', 'rt',
           'scm', 'cv', 'pp', 'cm', 'ws', 'wu',
-          'nd', 'ndc', 'ndl', 'cauto', 'cforce', 'caso', 'idx', 'fr', 'cNIC', 'cNIL', 'cNDC', 'cNDL', 'cPC', 'cPL', 'pbor', 'MPc', 'MNc', 'MPl', 'MNl']
+          'nd', 'ndc', 'ndl', 'cauto', 'cforce', 'caso', 'idx', 'fr', 'cNIC', 'cNIL', 'cNDC', 'cNDL', 'cPC', 'cPL', 'MNcd', 'MNld', 'MPcd', 'MPld', 'c342', 'pbor', 'MPc', 'MNc', 'MPl', 'MNl']
 for _b in BLKS:
-    _tcols += ['As' + _b, 'v' + _b, 'n' + _b, 'd' + _b, 'MR' + _b, 'FU' + _b, 'e' + _b]
+    _tcols += ['dq' + _b, 'As' + _b, 'v' + _b, 'n' + _b, 'd' + _b, 'MR' + _b, 'FU' + _b, 'e' + _b]
 _tcols += ['g678', 'Vu', 'VcR', 'cort', 'afm', 'hmin', 'heqv', 'peral', 'tdia', 'Lbc', 'Lbl', 'ncx', 'ncy', 'apoy', 'estado', 'nota']
 for i, nm in enumerate(_tcols):
     TC[nm] = CL(2 + i)
@@ -43,16 +43,31 @@ def nfit(var, avail):
     return 'INT((%s+{slib})/(%s+{slib}))' % (avail, db(var))
 
 
-def varsel2(As, pref, nmax, avail, nmin='1'):
-    """Varilla más chica (desde la preferida) cuyas piezas necesarias (al menos nmin) caben en el ancho libre y no pasan del máximo."""
+def varsel2(As, pref, nmax, avail, nmin='1', as43=None):
+    """Varilla más chica (desde la preferida) cuyas piezas necesarias (al menos nmin) caben en el ancho libre y no pasan del máximo.
+    Con as43 (= 4/3 de la As de flexión): si las piezas no llegan a as43, 6.3.5.1.1 pide al menos 2 (6.3.5.1.3)."""
     i0 = 'MATCH(%s,%s,0)' % (pref, BARCOL)
     out = 'INDEX(%s,%d)' % (BARCOL, NBARS)
     for k in range(4, -1, -1):
         idx = 'MIN(%s+%d,%d)' % (i0, k, NBARS)
         a_ = 'INDEX(%s,%s)' % (ABCOL, idx); d_ = 'INDEX(%s,%s)' % (DBCOL, idx)
-        ok = 'AND(%s>=0,MAX(%s,CEILING(%s/%s,1))<=MIN(%s,INT((%s+MAX({slib},%s))/(%s+MAX({slib},%s)))))' % (As, nmin, As, a_, nmax, avail, d_, d_, d_)
+        npz = 'MAX(%s,CEILING(%s/%s,1))' % (nmin, As, a_)
+        if as43:
+            npz = 'IF(%s*%s>=%s-0.0001,%s,MAX(%s,2))' % (npz, a_, as43, npz, npz)
+        ok = 'AND(%s>=0,%s<=MIN(%s,INT((%s+MAX({slib},%s))/(%s+MAX({slib},%s)))))' % (As, npz, nmax, avail, d_, d_, d_)
         out = 'IF(%s,INDEX(%s,%s),%s)' % (ok, BARCOL, idx, out)
     return out
+
+
+def red391(d):
+    """3.9.1 d) y 3.9.2: el peralte del lecho superior se reduce 20 mm si d ≤ 200 mm y no se anota la precaución en planos."""
+    return '(%s-IF(AND(%s<=20,{ctl_bw}<>"SÍ"),2,0))' % (d, d)
+
+
+def ldsel(var, n, r_):
+    """L_d de la Tabla 14.4.2.4: «otros casos» si el recubrimiento es < d_b o la separación libre de n barras en la nervadura es < 2d_b."""
+    d_ = db(var)
+    return 'IF(OR(%s<%s,AND(%s>=2,({bw}-2*%s-2*%s-%s*%s)/MAX(%s-1,1)<2*%s)),%s,%s)' % (r_, d_, n, r_, dbz('{est_sec}'), n, d_, n, d_, ldo(var), ld(var))
 
 
 def edge_af(t, side, k):
@@ -83,12 +98,13 @@ def sheet_tableros(wb):
     ws['B2'].font = font(9, i=True, color=GRAY); ws['B2'].alignment = Alignment(wrap_text=True, vertical='top'); ws.row_dimensions[2].height = 30
     ws.merge_cells('B3:%s3' % last)
     ws['B3'].value = ('ESTADO: «CUMPLE» = flexión, ε_t ≥ 0.005, cortante, peralte, capa y apoyos bien. «VER PRINCIPALES» = el tablero pasa pero alguna nervadura principal que lo recibe no. «MACIZAR n hilera(s)» = quitar casetones junto al apoyo por cortante. '
-                      '«6.7.8: NO» = el claro corto es menor que 6·a_c: la losa se diseña como losa apoyada en vigas (6.7.8.1.9), sin el ×1.1 de V_cR.')
-    ws['B3'].font = font(9, True, color=WARN_FG); ws['B3'].fill = fill(WARN_BG); ws['B3'].alignment = Alignment(wrap_text=True, vertical='top'); ws.row_dimensions[3].height = 30
+                      '«6.7.8: NO» = la separación libre a_c pasa de 1/6 del claro corto (6.7.8.1.4): la losa se diseña como losa apoyada en vigas (6.7.8.1.9): nervaduras con recubrimiento de viga (r_np) y sin el ×1.1 de V_cR. '
+                      '«3.4.2.1 c)» = los M⁻ del borde común con un vecino difieren más de 50 % del menor: los coeficientes quedan fuera de su campo y conviene confirmar con el modelo; aun así se distribuye 2/3 del desequilibrio (3.4.3.1).')
+    ws['B3'].font = font(9, True, color=WARN_FG); ws['B3'].fill = fill(WARN_BG); ws['B3'].alignment = Alignment(wrap_text=True, vertical='top'); ws.row_dimensions[3].height = 42
     groups = [('key', 'dest', 'TABLERO'), ('Lx', 'rt', 'GEOMETRÍA'), ('scm', 'wu', 'CARGAS (kg/m²)'), ('nd', 'caso', 'CASO DE LA TABLA'),
-              ('idx', 'cPL', 'COEFICIENTES ×10⁻⁴ (Tabla 3.4.2.1, interpolados en m)'), ('pbor', 'MNl', 'MOMENTOS POR NERVADURA (t·m)'),
-              ('AsPc', 'ePc', 'INFERIOR — CLARO CORTO'), ('AsNc', 'eNc', 'SUPERIOR — CLARO CORTO'), ('AsPl', 'ePl', 'INFERIOR — CLARO LARGO'),
-              ('AsNl', 'eNl', 'SUPERIOR — CLARO LARGO'), ('g678', 'cort', 'CORTANTE'), ('afm', 'tdia', 'PERALTE Y CAPA'), ('Lbc', 'nota', 'DETALLE Y RESUMEN')]
+              ('idx', 'cPL', 'COEFICIENTES ×10⁻⁴ (Tabla 3.4.2.1, interpolados en m)'), ('MNcd', 'c342', 'DISTRIBUCIÓN CON LOS VECINOS (3.4.3.1) Y 3.4.2.1 c)'), ('pbor', 'MNl', 'MOMENTOS POR NERVADURA (t·m)'),
+              ('dqPc', 'ePc', 'INFERIOR — CLARO CORTO'), ('dqNc', 'eNc', 'SUPERIOR — CLARO CORTO'), ('dqPl', 'ePl', 'INFERIOR — CLARO LARGO'),
+              ('dqNl', 'eNl', 'SUPERIOR — CLARO LARGO'), ('g678', 'cort', 'CORTANTE'), ('afm', 'tdia', 'PERALTE Y CAPA'), ('Lbc', 'nota', 'DETALLE Y RESUMEN')]
     for a, b, t in groups:
         ws.merge_cells('%s6:%s6' % (TC[a], TC[b]))
         x = ws['%s6' % TC[a]]; x.value = t; x.font = font(9, True, color='FFFFFF'); x.fill = fill(SEC_BG); x.alignment = Alignment(horizontal='center')
@@ -98,17 +114,18 @@ def sheet_tableros(wb):
              'scm': ('SCM', 7), 'cv': ('CV W_m', 7), 'pp': ('PP diseño', 7), 'cm': ('CM', 7), 'ws': ('w serv.', 7), 'wu': ('w_u', 7),
              'nd': ('Bordes discont.', 7.5), 'ndc': ('… cortos', 6.5), 'ndl': ('… largos', 6.5), 'cauto': ('Caso automático', 15), 'cforce': ('Forzar caso', 12), 'caso': ('Caso usado', 15),
              'idx': ('col. m', 5), 'fr': ('interp.', 6), 'cNIC': ('M⁻ cont. corto', 7.5), 'cNIL': ('M⁻ cont. largo', 7.5), 'cNDC': ('M⁻ disc. corto', 7.5), 'cNDL': ('M⁻ disc. largo', 7.5),
-             'cPC': ('M⁺ corto', 7.5), 'cPL': ('M⁺ largo', 7.5), 'pbor': ('Carga en orilla de volado', 8.5), 'MPc': ('M⁺ corto', 7.5), 'MNc': ('M⁻ corto', 7.5), 'MPl': ('M⁺ largo', 7.5), 'MNl': ('M⁻ largo', 7.5),
+             'cPC': ('M⁺ corto', 7.5), 'cPL': ('M⁺ largo', 7.5),
+             'MNcd': ('M⁻ corto que deja el vecino', 8), 'MNld': ('M⁻ largo que deja el vecino', 8), 'MPcd': ('ΔM⁺ corto por distribución', 8), 'MPld': ('ΔM⁺ largo por distribución', 8), 'c342': ('3.4.2.1 c)', 16), 'pbor': ('Carga en orilla de volado', 8.5), 'MPc': ('M⁺ corto', 7.5), 'MNc': ('M⁻ corto', 7.5), 'MPl': ('M⁺ largo', 7.5), 'MNl': ('M⁻ largo', 7.5),
              'g678': ('6.7.8 cumple', 8), 'Vu': ('V_u por nerv.', 7.5), 'VcR': ('V_cR', 7.5), 'cort': ('Estado', 15),
              'afm': ('α_fm', 6.5), 'hmin': ('h mín. Tabla 6.7.3.1.2 / volado L/8', 9), 'heqv': ('h_eq / h', 7), 'peral': ('Estado', 12), 'tdia': ('Capa (diafragma)', 11),
              'Lbc': ('Bastón ‖ corto desde paño', 8), 'Lbl': ('Bastón ‖ largo desde paño', 8), 'ncx': ('Casetones ‖X', 7.5), 'ncy': ('Casetones ‖Y', 7.5), 'apoy': ('Apoyos', 15), 'estado': ('ESTADO', 26), 'nota': ('Nota', 60)}
     for blk in BLKS:
-        heads['As' + blk] = ('As req.', 7); heads['v' + blk] = ('Var. No.', 6); heads['n' + blk] = ('Pzas', 5.5); heads['d' + blk] = ('d', 6); heads['MR' + blk] = ('M_R', 7); heads['FU' + blk] = ('Mu/M_R', 7); heads['e' + blk] = ('ε_t', 7)
+        heads['dq' + blk] = ('d para As (var. preferida)', 7); heads['As' + blk] = ('As req.', 7); heads['v' + blk] = ('Var. No.', 6); heads['n' + blk] = ('Pzas', 5.5); heads['d' + blk] = ('d', 6); heads['MR' + blk] = ('M_R', 7); heads['FU' + blk] = ('Mu/M_R', 7); heads['e' + blk] = ('ε_t', 7)
     units = {'Lx': 'm', 'Ly': 'm', 'ax': 'm', 'ay': 'm', 'a1': 'm', 'a2': 'm', 'ln1': 'cm', 'ln2': 'cm', 'bfc': 'cm', 'bfl': 'cm', 'rb': 'cm', 'rt': 'cm',
              'scm': 'kg/m²', 'cv': 'kg/m²', 'pp': 'kg/m²', 'cm': 'kg/m²', 'ws': 'kg/m²', 'wu': 'kg/m²', 'pbor': 'kg/m (serv.)',
-             'MPc': 't·m', 'MNc': 't·m', 'MPl': 't·m', 'MNl': 't·m', 'Vu': 't', 'VcR': 't', 'hmin': 'cm', 'heqv': 'cm', 'Lbc': 'cm', 'Lbl': 'cm'}
+             'MPc': 't·m', 'MNc': 't·m', 'MPl': 't·m', 'MNl': 't·m', 'MNcd': 't·m', 'MNld': 't·m', 'MPcd': 't·m', 'MPld': 't·m', 'Vu': 't', 'VcR': 't', 'hmin': 'cm', 'heqv': 'cm', 'Lbc': 'cm', 'Lbl': 'cm'}
     for blk in BLKS:
-        units['As' + blk] = 'cm²'; units['MR' + blk] = 't·m'; units['d' + blk] = 'cm'; units['e' + blk] = '≥ 0.005'
+        units['dq' + blk] = 'cm'; units['As' + blk] = 'cm²'; units['MR' + blk] = 't·m'; units['d' + blk] = 'cm'; units['e' + blk] = '≥ 0.005'
     for nm, (t, w) in heads.items():
         hdr_cell(ws, 7, CI(TC[nm]), t, w)
         unit_cell(ws, 8, CI(TC[nm]), units.get(nm, ''))
@@ -131,7 +148,8 @@ def sheet_tableros(wb):
             'dirc': ('=IF({ax}{r}<={ay}{r},"X","Y")', 'calc', '@'),
             'ln1': ('=MAX(0,{a1}{r}*100-IF({modo}{r}="VOLADO",{bp}/2,{bp}))', 'calc', '0'), 'ln2': ('=MAX(0,{a2}{r}*100-{bp})', 'calc', '0'),
             'bfc': ('=MIN({s},{bw}+2*MIN(8*{t},{ac}/2,{ln1}{r}/8))', 'calc', '0.0'), 'bfl': ('=MIN({s},{bw}+2*MIN(8*{t},{ac}/2,{ln2}{r}/8))', 'calc', '0.0'),
-            'rb': ('=IF({modo}{r}="VOLADO",{rec_ext},{rec})', 'calc', '0.0'), 'rt': ('=IF(AND({nivel}{r}="N+6.00",{exp_az}="SÍ"),{rec_ext},{rec})', 'calc', '0.0'),
+            'rb': ('=IF({modo}{r}="VOLADO",{rec_ext},IF({g678}{r}="NO",{rec_np},{rec}))', 'calc', '0.0'),
+            'rt': ('=IF(OR(AND({nivel}{r}="N+6.00",{exp_az}="SÍ"),AND({modo}{r}="VOLADO",{exp_vol}="SÍ")),{rec_ext},IF({g678}{r}="NO",{rec_np},{rec}))', 'calc', '0.0'),
             'scm': (scm, 'input', '0'), 'cv': ('=IF({dest}{r}="HABITACIÓN",{cv_hab},{cv_az})', 'calc', '0'),
             'pp': ('={PPd}', 'calc', '0'), 'cm': ('={pp}{r}+{scm}{r}', 'calc', '0'), 'ws': ('={cm}{r}+{cv}{r}', 'calc', '0'),
             'wu': ('=MAX({FCcm}*{cm}{r}+{FCcv}*{cv}{r},IF({dest}{r}="AZOTEA",{FCacc}*({cm}{r}+{Wg}),0))', 'key', '0'),
@@ -148,30 +166,66 @@ def sheet_tableros(wb):
             idx = 'MATCH({caso}{r}&"|%s",{CKEY},0)' % mm
             vals['c' + mm] = ('=INDEX({CVAL},%s,{idx}{r})+{fr}{r}*(INDEX({CVAL},%s,MIN({idx}{r}+1,7))-INDEX({CVAL},%s,{idx}{r}))' % (idx, idx, idx), 'calc', '0')
         fac = '*{wu}{r}*{a1}{r}^2*1E-4*{s}/100/1000'
-        vals['MPc'] = ('=IF({modo}{r}="PERIMETRAL",{cPC}{r}%s,0)' % fac, 'calc', '0.000')
-        vals['MNc'] = ('=IF({modo}{r}="PERIMETRAL",MAX({cNIC}{r},{cNDC}{r})%s,IF({modo}{r}="VOLADO",({wu}{r}*({ln1}{r}/100)^2/2+{FCcm}*{pbor}{r}*{ln1}{r}/100)*{s}/100/1000,0))' % fac, 'calc', '0.000')
-        vals['MPl'] = ('=IF({modo}{r}="PERIMETRAL",{cPL}{r}%s,0)' % fac, 'calc', '0.000')
-        vals['MNl'] = ('=IF({modo}{r}="PERIMETRAL",MAX({cNIL}{r},{cNDL}{r})%s,0)' % fac, 'calc', '0.000')
+        # 3.4.3.1: en cada borde continuo con vecino se reparten 2/3 del desequilibrio con rigideces d³/a1 (d igual en toda la losa: k ∝ 1/a1).
+        # 3.4.2.1 c): los M⁻ del borde común no deben diferir más de 50 % del menor.
+        gain = {'c': [], 'l': []}; redu = {'c': [], 'l': []}; fails = []
+        for s_ in SIDES:
+            e_ = t['bordes'][s_]
+            dE = 'Y' if s_ in ('inferior', 'superior') else 'X'
+            nbs = [n_.strip() for n_ in (e_.get('vecinos') or '').split(',') if n_.strip()]
+            nbs = [n_ for n_ in nbs if (n_ + ' ' + t['level']) in TROW and (n_ + ' ' + t['level']) != k]
+            if not nbs:
+                continue
+            MA = '(IF({dirc}{r}="%s",{cNIC}{r},{cNIL}{r})*{wu}{r}*{a1}{r}^2)' % dE
+            reds = []
+            for n_ in nbs:
+                rb_ = TROW[n_ + ' ' + t['level']]
+                MB = '(IF({dirc}%d="%s",{cNIC}%d,{cNIL}%d)*{wu}%d*{a1}%d^2)' % (rb_, dE, rb_, rb_, rb_, rb_)
+                cond = 'APOYOS!$G$%d="CONTINUO",{modo}%d="PERIMETRAL"' % (EDGE[(k, s_)], rb_)
+                kA = '{a1}%d/({a1}{r}+{a1}%d)' % (rb_, rb_)
+                gA = 'IF(AND(%s,%s>%s),%s+2/3*(%s-%s)*%s,0)' % (cond, MB, MA, MA, MB, MA, kA)
+                rA = 'IF(AND(%s,%s>%s),2/3*(%s-%s)*%s,0)' % (cond, MA, MB, MA, MB, kA)
+                for dd, op in (('c', '='), ('l', '<>')):
+                    gain[dd].append('IF({dirc}{r}%s"%s",%s,0)' % (op, dE, gA))
+                reds.append(rA)
+                fails.append(('AND(%s,ABS(%s-%s)>0.5*MIN(%s,%s))' % (cond, MA, MB, MA, MB), n_))
+            rmax = reds[0] if len(reds) == 1 else 'MAX(%s)' % ','.join(reds)
+            for dd, op in (('c', '='), ('l', '<>')):
+                redu[dd].append('IF({dirc}{r}%s"%s",%s,0)' % (op, dE, rmax))
+        f4 = '*1E-4*{s}/100/1000'
+        for dd in ('c', 'l'):
+            vals['MN%sd' % dd] = ('=IF({modo}{r}="PERIMETRAL",MAX(0,%s)%s,0)' % (','.join(gain[dd]) or '0', f4), 'calc', '0.000')
+            vals['MP%sd' % dd] = ('=IF({modo}{r}="PERIMETRAL",(%s)/2%s,0)' % ('+'.join(redu[dd]) or '0', f4), 'calc', '0.000')
+        if fails:
+            vals['c342'] = ('=IF({modo}{r}<>"PERIMETRAL","—",IF(OR(%s),"FUERA con"%s,"CUMPLE"))' % (','.join(f_ for f_, _ in fails), ''.join('&IF(%s," %s","")' % (f_, n_) for f_, n_ in fails)), 'calc', '@')
+        else:
+            vals['c342'] = ('=IF({modo}{r}<>"PERIMETRAL","—","CUMPLE")', 'calc', '@')
+        vals['MPc'] = ('=IF({modo}{r}="PERIMETRAL",{cPC}{r}%s+{MPcd}{r},0)' % fac, 'calc', '0.000')
+        vals['MNc'] = ('=IF({modo}{r}="PERIMETRAL",MAX(MAX({cNIC}{r},{cNDC}{r})%s,{MNcd}{r}),IF({modo}{r}="VOLADO",({wu}{r}*({ln1}{r}/100)^2/2+{FCcm}*{pbor}{r}*{ln1}{r}/100)*{s}/100/1000,0))' % fac, 'calc', '0.000')
+        vals['MPl'] = ('=IF({modo}{r}="PERIMETRAL",{cPL}{r}%s+{MPld}{r},0)' % fac, 'calc', '0.000')
+        vals['MNl'] = ('=IF({modo}{r}="PERIMETRAL",MAX(MAX({cNIL}{r},{cNDL}{r})%s,{MNld}{r}),0)' % fac, 'calc', '0.000')
         # peraltes efectivos: el lecho del claro corto va por fuera; el del largo, encima (o debajo) de él
         dq = {'Pc': '({h}-{rb}{r}-%s-%s/2)' % (dbe, db('{var_inf}')),
               'Pl': '({h}-{rb}{r}-%s-%s-%s/2)' % (dbe, db('{var_inf}'), db('{var_inf}')),
-              'Nc': '({h}-{rt}{r}-2*{fim}-%s-%s/2)' % (dbe, db('{var_sup}')),
-              'Nl': '({h}-{rt}{r}-2*{fim}-%s-%s-%s/2)' % (dbe, db('{var_sup}'), db('{var_sup}'))}
+              'Nc': red391('({h}-{rt}{r}-2*{fim}-%s-%s/2)' % (dbe, db('{var_sup}'))),
+              'Nl': red391('({h}-{rt}{r}-2*{fim}-%s-%s-%s/2)' % (dbe, db('{var_sup}'), db('{var_sup}')))}
         dact = {'Pc': '{h}-{rb}{r}-%s-%s/2' % (dbe, db('{vPc}{r}')),
                 'Pl': '{h}-{rb}{r}-%s-%s-%s/2' % (dbe, db('{vPc}{r}'), db('{vPl}{r}')),
-                'Nc': '{h}-{rt}{r}-2*{fim}-%s-%s/2' % (dbe, db('{vNc}{r}')),
-                'Nl': '{h}-{rt}{r}-2*{fim}-%s-%s-%s/2' % (dbe, db('{vNc}{r}'), db('{vNl}{r}'))}
+                'Nc': red391('({h}-{rt}{r}-2*{fim}-%s-%s/2)' % (dbe, db('{vNc}{r}'))),
+                'Nl': red391('({h}-{rt}{r}-2*{fim}-%s-%s-%s/2)' % (dbe, db('{vNc}{r}'), db('{vNl}{r}')))}
         for blk, M, neg in (('Pc', 'MPc', False), ('Nc', 'MNc', True), ('Pl', 'MPl', False), ('Nl', 'MNl', True)):
             b = '{bwc}' if neg else '{bf%s}{r}' % blk[1].lower()
             pref = '{var_sup}' if neg else '{var_inf}'
-            av = '({bw}-2*{rec}-2*%s)' % dbe if neg else '({bw}-2*{rb}{r}-2*%s)' % dbe
+            av = '({bw}-2*{rt}{r}-2*%s)' % dbe if neg else '({bw}-2*{rb}{r}-2*%s)' % dbe
             bmin = 'IF({modo}{r}="VOLADO",2*{bw},{bw})' if blk == 'Nc' else '{bw}'
             Mref = '{%s}{r}' % M
-            vals['As' + blk] = ('=IF({modo}{r}="HUECO",0,%s)' % asreq(Mref, b, dq[blk], neg, bmin), 'calc', '0.00')
-            vals['v' + blk] = ('=' + varsel2('{As%s}{r}' % blk, pref, '{nmax_sec}', av), 'calc', 'General')
+            vals['dq' + blk] = ('=' + dq[blk], 'calc', '0.00')
+            dqr = '{dq%s}{r}' % blk
+            vals['As' + blk] = ('=IF({modo}{r}="HUECO",0,%s)' % asreq(Mref, b, dqr, neg, bmin), 'calc', '0.00')
+            vals['v' + blk] = ('=' + varsel2('{As%s}{r}' % blk, pref, '{nmax_sec}', av, '{nmin_sec}', '4/3*' + asflex(Mref, b, dqr, neg)), 'calc', 'General')
             ab_ = ab('{v%s}{r}' % blk)
             n0 = 'MAX({nmin_sec},CEILING(MAX({As%s}{r},0)/%s,1))' % (blk, ab_)
-            vals['n' + blk] = ('=IF({modo}{r}="HUECO",0,IF({As%s}{r}<0,0,IF(%s*%s>=4/3*%s-0.0001,%s,MAX(%s,2))))' % (blk, n0, ab_, asflex(Mref, b, dq[blk], neg), n0, n0), 'calc', '0')
+            vals['n' + blk] = ('=IF({modo}{r}="HUECO",0,IF({As%s}{r}<0,0,IF(%s*%s>=4/3*%s-0.0001,%s,MAX(%s,2))))' % (blk, n0, ab_, asflex(Mref, b, dqr, neg), n0, n0), 'calc', '0')
             vals['d' + blk] = ('=' + dact[blk], 'calc', '0.00')
             asp = '{n%s}{r}*%s' % (blk, ab_)
             vals['MR' + blk] = ('=IF({n%s}{r}=0,0,{FRf}*%s*{fy}*({d%s}{r}-%s*{fy}/({fpc}*%s)/2)/1E5)' % (blk, asp, blk, asp, b), 'calc', '0.000')
@@ -184,7 +238,13 @@ def sheet_tableros(wb):
         vals['Vu'] = ('=IF({modo}{r}="PERIMETRAL",MAX(0,({ln1}{r}/2-{dNc}{r})/100)*(0.95-0.5*{m}{r})*{wu}{r}*IF(AND({nd}{r}>0,{nd}{r}<4),{Vinc},1)*{s}/100/1000,'
                       'IF({modo}{r}="VOLADO",({wu}{r}*MAX(0,{ln1}{r}-{dNc}{r})/100+{FCcm}*{pbor}{r})*{s}/100/1000,0))', 'calc', '0.000')
         vals['VcR'] = ('=IF({modo}{r}="HUECO",0,{FRv}*2*%s*%s^(1/3)*SQRT({fc})*{bwc}*{dNc}{r}*IF({g678}{r}="SÍ",{VcRinc},1)/1000)' % (lam, pexp), 'calc', '0.000')
-        vals['cort'] = ('=IF({modo}{r}="HUECO","—",IF({Vu}{r}<={VcR}{r},"CUMPLE","MACIZAR "&MAX(1,CEILING(IF({modo}{r}="VOLADO",{a1}{r},{a1}{r}/2)*(1-{VcR}{r}/{Vu}{r})*100/{s},1))&" hilera(s)"))', 'calc', '@')
+        # largo (cm desde el paño) donde V > V_cR; se compara contra el macizo de orilla que ya da el acomodo de casetones
+        xper = '({ln1}{r}/2-{VcR}{r}/MAX({Vu}{r},1E-9)*({ln1}{r}/2-{dNc}{r}))'
+        xvol = '({ln1}{r}-({VcR}{r}*1E5/{s}-{FCcm}*{pbor}{r})*100/{wu}{r})'
+        ncs = 'INT(({a1}{r}*100-{bp}+{bw})/{s})'
+        oril = 'IF(%s>0,({a1}{r}*100-{bp}-(%s*{ac}+(%s-1)*{bw}))/2,{a1}{r}*100/2)' % (ncs, ncs, ncs)
+        hil = 'MAX(0,CEILING((IF({modo}{r}="VOLADO",%s,%s)-%s)/{s},1))' % (xvol, xper, oril)
+        vals['cort'] = ('=IF({modo}{r}="HUECO","—",IF({Vu}{r}<={VcR}{r},"CUMPLE",IF(%s<=0,"CUMPLE (basta el macizo de orilla)","MACIZAR "&%s&" hilera(s)")))' % (hil, hil), 'calc', '@')
         afs = [edge_af(t, s_, k) for s_ in SIDES]
         vals['afm'] = ('=IF({modo}{r}="PERIMETRAL",(%s)/4,0)' % '+'.join(afs), 'calc', '0.00')
         disc_nobeam = 'OR(' + ','.join('AND(%s,%s<0.8)' % (D_[s_], a_) for s_, a_ in zip(SIDES, afs)) + ')'
@@ -198,31 +258,39 @@ def sheet_tableros(wb):
         vals['peral'] = ('=IF({modo}{r}="HUECO","—",IF({heqv}{r}>={hmin}{r},"CUMPLE",IF({modo}{r}="VOLADO","NO CUMPLE","CALCULAR FLECHA")))', 'calc', '@')
         vals['tdia'] = ('=IF({modo}{r}="HUECO","—",IF({t}>=IF(IF({modo}{r}="VOLADO",{a1}{r},{a2}{r})>=6,6,5),"CUMPLE","CAPA ≥ 6 cm"))', 'calc', '@')
         # bastones: desde el paño, punto de inflexión + max(d, 12db, Ln/16), y no menos que L_d
-        xpi_c = '{ln1}{r}*(1-SQRT({MPc}{r}/MAX({MPc}{r}+{MNc}{r},1E-9)))/2'
-        xpi_l = '{ln2}{r}*(1-SQRT({MPl}{r}/MAX({MPl}{r}+{MNl}{r},1E-9)))/2'
+        # punto de inflexión con momentos distintos en los extremos: M(ξ) = −M1(1−ξ) − M2·ξ + 4·M0·ξ(1−ξ), M0 = M⁺ + (M1+M2)/2.
+        # M1 = M⁻ de diseño (incluye lo que deja el vecino), M2 = el del otro extremo sin distribuir, M⁺ sin el ΔM⁺ (lo más largo).
+        def xpi(ln, cP, cI, cD, MN):
+            P_ = '({%s}{r}%s)' % (cP, fac); M1 = '{%s}{r}' % MN
+            M2 = '(IF(AND({%s}{r}>0,{%s}{r}>0),MIN({%s}{r},{%s}{r}),MAX({%s}{r},{%s}{r}))%s)' % (cI, cD, cI, cD, cI, cD, fac)
+            M0 = '(%s+(%s+%s)/2)' % (P_, M1, M2)
+            bq_ = '(4*%s+%s-%s)' % (M0, M1, M2)
+            return '{%s}{r}*(%s-SQRT(MAX(0,%s^2-16*%s*%s)))/(8*MAX(%s,1E-9))' % (ln, bq_, bq_, M0, M1, M0)
+        xpi_c = xpi('ln1', 'cPC', 'cNIC', 'cNDC', 'MNc')
+        xpi_l = xpi('ln2', 'cPL', 'cNIL', 'cNDL', 'MNl')
         ext_c = 'MAX({dNc}{r},12*%s,{ln1}{r}/16)' % db('{vNc}{r}')
         ext_l = 'MAX({dNl}{r},12*%s,{ln2}{r}/16)' % db('{vNl}{r}')
         if t['modo'] == 'VOLADO':
             lb = t['volado']['Lb']
             # claro de respaldo con 0.9·PP geométrico y sin carga viva (efecto favorable): donde se anula el momento negativo
             wD = '(0.9*{PP}*{s}/100/1000)'
-            A_ = '(0.45*%s)' % wD; B_ = '(0.45*%s*%.3f+{MNc}{r}/%.3f)' % (wD, lb, lb); C_ = '{MNc}{r}'
+            A_ = '(0.5*%s)' % wD; B_ = '(0.5*%s*%.3f+{MNc}{r}/%.3f)' % (wD, lb, lb); C_ = '{MNc}{r}'
             x0 = 'IF(%s^2-4*%s*%s<0,%.3f,MIN(%.3f,(%s-SQRT(%s^2-4*%s*%s))/(2*%s)))*100' % (B_, A_, C_, lb, lb, B_, B_, A_, C_, A_)
-            vals['Lbc'] = ('=CEILING(MAX(%s+MAX({dNc}{r},12*%s,%.1f/16),%s),5)' % (x0, db('{vNc}{r}'), lb * 100, ld('{vNc}{r}')), 'key', '0')
+            vals['Lbc'] = ('=CEILING(MAX(%s+MAX({dNc}{r},12*%s,%.1f/16),%s),5)' % (x0, db('{vNc}{r}'), lb * 100, ldsel('{vNc}{r}', '{nNc}{r}', '{rt}{r}')), 'key', '0')
             vals['Lbl'] = (0, 'calc', '0')
         else:
-            vals['Lbc'] = ('=IF({modo}{r}="HUECO",0,CEILING(MAX(%s+%s,%s),5))' % (xpi_c, ext_c, ld('{vNc}{r}')), 'key', '0')
-            vals['Lbl'] = ('=IF({modo}{r}="HUECO",0,CEILING(MAX(%s+%s,%s),5))' % (xpi_l, ext_l, ld('{vNl}{r}')), 'key', '0')
+            vals['Lbc'] = ('=IF({modo}{r}="HUECO",0,CEILING(MAX(%s+%s,%s),5))' % (xpi_c, ext_c, ldsel('{vNc}{r}', '{nNc}{r}', '{rt}{r}')), 'key', '0')
+            vals['Lbl'] = ('=IF({modo}{r}="HUECO",0,CEILING(MAX(%s+%s,%s),5))' % (xpi_l, ext_l, ldsel('{vNl}{r}', '{nNl}{r}', '{rt}{r}')), 'key', '0')
         vals['ncx'] = ('=MAX(0,INT(({Lx}{r}*100-{bp}+{bw})/{s}))', 'calc', '0')
         vals['ncy'] = ('=MAX(0,INT(({Ly}{r}*100-{bp}+{bw})/{s}))', 'calc', '0')
         libre = '+'.join('(APOYOS!$F$%d="LIBRE")' % e[s] for s in SIDES)
         vals['apoy'] = ('=IF(COUNTIFS(TRIB!$C$%d:$C$%d,{key}{r},TRIB!$K$%d:$K$%d,"NO CUMPLE*")+COUNTIFS(TRIB!$C$%d:$C$%d,{key}{r},TRIB!$K$%d:$K$%d,"SIN APOYO*")>0,"VER PRINCIPALES",IF(%s>0,"REVISAR: borde libre","OK"))'
                         % (R0, R1, R0, R1, R0, R1, R0, R1, libre), 'calc', '@')
         fus = 'MAX({FUPc}{r},{FUNc}{r},{FUPl}{r},{FUNl}{r})'
-        nn = 'OR(' + ','.join('{n%s}{r}>MIN({nmax_sec},%s)' % (k_b, nfit('{v%s}{r}' % k_b, ('({bw}-2*{rec}-2*%s)' % dbe) if k_b[0] == 'N' else ('({bw}-2*{rb}{r}-2*%s)' % dbe))) for k_b in BLKS) + ')'
+        nn = 'OR(' + ','.join('{n%s}{r}>MIN({nmax_sec},%s)' % (k_b, nfit('{v%s}{r}' % k_b, ('({bw}-2*{rt}{r}-2*%s)' % dbe) if k_b[0] == 'N' else ('({bw}-2*{rb}{r}-2*%s)' % dbe))) for k_b in BLKS) + ')'
         etl = 'OR(' + ','.join('AND(ISNUMBER({e%s}{r}),{e%s}{r}<0.005)' % (k_b, k_b) for k_b in BLKS) + ')'
         vals['estado'] = ('=IF({modo}{r}="HUECO","HUECO — marco de nervaduras principales",IF(AND(%s<=1,NOT(%s),NOT(%s),{peral}{r}="CUMPLE",{tdia}{r}="CUMPLE"),'
-                          'IF({apoy}{r}="OK",IF({cort}{r}="CUMPLE","CUMPLE","CUMPLE — "&{cort}{r}),IF({apoy}{r}="VER PRINCIPALES","VER PRINCIPALES","REVISAR APOYOS")),'
+                          'IF({apoy}{r}="OK",IF(LEFT({cort}{r},6)="CUMPLE","CUMPLE","CUMPLE — "&{cort}{r})&IF(LEFT({c342}{r},5)="FUERA"," · fuera de 3.4.2.1 c)",""),IF({apoy}{r}="VER PRINCIPALES","VER PRINCIPALES","REVISAR APOYOS")),'
                           'IF(AND(%s<=1,NOT(%s),NOT(%s),{peral}{r}="CALCULAR FLECHA"),"REVISAR: calcular flecha (h_eq < h mín.)",'
                           '"NO CUMPLE: "&IF(%s>1,"flexión ","")&IF(%s,"no caben ","")&IF(%s,"ε_t < 0.005 ","")&IF({peral}{r}="NO CUMPLE","peralte ","")&IF({tdia}{r}<>"CUMPLE","capa < 6 cm",""))))'
                           % (fus, nn, etl, fus, nn, etl, fus, nn, etl), 'key', '@')
@@ -234,14 +302,17 @@ def sheet_tableros(wb):
         if t['name'] == 'F2':
             notes.append('Sin cargas en el E2K: se toma la SCM de F80023 (270 kg/m²). REVISAR.')
         if t['modo'] == 'VOLADO':
-            notes.append('Volado de %.2f m desde el borde %s (muro); orilla libre con %.1f kg/m del E2K. Cara inferior a la intemperie (r = r_ext). Si la orilla lleva pretil de block u otro elemento frágil, el L/8 no basta: calcular flecha (13.4). '
+            notes.append('Volado de %.2f m desde el borde %s (muro); orilla libre con %.1f kg/m del E2K. Cara inferior a la intemperie (r = r_ext); cara superior a la intemperie si DATOS lo indica (r = r_ext). Si la orilla lleva pretil de block u otro elemento frágil, el L/8 no basta: calcular flecha (13.4). '
                          'Bastón superior: se prolonga hacia el claro de respaldo (%.2f m) hasta pasar el punto donde se anula el momento con 0.9·PP y sin carga viva (NTC-Criterios 3.4.1 c y 5.1.2.2).' % (t['volado']['Lv'], t['volado']['raiz'], t['volado'].get('carga_borde', 0), t['volado']['Lb']))
         if t['modo'] == 'HUECO':
             notes.append('Tragaluz de 0.30 m: casi todo el tablero es hueco (quedan %.2f m² de losa).' % t['area'])
         if min(t['Lx'], t['Ly']) < 0.75:
             notes.append('No cabe un casetón en el claro corto: el tablero se cuela MACIZO.')
         txt = ' '.join(notes) or '—'
-        vals['nota'] = ('=IF({g678}{r}="NO","No cumple 6.7.8.1.4 (claro corto < 6·a_c): losa apoyada en vigas, 6.7.8.1.9 — V_cR sin ×1.1. ","")&"%s"' % txt.replace('"', '""'), 'calc', '@')
+        txtf = '&'.join('"%s"' % txt[i_:i_ + 200].replace('"', '""') for i_ in range(0, len(txt), 200))
+        vals['nota'] = ('=IF(AND({g678}{r}="NO",{modo}{r}="PERIMETRAL"),"No cumple 6.7.8.1.4 (a_c = "&{ac}&" cm > claro corto/6 = "&TEXT({a1}{r}*100/6,"0")&" cm): se diseña como losa apoyada en vigas (6.7.8.1.9): '
+                        'nervaduras con recubrimiento de viga r_np = "&{rec_np}&" cm (Tabla 4.14.16.a), V_cR sin ×1.1 y cortante sin estribos por 5.5.3.8.1 (criterio del Proyectista). Para que cuente como encasetonada: casetón de "&TEXT(FLOOR(MIN(80,{a1}{r}*100/6),1),"0")&" cm o menor. ","")'
+                        '&IF(LEFT({c342}{r},5)="FUERA","M⁻ del borde común "&{c342}{r}&": difieren más de 50%% (3.4.2.1 c); se distribuyen 2/3 del desequilibrio (3.4.3.1) y conviene confirmar los momentos con el modelo. ","")&%s' % txtf, 'calc', '@')
         for nm in _tcols:
             v, kind, fmt = vals[nm]
             if isinstance(v, str) and v.startswith('='):
@@ -255,7 +326,7 @@ def sheet_tableros(wb):
         dv_list(ws, '%s%d' % (TC['cforce'], r), '=' + N['LIST_0'])
     ws.freeze_panes = 'C9'
     add_cf(ws, 'B9:%s%d' % (TC['estado'], T1))
-    for c_ in ('g678', 'peral', 'tdia', 'cort'):
+    for c_ in ('g678', 'peral', 'tdia', 'cort', 'c342'):
         add_cf(ws, '%s9:%s%d' % (TC[c_], TC[c_], T1))
     ws.sheet_view.zoomScale = 80
     return ws
@@ -265,7 +336,7 @@ def sheet_tableros(wb):
 def sheet_nervadura(wb):
     ws = wb.create_sheet('NERVADURA'); S = Narr(ws, N)
     S.title('NERVADURA — DISEÑO PASO A PASO DE UN TABLERO')
-    S.subtitle('Escoge el tablero en la celda amarilla. La hoja vuelve a hacer, con la fórmula a la vista, lo mismo que hace TABLEROS en un renglón; al final compara los dos resultados. La sección 9 revisa la capa de compresión (es igual para todos los tableros).', 30)
+    S.subtitle('Escoge el tablero en la celda amarilla. La hoja vuelve a hacer, con la fórmula a la vista, lo mismo que hace TABLEROS en un renglón; al final compara los dos resultados. La sección 11 revisa la capa de compresión (es igual para todos los tableros).', 30)
     S.gap()
     S.section('0. TABLERO')
     S.header()
@@ -280,7 +351,7 @@ def sheet_nervadura(wb):
     S.header()
     S.row('Modo', '=' + tv('modo'), '—', 'PERIMETRAL = apoyado en sus cuatro bordes; VOLADO; HUECO.', 'APOYOS / TABLEROS', 'key', '@', 'n_modo')
     S.row('Nivel', '=' + tv('nivel'), '—', '—', E2K, 'calc', '@', 'n_niv')
-    S.row('a_x — claro en X usado (a ejes)', '=' + tv('ax'), 'm', 'De TABLEROS (para irregulares es el rectángulo representativo). Usar claros a ejes queda del lado seguro: la tabla permite claros libres en el caso I.', DXFT + ' · TRIB_TABLERO · ' + NTCC + ' Tabla 3.4.2.1 nota [2], p. 65', 'calc', '0.000', 'n_ax')
+    S.row('a_x — claro en X usado (a ejes)', '=' + tv('ax'), 'm', 'De TABLEROS (para irregulares es el rectángulo representativo). Usar claros a ejes queda del lado seguro: la tabla permite claros libres en el caso I.', DXFT + ' · TRIB_TABLERO · ' + NTCC + ' Tabla 3.4.2.1, nota final (Caso I: claros libres entre paños), p. 65', 'calc', '0.000', 'n_ax')
     S.row('a_y — claro en Y usado (a ejes)', '=' + tv('ay'), 'm', '—', DXFT, 'calc', '0.000', 'n_ay')
     S.row('a1 — claro corto', '=MIN({n_ax},{n_ay})', 'm', 'CALCULADA.', '—', 'key', '0.000', 'n_a1')
     S.row('a2 — claro largo', '=MAX({n_ax},{n_ay})', 'm', 'CALCULADA.', '—', 'calc', '0.000', 'n_a2')
@@ -291,7 +362,7 @@ def sheet_nervadura(wb):
     S.row('SCM — sobrecarga muerta', '=' + tv('scm'), 'kg/m²', 'Del E2K, tablero por tablero.', E2K + ' · AREALOAD "Sobrecarga"', 'calc', '0', 'n_scm')
     S.row('W_m — carga viva', '=' + tv('cv'), 'kg/m²', 'Según el destino del tablero.', NTCCA + ' Tabla 6.1.2.2, p. 11', 'calc', '0', 'n_cv')
     S.row('PP de diseño (geométrico + 20 + 20)', '={PPd}', 'kg/m²', 'CARGAS sección 1.', NTCCA + ' 5.1.2.1, p. 9', 'calc', '0.0', 'n_pp')
-    S.row('CM = PP + SCM', '={n_pp}+{n_scm}', 'kg/m²', 'CALCULADA. W_m/CM < 2.5: se pueden usar los coeficientes.', NTCC + ' 3.4.2.1 d), p. 64', 'calc', '0', 'n_cm')
+    S.row('CM = PP + SCM', '={n_pp}+{n_scm}', 'kg/m²', 'CALCULADA. W_m/CM < 2.5: cumple 3.4.2.1 d). La condición c) (M⁻ de tableros vecinos que no difieran más de 50 %) se revisa en TABLEROS, columna «3.4.2.1 c)», y se reporta abajo.', NTCC + ' 3.4.2.1 c) y d), p. 64', 'calc', '0', 'n_cm')
     S.row('w — carga de servicio', '={n_cm}+{n_cv}', 'kg/m²', 'CM + W_m.', NTCCA + ' 3.4.1 d), p. 7', 'calc', '0', 'n_ws')
     S.row('w_u — carga última', '=MAX({FCcm}*{n_cm}+{FCcv}*{n_cv},IF(' + tv('dest') + '="AZOTEA",{FCacc}*({n_cm}+{Wg}),0))', 'kg/m²', 'El mayor de 1.3·CM + 1.5·W_m y, en azotea, 1.1·(CM + W_g).', NTCCA + ' 3.4.1 a) y b), p. 7 · 7.3.2.1, p. 17', 'key', '0', 'n_wu')
     S.gap()
@@ -306,15 +377,18 @@ def sheet_nervadura(wb):
     S.row('Coef. M⁻ en bordes discontinuos, claro largo', '=' + tv('cNDL'), '×10⁻⁴', 'Interpolado en m.', 'TABLAS sección A', 'calc', '0', 'n_cNDL')
     S.row('Coef. M⁺ claro largo', '=' + tv('cPL'), '×10⁻⁴', 'Interpolado en m.', 'TABLAS sección A', 'calc', '0', 'n_cPL')
     S.row('Carga en la orilla del volado (servicio)', '=' + tv('pbor'), 'kg/m', 'Sólo para volados: barandal del E2K.', E2K + ' · FRAME OBJECT LOADS', 'calc', '0.0', 'n_pb')
+    S.row('3.4.2.1 c): M⁻ del borde común con cada vecino', '=' + tv('c342'), '—', 'FUERA = con ese vecino los M⁻ difieren más de 50 % del menor: los coeficientes quedan fuera de su campo; se distribuye el desequilibrio (renglones de abajo) y conviene confirmar con el modelo (método reconocido, 3.4.1.1).', NTCC + ' 3.4.2.1 c), p. 64', 'key', '@', 'n_c342')
+    S.row('M⁻ que deja el vecino al distribuir (corto / largo)', '=TEXT(' + tv('MNcd') + ',"0.000")&" / "&TEXT(' + tv('MNld') + ',"0.000")', 't·m', 'En cada borde continuo con vecino de M⁻ mayor: M + 2/3·(M_vecino − M)·k/(k + k_vecino), con k ∝ d³/a1 (d igual en toda la losa). Por nervadura.', NTCC + ' 3.4.3.1, p. 64', 'calc', '@')
+    S.row('ΔM⁺ por la distribución (corto / largo)', '=TEXT(' + tv('MPcd') + ',"0.000")&" / "&TEXT(' + tv('MPld') + ',"0.000")', 't·m', 'Donde el tablero cede negativo al vecino, el M⁺ sube la mitad de lo que baja el M⁻ en cada extremo.', NTCC + ' 3.4.3.1, p. 64', 'calc', '@')
     S.gap()
     S.section('3. MOMENTOS POR NERVADURA')
     S.secnote('Por metro: M = coef × 10⁻⁴ × w_u × a1². Por nervadura: × s. En volado: M = (w_u·L_n²/2 + 1.3·P·L_n)·s, con L_n medido al paño del muro.')
     S.header()
     fac = '*{n_wu}*{n_a1}^2*1E-4*{s}/100/1000'
-    S.row('M⁺ claro corto', '=IF({n_modo}="PERIMETRAL",{n_cPC}%s,0)' % fac, 't·m', 'Coef. M⁺ corto × 10⁻⁴ × w_u × a1² × s.', NTCC + ' 3.4.2.1, p. 64 y Tabla 3.4.2.1, p. 65', 'key', '0.000', 'n_MPc')
-    S.row('M⁻ claro corto', '=IF({n_modo}="PERIMETRAL",MAX({n_cNIC},{n_cNDC})%s,IF({n_modo}="VOLADO",({n_wu}*(%s/100)^2/2+{FCcm}*{n_pb}*%s/100)*{s}/100/1000,0))' % (fac, tv('ln1'), tv('ln1')), 't·m', 'El mayor entre borde continuo y discontinuo (envolvente: no se redistribuye el desequilibrio de 3.4.3.1); en volado, el momento en el paño.', NTCC + ' 3.4.3.1, p. 64', 'key', '0.000', 'n_MNc')
-    S.row('M⁺ claro largo', '=IF({n_modo}="PERIMETRAL",{n_cPL}%s,0)' % fac, 't·m', 'Mismo procedimiento.', NTCC + ' Tabla 3.4.2.1, p. 65', 'key', '0.000', 'n_MPl')
-    S.row('M⁻ claro largo', '=IF({n_modo}="PERIMETRAL",MAX({n_cNIL},{n_cNDL})%s,0)' % fac, 't·m', 'Mismo procedimiento.', NTCC + ' Tabla 3.4.2.1, p. 65', 'key', '0.000', 'n_MNl')
+    S.row('M⁺ claro corto', '=IF({n_modo}="PERIMETRAL",{n_cPC}%s+%s,0)' % (fac, tv('MPcd')), 't·m', 'Coef. M⁺ corto × 10⁻⁴ × w_u × a1² × s, más el ΔM⁺ de la distribución.', NTCC + ' 3.4.2.1, p. 64 y Tabla 3.4.2.1, p. 65 · 3.4.3.1, p. 64', 'key', '0.000', 'n_MPc')
+    S.row('M⁻ claro corto', '=IF({n_modo}="PERIMETRAL",MAX(MAX({n_cNIC},{n_cNDC})%s,%s),IF({n_modo}="VOLADO",({n_wu}*(%s/100)^2/2+{FCcm}*{n_pb}*%s/100)*{s}/100/1000,0))' % (fac, tv('MNcd'), tv('ln1'), tv('ln1')), 't·m', 'El mayor entre borde continuo, borde discontinuo y lo que deja el vecino al distribuir (3.4.3.1); en volado, el momento en el paño. En el borde común se arma con el mayor de los dos tableros.', NTCC + ' 3.4.3.1, p. 64', 'key', '0.000', 'n_MNc')
+    S.row('M⁺ claro largo', '=IF({n_modo}="PERIMETRAL",{n_cPL}%s+%s,0)' % (fac, tv('MPld')), 't·m', 'Mismo procedimiento.', NTCC + ' Tabla 3.4.2.1, p. 65 · 3.4.3.1, p. 64', 'key', '0.000', 'n_MPl')
+    S.row('M⁻ claro largo', '=IF({n_modo}="PERIMETRAL",MAX(MAX({n_cNIL},{n_cNDL})%s,%s),0)' % (fac, tv('MNld')), 't·m', 'Mismo procedimiento.', NTCC + ' Tabla 3.4.2.1, p. 65 · 3.4.3.1, p. 64', 'key', '0.000', 'n_MNl')
     sec = 4
     for blk, M, neg, lbl in (('Pc', 'n_MPc', False, 'LECHO INFERIOR — CLARO CORTO'), ('Nc', 'n_MNc', True, 'LECHO SUPERIOR — CLARO CORTO'),
                              ('Pl', 'n_MPl', False, 'LECHO INFERIOR — CLARO LARGO'), ('Nl', 'n_MNl', True, 'LECHO SUPERIOR — CLARO LARGO')):
@@ -323,7 +397,7 @@ def sheet_nervadura(wb):
         S.header()
         b = '{bwc}' if neg else tv('bf' + blk[1].lower())
         S.row('b — ancho que trabaja a compresión', '=' + b, 'cm', 'Arriba en tensión: comprime la nervadura (b_w de cálculo).' if neg else 'Arriba comprime el patín efectivo b_f (sección T).', NTCC + (' 3.9.1 e), p. 74' if neg else ' Tabla 5.2.1.4.2, p. 89 · 5.2.2.1.3.1, p. 90'), 'calc', '0.0', 'n_b' + blk)
-        S.row('d — peralte efectivo con la varilla que se usa', '=' + tv('d' + blk), 'cm', 'h − r − d_b/2' + (' − 2·Ø de la malla (la varilla va bajo la malla)' if neg else '') + (' − d_b del lecho del claro corto' if blk[1] == 'l' else '') + '. r = ' + ('r superior' if neg else 'r inferior (r_ext en volados)') + '.', NTCC + ' Tabla 4.14.16.a, p. 85', 'calc', '0.00', 'n_d' + blk)
+        S.row('d — peralte efectivo con la varilla que se usa', '=' + tv('d' + blk), 'cm', 'h − r − d_b/2' + (' − 2·Ø de la malla (la varilla va bajo la malla)' if neg else '') + (' − d_b del lecho del claro corto' if blk[1] == 'l' else '') + '. r = ' + ('r superior (r_np si el tablero no cumple 6.7.8; r_ext si la cara queda expuesta); − 2 cm si d ≤ 20 cm sin la precaución de 3.9.2' if neg else 'r inferior (r_np si el tablero no cumple 6.7.8; r_ext en volados)') + '.', NTCC + ' Tabla 4.14.16.a, p. 85' + (' · 3.9.1 d) y 3.9.2, p. 74' if neg else ''), 'calc', '0.00', 'n_d' + blk)
         S.row("As mín = máx(0.80·√f'c, 14)/fy · b_w · d", '={pmin}*IF(AND(%s,{n_modo}="VOLADO"),2*{bw},{bw})*{n_d%s}' % ('TRUE' if blk == 'Nc' else 'FALSE', blk), 'cm²', 'Sobre b_w (en el volado, patín a tensión: 2b_w). Se dispensa si la As colocada es ≥ 4/3 de la requerida.', NTCC + ' 6.3.5.1.2 y 6.3.5.1.3, p. 122', 'calc', '0.00', 'n_min' + blk)
         S.row('As requerida (TABLEROS)', '=' + tv('As' + blk), 'cm²', "q = 1 − √(1 − 2Mu/(F_R·b·d²·f''c)); As = q·f''c·b·d/fy; luego el mayor de esa y el menor de (As mín, 4/3·As). −1 = no alcanza o rebasa p_max.", NTCC + ' ecs. 5.2.2.1.1.1.a y b, p. 89 · 6.3.5.1.3, p. 122', 'key', '0.00', 'n_As' + blk)
         S.row('Varilla que se usa', '=' + tv('v' + blk), 'No.', 'La preferida (No. 4) o la siguiente que quepa.', NTCC + ' 6.7.6.1.3, p. 175', 'calc', 'General', 'n_v' + blk)
@@ -333,7 +407,7 @@ def sheet_nervadura(wb):
         S.row('M_R — momento resistente', '={FRf}*%s*{fy}*({n_d%s}-{n_a%s}/2)/1E5' % (asp, blk, blk), 't·m', "F_R·As·fy·(d − a/2).", NTCC + ' ec. 5.2.2.1.1.1.b, p. 89 · ' + NAIM24 + ' pág. 13', 'calc', '0.000', 'n_MR' + blk)
         S.row('Mu / M_R', '=IF({n_As%s}<0,9.99,IF({n_MR%s}>0,{%s}/{n_MR%s},0))' % (blk, blk, M, blk), '—', 'Debe ser ≤ 1. 9.99 = la sección no alcanza.', '—', 'key', '0.00', 'n_FU' + blk)
         S.row('ε_t — deformación del acero de tensión', '=0.003*({n_d%s}-{n_a%s}/{beta1})/({n_a%s}/{beta1})' % (blk, blk, blk), '—', 'ε_t = 0.003·(d − c)/c con c = a/β1. Debe ser ≥ 0.005 para usar F_R = 0.9 (sección controlada por tensión).', NTCC + ' Tabla 3.8.2.2, p. 70 · 6.7.3.3.1, p. 169', 'calc', '0.0000', 'n_e' + blk)
-        S.row('¿Caben en la nervadura?', '=IF({n_n%s}=0,"—",IF({n_n%s}*%s+({n_n%s}-1)*MAX({slib},%s)<={bw}-2*%s-2*%s+0.01,"CUMPLE","NO CABE"))' % (blk, blk, db('{n_v%s}' % blk), blk, db('{n_v%s}' % blk), ('{rec}' if neg else tv('rb')), dbz('{est_sec}')),
+        S.row('¿Caben en la nervadura?', '=IF({n_n%s}=0,"—",IF({n_n%s}*%s+({n_n%s}-1)*MAX({slib},%s)<={bw}-2*%s-2*%s+0.01,"CUMPLE","NO CABE"))' % (blk, blk, db('{n_v%s}' % blk), blk, db('{n_v%s}' % blk), (tv('rt') if neg else tv('rb')), dbz('{est_sec}')),
               '—', 'n·d_b + (n−1)·s_libre ≤ b_w − 2r − 2·estribo.', NTCC + ' 14.2.1, p. 347', 'calc', '@')
         S.row('Estado', '=IF(AND({n_FU%s}<=1,{n_e%s}>=0.005),"CUMPLE","NO CUMPLE")' % (blk, blk), '—', '—', '—', 'key', '@')
     S.gap()
@@ -344,10 +418,11 @@ def sheet_nervadura(wb):
     S.row('V_u por nervadura', '=' + tv('Vu'), 't', 'En volado: V = (w_u·(L_n − d) + 1.3·P)·s.', NTCC + ' 3.4.1.1, p. 64 · 6.7.4.3.2, p. 172 (sección crítica a d del paño)', 'key', '0.000', 'n_Vu')
     S.row('p — cuantía del acero superior en el apoyo', '={n_nNc}*%s/({bwc}*{n_dNc})' % ab('{n_vNc}'), '—', 'As_sup / (b_w·d).', NTCC + ' 5.5.3.2.1, p. 95', 'calc', '0.0000', 'n_p')
     S.row('λs — factor de tamaño', '=MIN(1,SQRT(2/(1+0.04*{n_dNc})))', '—', '√(2/(1 + 0.04d)) ≤ 1, d en cm.', NTCC + ' ec. 5.5.3.2.1.b, p. 95', 'calc', '0.000', 'n_ls')
-    S.row('¿Cumple 6.7.8 (losa encasetonada)?', '=' + tv('g678'), '—', 'Claro corto ≥ 6·a_c, a_c ≤ 80, b_w ≥ 10, h ≤ 3.5b_w, t ≥ máx(a_c/13, 5). Si NO, se diseña como losa apoyada en vigas y no se usa el ×1.1.', NTCC + ' 6.7.8.1.2 a 6.7.8.1.4, p. 187 · 6.7.8.1.9, p. 188', 'key', '@', 'n_678')
+    S.row('¿Cumple 6.7.8 (losa encasetonada)?', '=' + tv('g678'), '—', 'Claro corto ≥ 6·a_c, a_c ≤ 80, b_w ≥ 10, h ≤ 3.5b_w, t ≥ máx(a_c/13, 5). Si NO, se diseña como losa apoyada en vigas: nervaduras con recubrimiento de viga (r_np) y sin el ×1.1.', NTCC + ' 6.7.8.1.2 a 6.7.8.1.4, p. 187 · 6.7.8.1.9, p. 188', 'key', '@', 'n_678')
     S.row('V_cR — cortante que toma el concreto', "={FRv}*2*{n_ls}*{n_p}^(1/3)*SQRT({fc})*{bwc}*{n_dNc}*IF({n_678}=\"SÍ\",{VcRinc},1)/1000", 't',
           "F_R·2·λs·p^(1/3)·√f'c·b_w·d (× 1.1 si cumple 6.7.8). Sin estribos: elemento en que no es práctico colocarlos.", NTCC + ' 5.5.3.8.1, p. 97 · ec. 5.5.3.2.1.a, p. 95 · 6.7.8.1.5, p. 187 · Tabla 3.8.2.1, p. 70', 'key', '0.000', 'n_VcR')
-    S.row('Estado', '=' + tv('cort'), '—', 'Si no pasa, se quita(n) la(s) primera(s) hilera(s) de casetones junto al apoyo (macizo). Donde V_u > V_cR sin macizar haría falta al menos A_v,mín.', NTCC + ' Tabla 6.3.5.4.1 c) y 6.3.5.4.1, p. 123', 'key', '@')
+    S.row('Estado', '=' + tv('cort'), '—', 'Si V_u > V_cR se mide desde el paño hasta donde V baja a V_cR y se compara con el macizo de orilla; lo que falte se cubre quitando hileras de casetones (macizo). '
+          'Sin estribos por 5.5.3.8.1 (elemento en que no es práctico colocarlos, criterio del Proyectista); si el tablero no cumple 6.7.8 tampoco aplica la exención de la Tabla 6.3.5.4.1 c).', NTCC + ' 5.5.3.8.1, p. 97 · 5.5.3.1.1 y Tabla 6.3.5.4.1, p. 123', 'key', '@')
     S.gap()
     S.section('%d. ESPESOR MÍNIMO (SE PUEDE OMITIR EL CÁLCULO DE FLECHAS)' % sec); sec += 1
     S.secnote('Tabla 6.7.3.1.2 con α_fm = promedio de α_f de los cuatro bordes: un muro bajo todo el borde cuenta como viga infinitamente rígida (α_f = ∞); una nervadura principal, como I_b/I_s. '
@@ -367,33 +442,47 @@ def sheet_nervadura(wb):
     S.row('Macizo en cada orilla Y', '=IF({n_ncy}>0,({n_ay}*100-{bp}-({n_ncy}*{ac}+({n_ncy}-1)*{bw}))/2,{n_ay}*100/2)', 'cm', 'Mismo cálculo.', 'Geometría', 'calc', '0.0', 'n_my')
     S.row('Nervaduras secundarias ‖ X (entre casetones)', '=MAX(0,{n_ncy}-1)', 'pzas', 'Una entre cada par de hileras de casetones.', 'Geometría', 'calc', '0', 'n_nrx')
     S.row('Nervaduras secundarias ‖ Y', '=MAX(0,{n_ncx}-1)', 'pzas', 'Mismo criterio.', 'Geometría', 'calc', '0', 'n_nry')
-    S.row('Bastón superior ‖ claro corto: largo desde el paño', '=' + tv('Lbc'), 'cm', 'Punto de inflexión x = L_n·(1 − √(M⁺/(M⁺ + M⁻)))/2 más el mayor de d, 12d_b y L_n/16, y no menos que L_d. En volado: hacia el claro de respaldo.', NTCC + ' 6.3.7.3.4, p. 127 · 6.3.7.3.10.4, p. 129 · 14.4.2.1, p. 352', 'key', '0', 'n_Lbc')
+    S.row('Bastón superior ‖ claro corto: largo desde el paño', '=' + tv('Lbc'), 'cm', 'Punto de inflexión de M(ξ) = −M1(1−ξ) − M2·ξ + 4M0·ξ(1−ξ), con M1 = M⁻ de diseño, M2 = M⁻ del otro extremo y M0 = M⁺ + (M1+M2)/2, más el mayor de d, 12d_b y L_n/16, y no menos que L_d '
+          '(«otros casos» de la Tabla 14.4.2.4 si r < d_b o la separación libre < 2d_b). En volado: hacia el claro de respaldo.', NTCC + ' 6.3.7.3.4, p. 127 · 6.3.7.3.10.4, p. 129 · 14.4.2.1, p. 352', 'key', '0', 'n_Lbc')
     S.row('Bastón superior ‖ claro largo: largo desde el paño', '=' + tv('Lbl'), 'cm', 'Mismo criterio.', NTCC + ' 6.3.7.3.10.4, p. 129', 'key', '0', 'n_Lbl')
-    S.row('Varilla inferior corrida en bordes discontinuos', 'entra ≥ 15 cm en el apoyo', '—', 'Una varilla inferior por nervadura, continua y anclada para 1.25 fy en el paño (L_dh·1.25 ≈ 32 cm para No. 4): en dalas de 15 cm no cabe recta; rematar con gancho dentro de la dala y continuidad con la nervadura vecina.',
-          NTCC + ' 6.7.8.1.7, p. 188 · 6.7.7.4.1.1 a), p. 179 · 14.4.3.1, p. 355', 'calc', '@')
-    S.row('Bastón superior en bordes discontinuos', 'gancho de 90° en la dala', '—', 'Se dobla o se ancla en el muro para que desarrolle fy en el paño (L_dh ≈ 25 cm No. 4; extensión 12d_b).', NTCC + ' 6.7.7.4.1.1 b), p. 179 · Tabla 14.3.1, p. 349', 'calc', '@')
+    ldh_ = lambda v_: 'INDEX({LDHCOL},MATCH(%s,{BARCOL},0))' % v_
+    S.row('Ancho disponible para anclar en la dala o muro del borde discontinuo', '={bp}-{rec_np}', 'cm', 'b de la dala (15 cm) menos el recubrimiento de la cara exterior. L_dh se mide del paño al lado exterior del doblez.', NTCC + ' 14.4.3.1, p. 355', 'calc', '0.0', 'n_anc')
+    S.row('Varilla inferior de integridad en bordes discontinuos (1.25 fy en el paño)', '=IF(AND(1.25*%s<={n_anc},{n_anc}>=15),"CUMPLE","NO CUMPLE: 1.25·L_dh = "&TEXT(1.25*%s,"0.0")&" cm y ≥ 15 cm dentro del apoyo; hay "&TEXT({n_anc},"0.0")&" cm")' % (ldh_('{n_vPc}'), ldh_('{n_vPc}')), '—',
+          'Una varilla inferior por nervadura, continua y anclada para 1.25 fy en el paño, con ≥ 150 mm dentro del muro o viga. En dalas de 15 cm no cabe ni con gancho. '
+          'Solución en los bordes discontinuos: dala o cadena de borde de ancho ≥ 1.25·L_dh + r (≈ 36 cm con No. 4) o anclaje mecánico con cabeza (14.4.4).',
+          NTCC + ' 6.7.8.1.7, p. 188 · 6.7.7.4.1.1 a), p. 179 · 14.4.3.1, p. 355 · 14.4.10.2 a) y d), p. 366', 'key', '@', 'n_anc1')
+    S.row('Bastón superior en bordes discontinuos (fy en el paño)', '=IF(%s<={n_anc},"CUMPLE","NO CUMPLE: L_dh = "&TEXT(%s,"0.0")&" cm > "&TEXT({n_anc},"0.0")&" cm disponibles en la dala")' % (ldh_('{n_vNc}'), ldh_('{n_vNc}')), '—',
+          'El negativo se dobla o se ancla en el muro para desarrollarse en el paño (gancho de 90° con extensión de 12d_b). Solución: dala o cadena de borde de ancho ≥ L_dh + r (≈ 30 cm con No. 4) o anclaje mecánico (14.4.4).',
+          NTCC + ' 6.7.7.4.1.1 b), p. 179 · 14.4.3.1, p. 355 · Tabla 14.3.1, p. 349 · NTC-Mampostería 2023 (CDMX) 4.1.17.2, p. 43', 'key', '@', 'n_anc2')
     S.row('Refuerzo de esquina exterior (tableros de esquina sobre muros)', 'arriba y abajo en L_largo/5', '—', 'Para el M⁺ máximo del tablero, en un cuadro de un quinto del claro largo desde la esquina.', NTCC + ' 6.7.7.3.1, p. 178', 'calc', '@')
     S.gap()
     S.section('%d. CAPA DE COMPRESIÓN — MALLA, DIAFRAGMA Y CARGA CONCENTRADA (IGUAL PARA TODOS LOS TABLEROS)' % sec); sec += 1
     S.header()
+    capa0 = S.r
     S.row('As de la malla escogida', '=INDEX(TABLAS!$D$%d:$D$%d,MATCH({malla},TABLAS!$B$%d:$B$%d,0))' % (TB_W0, TB_W1, TB_W0, TB_W1), 'cm²/m', 'TABLAS sección C.', 'TABLAS', 'calc', '0.000', 'n_asm')
     S.row('Ø del alambre', '=INDEX(TABLAS!$C$%d:$C$%d,MATCH({malla},TABLAS!$B$%d:$B$%d,0))/10' % (TB_W0, TB_W1, TB_W0, TB_W1), 'cm', 'TABLAS sección C.', 'TABLAS', 'calc', '0.000', 'n_fim')
     S.row('Contracción y temperatura: As mín = 0.0018·t·100', '=0.0018*{t}*100', 'cm²/m', 'Ya no depende de fy ni de la exposición (la fórmula 660x₁/(fy(x₁+100)) era de 2017).', NTCC + ' 13.8.2.1.1, p. 345 · 6.7.8.1.8, p. 188', 'calc', '0.000', 'n_as1')
     S.row('Estado (temperatura)', '=IF({n_asm}>={n_as1},"CUMPLE","NO CUMPLE")', '—', '—', '—', 'key', '@')
     S.row('Diafragma: cuantía mínima por cortante = 0.0025·t·100', '=0.0025*{t}*100', 'cm²/m', 'Sólo cuenta el acero de la capa (el de cambios volumétricos sí contribuye; el de flexión de las nervaduras no).', NTCC + ' 6.8.6.4 y 6.8.6.3, p. 196 · 6.8.1.1 a), p. 188', 'calc', '0.000', 'n_asd')
     S.row('Estado (diafragma)', '=IF({n_asm}>={n_asd}-0.0005,"CUMPLE","NO CUMPLE: "&TEXT({n_asm}/{n_asd},"0%")&" — capa de 6 cm con 6x6-4/4")', '—', 'Con capa de 5 cm ninguna malla de la lista cumple a la vez diafragma y recubrimiento.', '—', 'key', '@')
-    S.row('Recubrimiento de la malla centrada en la capa', '=({t}-2*{n_fim})/2', 'cm', '(t − 2Ø)/2. Debe ser ≥ r (2 cm, interior A1).', NTCC + ' Tabla 4.14.16.a, p. 85', 'calc', '0.00', 'n_rm')
-    S.row('Estado (recubrimiento de la malla)', '=IF({n_rm}>={rec}-0.005,"CUMPLE","NO CUMPLE")', '—', '—', '—', 'key', '@')
+    S.row('Recubrimiento de la malla centrada en la capa', '=({t}-2*{n_fim})/2', 'cm', '(t − 2Ø)/2. Debe ser ≥ r (2 cm, interior A1) y ≥ r_ext donde la cara superior queda a la intemperie (azotea o volados marcados como expuestos en DATOS).', NTCC + ' Tabla 4.14.16.a, p. 85 · 4.3.2, p. 76', 'calc', '0.00', 'n_rm')
+    S.row('Estado (recubrimiento de la malla)', '=IF({n_rm}>=IF(OR({exp_az}="SÍ",{exp_vol}="SÍ"),{rec_ext},{rec})-0.005,"CUMPLE","NO CUMPLE"&IF(AND({n_rm}>={rec}-0.005,OR({exp_az}="SÍ",{exp_vol}="SÍ"))," en las zonas expuestas: protegerlas (piso o impermeabilizante, DATOS) o engrosar ahí la capa",""))', '—', '—', '—', 'key', '@')
     S.row('Separación de la malla (15.24 cm) ≤ máx. permitida', '=IF(15.24<=MIN(5*{t},45,30),"CUMPLE","NO CUMPLE")', '—', 'El menor de 5t y 45 cm (diafragma) y 30 cm entre alambres soldados.', NTCC + ' 6.8.7.3, p. 196 · 2.4.2.1.6.3, p. 44', 'calc', '@')
     S.row('Espesor de pisos y rellenos que reparten la carga concentrada (45°)', 0, 'cm', 'CAPTURA. 0 = la carga actúa directo sobre la capa (lo más estricto). Si cuentas el piso y el pegapiso (≈ 6 cm), pon aquí su espesor.', 'Criterio de esta hoja', 'input', '0.0', 'tpz')
     S.row('P_u = FC_CV × 1 000 kg en 10 × 10 cm', '={FCcv}*' + N['Pcap'], 'kg', 'Carga concentrada mínima entre nervaduras.', NTCC + ' 6.7.8.1.6, p. 187 · ' + NTCCA + ' 3.4.1 a), p. 7', 'calc', '0', 'n_Pu')
     S.row('d de la capa (malla al centro)', '={t}/2', 'cm', '—', 'Geometría', 'calc', '0.00', 'n_dc')
     S.row('b₀ — perímetro crítico a d/2', '=4*(10+2*{tpz}+{n_dc})', 'cm', '4·(c + d) con c = 10 cm más el reparto.', NTCC + ' 5.6, p. 99–100', 'calc', '0.0', 'n_bo')
     S.row('V_cR punzonamiento de la capa', "={FRv}*MIN(1,0.5*(1+2/1),0.27*(2+40*{n_dc}/{n_bo}))*MIN(1,SQRT(2/(1+0.04*{n_dc})))*SQRT({fc})*{n_bo}*{n_dc}", 'kg', "v_cR = F_R·(el menor de 1.0, 0.5(1 + 2/β) y 0.27(2 + α_s·d/b₀))·λs·√f'c, con β = 1 y α_s = 40.", NTCC + ' Tabla 5.6.2.1.1, p. 100', 'calc', '0', 'n_vcp')
-    S.row('Estado (punzonamiento)', '=IF({n_Pu}<={n_vcp},"CUMPLE","NO CUMPLE: P_u/V_cR = "&TEXT({n_Pu}/{n_vcp},"0.00")&" — capa de 6 cm o contar el reparto del piso")', '—', '—', '—', 'key', '@')
+    S.row('Estado (punzonamiento)', '=IF({n_Pu}<={n_vcp},"CUMPLE","NO CUMPLE: P_u/V_cR = "&TEXT({n_Pu}/{n_vcp},"0.00")&" — capa de 6 cm con 6x6-4/4")', '—', 'Contar el reparto del piso (renglón de arriba) sólo ayuda aquí: no resuelve el diafragma ni el acero mínimo de abajo.', '—', 'key', '@')
+    S.row('v_uv — esfuerzo cortante en la sección crítica', '={n_Pu}/({n_bo}*{n_dc})', 'kg/cm²', 'P_u/(b₀·d).', NTCC + ' 6.7.6.1.2, p. 175', 'calc', '0.00', 'n_vuv')
+    S.row("Límite 0.5·F_R·λs·λ·√f'c", "=0.5*{FRv}*MIN(1,SQRT(2/(1+0.04*{n_dc})))*SQRT({fc})", 'kg/cm²', 'Si v_uv lo rebasa, se pide acero mínimo alrededor de la carga concentrada (ec. 6.7.6.1.2).', NTCC + ' 6.7.6.1.2, p. 175', 'calc', '0.00', 'n_vlim')
+    S.row('b_losa — ancho en que se coloca ese acero', '=10+2*{tpz}+2*1.5*{t}', 'cm', 'Ancho cargado más 1.5h a cada lado.', NTCC + ' Tabla 6.7.4.2.2.3, p. 171', 'calc', '0.0', 'n_bls')
+    S.row('As,mín alrededor de la carga = 5·v_uv·b_losa·b₀/(F_R·α_s·fy)', '=IF({n_vuv}>{n_vlim},5*{n_vuv}*{n_bls}*{n_bo}/({FRv}*40*{fym}),0)', 'cm²', 'α_s = 40 (carga interior); fy de la malla.', NTCC + ' ec. 6.7.6.1.2, p. 175 · Tabla 5.6.2.1.1, p. 100', 'calc', '0.000', 'n_asc')
+    S.row('Estado (acero mínimo alrededor de la carga concentrada)', '=IF({n_asm}/100*{n_bls}>={n_asc}-0.0005,"CUMPLE","NO CUMPLE: la malla da "&TEXT({n_asm}/100*{n_bls},"0.00")&" de "&TEXT({n_asc},"0.00")&" cm² — capa de 6 cm con 6x6-4/4")', '—', 'Malla dentro de b_losa contra As,mín.', NTCC + ' 6.7.6.1.2, p. 175', 'key', '@')
     S.row('m_R de la capa por unidad de ancho', "={FRf}*{n_asm}/100*{fym}*({n_dc}-{n_asm}/100*{fym}/({fpc})/2)", 'kg·cm/cm', "F_R·As·fy·(d − a/2) por cm.", NTCC + ' ec. 5.2.2.1.1.1.b, p. 89', 'calc', '0.0', 'n_mR')
-    S.row('m requerido = P_u/(4π) (abanico de líneas de fluencia, m = m′)', '={n_Pu}/(4*PI())', 'kg·cm/cm', 'Mecanismo de abanico alrededor de la carga; la malla única al centro da m = m′. Ignorar el área cargada queda del lado seguro.', 'Criterio de esta hoja · ' + NTCC + ' 3.4.1.1, p. 64 (líneas de fluencia) · 6.7.8.1.8, p. 188', 'calc', '0.0', 'n_mq')
+    S.row('m requerido = P_u/(4π) (abanico de líneas de fluencia, m = m′)', '={n_Pu}/(4*PI())', 'kg·cm/cm', 'Mecanismo de abanico alrededor de la carga; la malla única al centro da m = m′. Ignorar el área cargada queda del lado seguro.', 'Criterio de esta hoja · ' + NTCC + ' 3.4.1.1, p. 64 (líneas de fluencia) · véase también ec. 3.4.5.1, p. 66 (se desprecia 2r/3R_b, del lado seguro) · 6.7.8.1.8, p. 188', 'calc', '0.0', 'n_mq')
     S.row('Estado (flexión de la capa)', '=IF({n_mq}<={n_mR},"CUMPLE","NO CUMPLE")', '—', '—', '—', 'key', '@')
+    N['CAPA_RNG'] = 'NERVADURA!$C$%d:$C$%d' % (capa0, S.r - 1)
     S.gap()
     S.section('%d. COMPROBACIÓN CONTRA TABLEROS' % sec)
     S.header()
@@ -413,7 +502,7 @@ _pcols = ['np', 'nivel', 'eje', 'de', 'a', 'L', 'ei', 'ej', 'ci', 'cj', 'cond', 
           'At', 'wt', 'Lm', 'wm', 'waz', 'scm', 'cv', 'wl', 'wpp', 'w', 'wD', 'wL', 'wW',
           'SP', 'SM', 'SV', 'SPm', 'SMs', 'Ri', 'Rj', 'Ris', 'Rjs', 'Mp', 'Mn', 'Vu', 'Ms',
           'd', 'AsP', 'vP', 'nPx', 'nP', 'MRP', 'FUP', 'eP', 'AsN', 'vN', 'nN', 'MRN', 'FUN', 'eN',
-          'VcR', 'se', 'sext', 'cort', 'bfq', 'Ig', 'Ie', 'dlt', 'dlim', 'Pu', 'Kf', 'fcm', 'm418', 'htab', 'h418', 'hflex', 'hrec', 'estado', 'nota', 'nmax']
+          'VcR', 'se', 'sext', 'cort', 'bfq', 'Ig', 'dr', 'nAs', 'kd', 'Icr', 'Ie', 'dlt', 'dlim', 'Pu', 'Kf', 'fcm', 'm418', 'htab', 'h418', 'hflex', 'hrec', 'estado', 'nota', 'nmax']
 for i, nm in enumerate(_pcols):
     PC[nm] = CL(2 + i)
 PC_LAST = CL(2 + len(_pcols) - 1)
@@ -449,7 +538,7 @@ def sheet_principales(wb):
     ws['B2'].font = font(9, i=True, color=GRAY); ws['B2'].alignment = Alignment(wrap_text=True, vertical='top'); ws.row_dimensions[2].height = 42
     ws.merge_cells('B3:%s3' % last)
     ws['B3'].value = ('b y h (amarillo) son la SECCIÓN PROPUESTA: la hoja la dimensionó para que el tramo cumpla todo; donde dice «PERALTAR» la dala de 15×25 del modelo no alcanza y debe ir como trabe descolgada de esa sección. '
-                      'Los extremos con castillo (C1…C8) dependen de lo que decidas en APOYOS sección B. «h requerido» es el mínimo por reglas de peralte y por flexión; la flecha y el muro sobre la viga se revisan con la h capturada.')
+                      'Los extremos con castillo (C1…C8) dependen de lo que decidas en APOYOS sección B. «h requerido» es el mínimo por reglas de peralte, por flexión y por NTC-M 4.1.18 (sin flecha ni acomodo de varillas); la flecha y el muro sobre la viga se revisan con la h capturada y el estado propone el h que falta.')
     ws['B3'].font = font(9, True, color=WARN_FG); ws['B3'].fill = fill(WARN_BG); ws['B3'].alignment = Alignment(wrap_text=True, vertical='top'); ws.row_dimensions[3].height = 30
     groups = [('np', 'raiz', 'TRAMO Y APOYOS'), ('bq', 'cambio', 'SECCIÓN PROPUESTA'), ('At', 'wW', 'CARGA REPARTIDA (última; servicio D / W_m / W)'), ('SP', 'Rjs', 'CARGAS PUNTUALES Y REACCIONES'),
               ('Mp', 'Ms', 'ELEMENTOS MECÁNICOS'), ('d', 'eN', 'FLEXIÓN'), ('VcR', 'cort', 'CORTANTE'), ('bfq', 'dlim', 'FLECHA (13.4) — SECCIÓN T CON LA CAPA'), ('Pu', 'm418', 'MURO SOBRE VIGA (NTC-M 4.1.18)'), ('htab', 'nmax', 'PERALTE Y ESTADO')]
@@ -465,12 +554,12 @@ def sheet_principales(wb):
              'AsP': ('As⁺ req.', 7), 'vP': ('Var.', 5.5), 'nPx': ('Extra por flecha', 6), 'nP': ('Pzas', 5), 'MRP': ('M_R⁺', 7), 'FUP': ('Mu⁺/M_R', 7), 'eP': ('ε_t⁺', 6.5),
              'AsN': ('As⁻ req.', 7), 'vN': ('Var.', 5.5), 'nN': ('Pzas', 5), 'MRN': ('M_R⁻', 7), 'FUN': ('Mu⁻/M_R', 7), 'eN': ('ε_t⁻', 6.5),
              'VcR': ('V_cR', 7), 'se': ('Sep. estribo claro', 7), 'sext': ('Sep. en 2h extremos', 7), 'cort': ('Cortante', 20),
-             'bfq': ('Patín b_f', 6.5), 'Ig': ('I_g sección T', 8.5), 'Ie': ('I_e', 8), 'dlt': ('Flecha total', 7), 'dlim': ('Límite', 7), 'Pu': ('P_u del muro', 7), 'Kf': ('K', 6), 'fcm': ('f_CM', 7), 'm418': ('Estado muro', 16),
-             'htab': ('h mín. (Tabla 6.3.3.1.1 / NTC-M 4.1.18.4)', 9), 'h418': ('h por NTC-M 4.1.18.3', 8), 'hflex': ('h req. flexión', 8), 'hrec': ('h requerido', 8), 'estado': ('ESTADO', 30),
+             'bfq': ('Patín b_f', 6.5), 'Ig': ('I_g sección T', 8.5), 'dr': ('d con la varilla real', 7), 'nAs': ('n·A_s a tensión', 7), 'kd': ('kd (rectángulo)', 7), 'Icr': ('I_cr agrietada (T real)', 8.5), 'Ie': ('I_e', 8), 'dlt': ('Flecha total', 7), 'dlim': ('Límite', 7), 'Pu': ('P_u del muro', 7), 'Kf': ('K', 6), 'fcm': ('f_CM', 7), 'm418': ('Estado muro', 16),
+             'htab': ('h mín. (Tabla 6.3.3.1.1 / NTC-M 4.1.18.4)', 9), 'h418': ('h por NTC-M 4.1.18.3', 8), 'hflex': ('h req. flexión', 8), 'hrec': ('h mín. por flexión, Tabla 6.3.3.1.1 y NTC-M 4.1.18 (sin flecha ni acomodo)', 10), 'estado': ('ESTADO', 30),
              'nota': ('Nota', 50), 'nmax': ('Ancho libre para varillas', 7)}
     units = {'L': 'm', 'bq': 'cm', 'hq': 'cm', 'At': 'm²', 'wt': 't/m', 'Lm': 'm', 'wm': 't/m', 'waz': 't/m', 'scm': 'kg/m', 'cv': 'kg/m', 'wl': 't/m', 'wpp': 't/m', 'w': 't/m', 'wD': 't/m', 'wL': 't/m', 'wW': 't/m',
              'SP': 't', 'SM': 't·m', 'SV': 't', 'SPm': 't', 'SMs': 't·m', 'Ri': 't', 'Rj': 't', 'Ris': 't', 'Rjs': 't', 'Mp': 't·m', 'Mn': 't·m', 'Vu': 't', 'Ms': 't·m', 'd': 'cm',
-             'AsP': 'cm²', 'MRP': 't·m', 'AsN': 'cm²', 'MRN': 't·m', 'eP': '≥ 0.005', 'eN': '≥ 0.005', 'VcR': 't', 'se': 'cm', 'sext': 'cm', 'bfq': 'cm', 'Ig': 'cm⁴', 'Ie': 'cm⁴', 'dlt': 'cm', 'dlim': 'cm',
+             'AsP': 'cm²', 'MRP': 't·m', 'AsN': 'cm²', 'MRN': 't·m', 'eP': '≥ 0.005', 'eN': '≥ 0.005', 'VcR': 't', 'se': 'cm', 'sext': 'cm', 'bfq': 'cm', 'Ig': 'cm⁴', 'dr': 'cm', 'nAs': 'cm²', 'kd': 'cm', 'Icr': 'cm⁴', 'Ie': 'cm⁴', 'dlt': 'cm', 'dlim': 'cm',
              'Pu': 't', 'fcm': 'kg/cm²', 'htab': 'cm', 'h418': 'cm', 'hflex': 'cm', 'hrec': 'cm', 'nmax': 'cm'}
     for nm, (t, w) in heads.items():
         hdr_cell(ws, 7, CI(PC[nm]), t, w); unit_cell(ws, 8, CI(PC[nm]), units.get(nm, ''))
@@ -531,7 +620,8 @@ def sheet_principales(wb):
         }
         vals['nPx'] = (nx0 or 0, 'input', '0')
         for blk, M in (('P', 'Mp'), ('N', 'Mn')):
-            asr = asreq('{%s}{r}' % M, '{bq}{r}', '{d}{r}', True, '{bq}{r}')
+            # 6.3.5.1.2: en viga isostática con el patín a tensión (volado), b_w = el menor de b_f y 2b_w
+            asr = asreq('{%s}{r}' % M, '{bq}{r}', '{d}{r}', True, 'IF({cond}{r}="VOLADO",MIN({bfq}{r},2*{bq}{r}),{bq}{r})' if blk == 'N' else '{bq}{r}')
             vals['As' + blk] = ('=IF(OR({cond}{r}="BORDE DE VOLADO",{cond}{r}="SIN APOYO"),0,%s)' % asr, 'calc', '0.00')
             vals['v' + blk] = ('=IF({As%s}{r}<0,0,' % blk + varsel2('{As%s}{r}' % blk, '{var_np}', '99', '{nmax}{r}', '{nmin_np}') + ')', 'calc', 'General')
             extra = '+{nPx}{r}' if blk == 'P' else ''
@@ -550,7 +640,7 @@ def sheet_principales(wb):
         smaxv = 'IF(%s<=1.1*SQRT({fc})*{bq}{r}*{d}{r}/1000,MIN({d}{r}/2,60),MIN({d}{r}/4,30))' % vs
         sreq = 'IF({Vu}{r}>{VcR}{r},{FRv}*%s*{fyt}*{d}{r}/(({Vu}{r}-{VcR}{r})*1000),999)' % av
         savm = '%s*{fyt}/(MAX(0.2*SQRT({fc}),3.5)*{bq}{r})' % av
-        s147 = 'MIN(16*%s,48*%s)' % (db('MAX({vP}{r},{vN}{r},2)'), db('{est_np}'))
+        s147 = 'MIN(16*%s,48*%s)' % (db('MIN(MAX({vP}{r},2),MAX({vN}{r},2))'), db('{est_np}'))
         vals['se'] = ('=IF({Vu}{r}=0,0,FLOOR(MIN(%s,%s,%s,%s,{smax_np}),0.5))' % (sreq, smaxv, savm, s147), 'calc', '0.0')
         if t['np'] in PERIM:
             vals['sext'] = ('=IF({Vu}{r}=0,0,FLOOR(MIN({se}{r},{d}{r}/4,8*%s,24*%s,30),0.5))' % (db('MIN(MAX({vP}{r},2),MAX({vN}{r},2))'), db('{est_np}')), 'calc', '0.0')
@@ -569,22 +659,36 @@ def sheet_principales(wb):
         Ig = '{Ig}{r}'
         AsT = 'IF({cond}{r}="VOLADO",{nN}{r}*%s,{nP}{r}*%s)' % (ab('MAX({vN}{r},2)'), ab('MAX({vP}{r},2)'))
         bc = 'IF({cond}{r}="VOLADO",{bq}{r},{bfq}{r})'
-        rn = '({Es}/{Ec}*%s/(%s*{d}{r}))' % (AsT, bc)
-        kd = '((SQRT(2*%s+%s^2)-%s)*{d}{r})' % (rn, rn, rn)
-        Icr = '(%s*%s^3/3+{Es}/{Ec}*%s*({d}{r}-%s)^2)' % (bc, kd, AsT, kd)
+        vals['dr'] = ('={hq}{r}-{rec_np}-%s-%s/2' % (db('{est_np}'), db('MAX(IF({cond}{r}="VOLADO",{vN}{r},{vP}{r}),2)')), 'calc', '0.00')
+        vals['nAs'] = ('={Es}/{Ec}*%s' % AsT, 'calc', '0.00')
+        dr = '{dr}{r}'; nAs = '{nAs}{r}'
+        rn = '(%s/(%s*%s))' % (nAs, bc, dr)
+        vals['kd'] = ('=IF(%s<=0,0,(SQRT(2*%s+%s^2)-%s)*%s)' % (nAs, rn, rn, rn, dr), 'calc', '0.00')
+        kd = '{kd}{r}'
+        Icr_r = '(%s*%s^3/3+%s*(%s-%s)^2)' % (bc, kd, nAs, dr, kd)
+        # eje neutro bajo la capa (sección T): (b_w/2)x² + [(b_f−b_w)t + nAs]x − [(b_f−b_w)t²/2 + nAs·d] = 0
+        Bt = '(({bfq}{r}-{bq}{r})*{t}+%s)' % nAs
+        Ct = '(({bfq}{r}-{bq}{r})*{t}^2/2+%s*%s)' % (nAs, dr)
+        xT = '((-%s+SQRT(%s^2+2*{bq}{r}*%s))/{bq}{r})' % (Bt, Bt, Ct)
+        Icr_t = '({bfq}{r}*{t}^3/12+{bfq}{r}*{t}*(%s-{t}/2)^2+{bq}{r}*(%s-{t})^3/3+%s*(%s-%s)^2)' % (xT, xT, nAs, dr, xT)
+        vals['Icr'] = ('=IF(AND({cond}{r}<>"VOLADO",%s>{t}),%s,%s)' % (kd, Icr_t, Icr_r), 'calc', '#,##0')
+        Icr = '{Icr}{r}'
         Mag = '({ffr}*%s/IF({cond}{r}="VOLADO",%s,{hq}{r}-%s))' % (Ig, ybT, ybT)
         Mse = '({Ms}{r}*1E5)'
-        vals['Ie'] = ('=IF({Ms}{r}<=0,%s,IF(%s<=2/3*%s,%s,IF(%s<=0,0,%s/(1-(2/3*%s/%s)^2*(1-%s/%s)))))' % (Ig, Mse, Mag, Ig, AsT, Icr, Mag, Mse, Icr, Ig), 'calc', '#,##0')
-        pcomp = 'IF({cond}{r}="VOLADO",{nP}{r}*%s,{nmin_np}*%s)/({bq}{r}*{d}{r})' % (ab('MAX({vP}{r},2)'), ab('MAX({vN}{r},2)'))
+        vals['Ie'] = ('=IF({Ms}{r}<=0,%s,IF(%s<=2/3*%s,%s,IF(%s<=0,0,%s/(1-(2/3*%s/%s)^2*(1-%s/%s)))))' % (Ig, Mse, Mag, Ig, nAs, Icr, Mag, Mse, Icr, Ig), 'calc', '#,##0')
+        pcomp = 'IF({cond}{r}="VOLADO",{nP}{r}*%s,{nmin_np}*%s)/({bq}{r}*%s)' % (ab('MAX({vP}{r},2)'), ab('MAX({vN}{r},2)'), dr)
         rs = '(({wD}{r}+{wW}{r})/MAX({wD}{r}+{wL}{r},1E-6))'
-        di = '(IF({cond}{r}="VOLADO",1/4,5/48)*%s*({L}{r}*100)^2/({Ec}*MAX({Ie}{r},1)))' % Mse
+        # volado: carga repartida → M·L²/(4EI); cargas puntuales (cota de la punta) → M·L²/(3EI)
+        di = '(IF({cond}{r}="VOLADO",({Ms}{r}-{SMs}{r})/4+{SMs}{r}/3,5/48*{Ms}{r})*1E5*({L}{r}*100)^2/({Ec}*MAX({Ie}{r},1)))'
         vals['dlt'] = ('=IF(OR({cond}{r}="APOYADA",{cond}{r}="VOLADO"),%s*(1+2/(1+50*%s)*%s),0)' % (di, pcomp, rs), 'key', '0.00')
         vals['dlim'] = ('=IF({Lm}{r}>0,0.3+{L}{r}*100/480,0.5+{L}{r}*100/240)', 'calc', '0.00')
         # NTC-Mampostería 4.1.18: muro sobre viga
         ATm = '({tm}*100*{Lm}{r}*100)'
         a_ = 'MIN(1,{Lm}{r}/{L}{r})'
         Wp = '({Pu}{r}*1000/%s*{tm}*100*(%s^4-4*%s^3+8*%s))' % (ATm, a_, a_, a_)
-        wu4 = '(({wt}{r}+{wl}{r}+{wpp}{r})*10)'
+        # w_u sobre la viga: losa + lineal + peso extra + reacciones que llegan DIRECTO de otras principales como carga repartida equivalente 8·M/L²
+        # (las que llegan por el muro ya están en P_u)
+        wu4 = '(({wt}{r}+{wl}{r}+{wpp}{r}+IF({cond}{r}="APOYADA",8*(%s)/{L}{r}^2,0))*10)' % sumcol('H', 'directo')
         fI = '(%s/(%s+5*%s))' % (Wp, Wp, wu4)
         vals['Pu'] = ('=IF({Lm}{r}>0,({wm}{r}+{waz}{r})*{L}{r}+{SPm}{r},0)', 'calc', '0.00')
         vals['Kf'] = ('=IF({Lm}{r}>0,({Em}*{tm}*100*({L}{r}*100)^3/({Ec}*%s*%s))^0.25,0)' % (Ig, fI), 'calc', '0.00')
@@ -609,10 +713,11 @@ def sheet_principales(wb):
         hok = 'AND({hq}{r}>={htab}{r},{hq}{r}>={h418}{r},{hq}{r}/{bq}{r}<=6)'
         mok = 'OR({Lm}{r}=0,LEFT({m418}{r},6)<>"NO CUM")'
         ok = 'AND({FUP}{r}<=1,{FUN}{r}<=1,%s,%s,%s,{cort}{r}<>"SECCIÓN INSUFICIENTE",%s,%s,%s)' % (fitP, fitN, etok, hok, defok, mok)
-        vals['estado'] = ('=IF({cond}{r}="BORDE DE VOLADO","BORDE DE VOLADO — armado de orilla",IF({cond}{r}="SIN APOYO","SIN APOYO — REVISAR",IF(%s,IF(LEFT({m418}{r},7)="REVISAR","CUMPLE — REVISAR interacción muro-viga","CUMPLE")&IF({cond}{r}="VOLADO"," (en VOLADO)",""),'
+        vals['estado'] = ('=IF({cond}{r}="BORDE DE VOLADO","BORDE DE VOLADO — armado de orilla",IF({cond}{r}="SIN APOYO","SIN APOYO — REVISAR",IF(%s,IF(LEFT({m418}{r},7)="REVISAR","PENDIENTE: H/L < 0.6, falta el análisis de interacción muro-viga (NTC-M 4.1.18.2.1, p. 44)","CUMPLE")&IF({cond}{r}="VOLADO"," (en VOLADO)",""),'
                           '"NO CUMPLE: "&IF(OR({AsP}{r}<0,{AsN}{r}<0),"sección insuficiente en flexión ",IF(OR({FUP}{r}>1,{FUN}{r}>1),"flexión ",""))&IF(NOT(AND(%s,%s)),"no caben ","")&IF(NOT(%s),"ε_t ","")'
-                          '&IF({cort}{r}="SECCIÓN INSUFICIENTE","cortante ","")&IF(NOT(%s),"peralte ","")&IF(NOT(%s),"flecha ","")&IF(NOT(%s),"muro sobre viga ","")&"→ h ≥ "&TEXT({hrec}{r},"0")&" cm")))'
-                          % (ok, fitP, fitN, etok, hok, defok, mok), 'key', '@')
+                          '&IF({cort}{r}="SECCIÓN INSUFICIENTE","cortante ","")&IF(NOT(%s),"peralte ","")&IF(NOT(%s),"flecha ","")&IF(NOT(%s),"muro sobre viga ","")'
+                          '&"→ h ≥ "&TEXT(MAX({hrec}{r},IF({dlt}{r}>{dlim}{r},MAX({hq}{r}+5,CEILING({hq}{r}*({dlt}{r}/{dlim}{r})^(1/3),5)),0)),"0")&" cm"&IF(NOT(AND(%s,%s))," y b ≥ "&TEXT({bq}{r}+5,"0")&" cm","")&" (verificar)")))'
+                          % (ok, fitP, fitN, etok, hok, defok, mok, fitP, fitN), 'key', '@')
         notes = []
         for k, e in enumerate(ext):
             if e.get('prop'):

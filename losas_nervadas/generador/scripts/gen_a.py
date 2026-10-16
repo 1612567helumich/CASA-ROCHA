@@ -92,8 +92,9 @@ KGCOL = "TABLAS!$E$%d:$E$%d" % (TB_V0, TB_V1)
 LDCOL = "TABLAS!$F$%d:$F$%d" % (TB_V0, TB_V1)
 LDHCOL = "TABLAS!$G$%d:$G$%d" % (TB_V0, TB_V1)
 LTCOL = "TABLAS!$H$%d:$H$%d" % (TB_V0, TB_V1)
+LDOCOL = "TABLAS!$I$%d:$I$%d" % (TB_V0, TB_V1)
 NBARS = len(BARS)
-N['BARCOL'] = BARCOL; N['DBCOL'] = DBCOL; N['ABCOL'] = ABCOL; N['KGCOL'] = KGCOL; N['LDCOL'] = LDCOL; N['LDHCOL'] = LDHCOL; N['LTCOL'] = LTCOL
+N['BARCOL'] = BARCOL; N['DBCOL'] = DBCOL; N['ABCOL'] = ABCOL; N['KGCOL'] = KGCOL; N['LDCOL'] = LDCOL; N['LDHCOL'] = LDHCOL; N['LTCOL'] = LTCOL; N['LDOCOL'] = LDOCOL
 N['MROW'] = "TABLAS!$D$%d:$J$%d" % (TB_M, TB_M)
 N['CKEY'] = "TABLAS!$B$%d:$B$%d" % (TB_C0, TB_C1)
 N['CVAL'] = "TABLAS!$D$%d:$J$%d" % (TB_C0, TB_C1)
@@ -116,6 +117,11 @@ def dbz(var):
 
 def ld(var):
     return 'INDEX(%s,MATCH(%s,%s,0))' % (LDCOL, var, BARCOL)
+
+
+def ldo(var):
+    """L_d de «otros casos» de la Tabla 14.4.2.4 (separación libre < 2d_b o recubrimiento < d_b)."""
+    return 'INDEX(%s,MATCH(%s,%s,0))' % (LDOCOL, var, BARCOL)
 
 
 # =====================================================================
@@ -144,8 +150,9 @@ def sheet_datos(wb):
     S.row('h — peralte total de la losa', '=({hc}+{t})', 'cm', 'CALCULADA = h_c + t. Debe dar 25: es la LR-25 del modelo. Máximo 3.5·b_w.', E2K + ' · SHELLPROP "LR-25" SLABTHICKNESS 0.25 · ' + NTCC + ' 6.7.8.1.3, p. 187', 'key', '0', 'h')
     S.row('s — separación entre ejes de nervaduras', '=({ac}+{bw})', 'cm', 'CALCULADA = a_c + b_w. Es el ancho tributario de cada nervadura.', 'Geometría', 'key', '0', 's')
     S.row('b_p — ancho de la nervadura principal / dala', 15, 'cm', 'CAPTURA. Es el ancho de las dalas D-15x20 del modelo. En PRINCIPALES cada tramo lleva su propia sección propuesta.', E2K + ' · FRAMESECTION "002_D-15x20" B 0.15', 'input', '0', 'bp')
-    S.row('¿Se anota en planos el control del ancho de nervadura? (casetón de medida fija, sin reducir b_w)', 'SÍ', '—',
-          'SELECTOR. b_w = 10 cm < 200 mm: la norma pide calcular con 20 mm menos, salvo que se tomen precauciones que garanticen el ancho y se anoten en planos. Si dices NO, la hoja usa b_w − 2 cm en cortante y en flexión negativa.',
+    S.row('¿Se anotan en planos las precauciones de 3.9.2? (casetón de medida fija que garantiza b_w y silletas que fijan el peralte del lecho superior)', 'SÍ', '—',
+          'SELECTOR. b_w = 10 cm < 200 mm y, donde el lecho superior queda con d ≤ 200 mm, la norma pide calcular con 20 mm menos, salvo que se tomen precauciones que garanticen la dimensión y se anoten en planos. '
+          'Si dices NO, la hoja usa b_w − 2 cm en cortante y en flexión negativa, y d − 2 cm en el lecho superior de cada tablero cuyo d sea ≤ 20 cm.',
           NTCC + ' 3.9.1 e) y 3.9.2, p. 74 · 6.3.1.2 b), p. 117 (las nervaduras son vigas)', 'input', '@', 'ctl_bw')
     dv_list(ws, N['ctl_bw'].split('!')[1].replace('$', ''), '"SÍ,NO"')
     S.row('b_w de cálculo', '=IF({ctl_bw}="SÍ",{bw},{bw}-2)', 'cm', 'CALCULADA.', NTCC + ' 3.9.1 e), p. 74', 'key', '0.0', 'bwc')
@@ -153,15 +160,21 @@ def sheet_datos(wb):
           'CAPTURA. El mayor de: 15 mm (colocación en losas), 0.75 × 25 mm = 19 mm (corrosión A1 con f\'c = 250) y 20 mm (losas y viguetas no expuestas). Manda 20 mm.',
           NTCC + ' 4.13.1.1 y 4.13.2.2 b), p. 83 · Tabla 4.13.3.1 y 4.13.3.2, p. 84 · Tabla 4.14.16.a, p. 85 · ' + NAIM24 + ' pág. 13', 'input', '0.0', 'rec')
     S.row('r_ext — recubrimiento de caras expuestas a la intemperie (barras ≤ No. 5)', 4.0, 'cm',
-          'CAPTURA. Se usa en el lecho inferior de los volados (cara exterior) y en el lecho superior de azotea si la pones como expuesta. Con No. 6 o mayor son 5 cm.',
+          'CAPTURA. Se usa en el lecho inferior de los volados (cara exterior), en su lecho superior si queda a la intemperie (selector de abajo) y en el lecho superior de azotea si la pones como expuesta. Con No. 6 o mayor son 5 cm.',
           NTCC + ' Tabla 4.14.16.a, p. 85 · Tabla 4.3.1, p. 76', 'input', '0.0', 'rec_ext')
     S.row('r_np — recubrimiento libre de las nervaduras principales que trabajan como trabe', 4.0, 'cm',
-          'CAPTURA. Para «vigas» no expuestas la tabla pide 40 mm al estribo (las nervaduras ordinarias son «viguetas» y llevan 20 mm).',
-          NTCC + ' Tabla 4.14.16.a, p. 85 (vigas: refuerzo principal y estribos, 40 mm)', 'input', '0.0', 'rec_np')
+          'CAPTURA. Para «vigas» no expuestas la tabla pide 40 mm al estribo (las nervaduras ordinarias son «viguetas» y llevan 20 mm). '
+          'También lo llevan las nervaduras secundarias de los tableros que no cumplen 6.7.8.1.4: esa losa se diseña como losa apoyada en vigas (6.7.8.1.9) y sus nervaduras ya no son «viguetas».',
+          NTCC + ' Tabla 4.14.16.a, p. 85 (vigas: refuerzo principal y estribos, 40 mm) · 6.7.8.1.9 y comentario de 6.7.8, p. 188', 'input', '0.0', 'rec_np')
     S.row('¿La cara superior de la azotea queda expuesta directo a la intemperie?', 'NO', '—',
           'SELECTOR. Con relleno, entortado e impermeabilizante encima la hoja la toma como protegida (criterio del Responsable: la norma no lo dice expresamente). Si dices SÍ, el lecho superior de azotea usa r_ext.',
           NTCC + ' 4.3.2 y Tabla 4.3.1, p. 76 · Tabla 4.14.16.a, p. 85', 'input', '@', 'exp_az')
     dv_list(ws, N['exp_az'].split('!')[1].replace('$', ''), '"SÍ,NO"')
+    S.row('¿La cara superior de los volados F80012 y F80019 queda expuesta a la intemperie?', 'SÍ', '—',
+          'SELECTOR. Los dos volados del N+3.00 quedan fuera de la azotea (sin techo encima): su cara superior recibe la lluvia directa (exposición A2) y su lecho superior lleva r_ext, igual que la malla. '
+          'Si dices NO, escribe en planos el criterio de protección del Responsable (piso o impermeabilizante que cubra la losa), como en azotea.',
+          NTCC + ' Tabla 4.3.1 c), p. 76 · 4.3.2, p. 76 · Tabla 4.14.16.a, p. 85', 'input', '@', 'exp_vol')
+    dv_list(ws, N['exp_vol'].split('!')[1].replace('$', ''), '"SÍ,NO"')
     S.row('No. de estribo en la nervadura secundaria (0 = sin estribo)', 0, '—',
           'CAPTURA. Las nervaduras de 10 cm no llevan estribo: la fuerza cortante la toma el concreto con la ec. 5.5.3.2.1 y donde no alcanza se maciza junto al apoyo. Si algún día se ponen, deben ser de varilla o alambre CORRUGADO (no alambrón liso).',
           NTCC + ' 5.5.3.8.1, p. 97 · Tabla 6.3.5.4.1 c), p. 123 · 2.4.2.1.1, p. 43 y Tabla 2.4.2.2.4.a, p. 46', 'input', 'General', 'est_sec')
@@ -178,7 +191,7 @@ def sheet_datos(wb):
     S.row('Separación libre mínima entre varillas', '=MAX(2.5,1.5*{tmag})', 'cm', 'CALCULADA = el mayor de 25 mm, d_b y 1.5·TMA (d_b se revisa barra por barra).', NTCC + ' 14.2.1, p. 347', 'calc', '0.00', 'slib')
     S.row('Ancho libre para varillas dentro de la nervadura secundaria', '={bw}-2*{rec}-2*' + dbz('{est_sec}'), 'cm', 'CALCULADA = b_w − 2r − 2·estribo. Con esto la hoja revisa cuántas varillas de cada número caben de verdad.', 'Geometría', 'calc', '0.00', 'av_sec')
     S.row('Malla electrosoldada en la capa de compresión', '6x6-6/6', '—',
-          'SELECTOR. La lista está en TABLAS. Debe cubrir: contracción y temperatura (0.0018·t), cortante de diafragma (0.0025·t), flexión de la capa con 1 000 kg entre nervaduras y caber con 2 cm de recubrimiento por cara (NERVADURA sección 9). Con capa de 5 cm la 6x6-6/6 es la que mejor cumple; la 6x6-4/4 ya no cabe con su recubrimiento.',
+          'SELECTOR. La lista está en TABLAS. Debe cubrir: contracción y temperatura (0.0018·t), cortante de diafragma (0.0025·t), flexión de la capa con 1 000 kg entre nervaduras y caber con 2 cm de recubrimiento por cara (NERVADURA sección 11). Con capa de 5 cm la 6x6-6/6 es la que mejor cumple; la 6x6-4/4 ya no cabe con su recubrimiento.',
           NTCC + ' 13.8.2.1.1, p. 345 · 6.7.8.1.8, p. 188 · 6.8.6.4, p. 196 · ' + NAIMPL + ' · EST-03 (dice 6x6-10/10)', 'input', '@', 'malla')
     dv_list(ws, N['malla'].split('!')[1].replace('$', ''), '=TABLAS!$B$%d:$B$%d' % (TB_W0, TB_W1))
     S.row('Ø del alambre de la malla', '=INDEX(TABLAS!$C$%d:$C$%d,MATCH({malla},TABLAS!$B$%d:$B$%d,0))/10' % (TB_W0, TB_W1, TB_W0, TB_W1), 'cm',
@@ -187,7 +200,7 @@ def sheet_datos(wb):
     S.section('2. MATERIALES')
     S.header()
     S.row("f'c — resistencia del concreto", 250, 'kg/cm²', "CAPTURA. Concreto Clase 1A (250 ≤ f'c < 400). Es también el mínimo para estructuras de ductilidad baja y para exposición A1, A2 y B1.",
-          E2K + " · MATERIAL \"Concreto f'c=250kg/cm2. Clase 1A\" · " + NTCC + ' 2.2.2 a), p. 30 · Tabla 2.2.6.3, p. 33 · 4.4.1.1, p. 78', 'input', '0', 'fc')
+          E2K + " · MATERIAL \"Concreto f'c=250kg/cm2. Clase 1A\" · " + NTCC + ' 2.2.2 a), p. 30 · Tabla 2.2.6.3, p. 33 · 4.4.1.1 y 4.5.2 a), p. 78', 'input', '0', 'fc')
     S.row('fy — fluencia de la varilla corrugada', 4200, 'kg/cm²', 'CAPTURA. Grado 42, NMX-B-506. Es también el máximo para estribos.', E2K + ' · MATERIAL "Fy=4200" · ' + NTCC + ' Tabla 2.4.2.1.2.a, p. 43 y Tabla 2.4.2.2.4.a, p. 46', 'input', '0', 'fy')
     S.row('fy de la malla electrosoldada', 5000, 'kg/cm²', 'CAPTURA. Alambre de malla NMX-B-290; en contracción, temperatura y flexión de losas se permite hasta 7 000. En 2023 la cuantía de temperatura ya no depende de fy.',
           NTCC + ' 2.4.2.1.6 y 2.4.2.1.7, p. 44 · Tabla 2.4.2.2.4.a renglón «Otras», p. 46 · plano EST Casa Yépez (Naim), nota 1.2', 'input', '0', 'fym')
@@ -201,7 +214,7 @@ def sheet_datos(wb):
     S.row("f''c — esfuerzo del bloque equivalente", '=0.85*{fc}', 'kg/cm²', "CALCULADA = 0.85·f'c (sin límite de f'c en 2023).", NTCC + ' 3.6.1 e), p. 68 · ' + NAIM24 + ' (su MR sale con 0.85 f\'c)', 'calc', '0.0', 'fpc')
     S.row('β1 — profundidad del bloque', '=IF({fc}<=300,0.85,MAX(0.65,1.05-{fc}/1400))', '—', "CALCULADA. 0.85 hasta f'c = 300 kg/cm².", NTCC + ' ec. 3.6.1, p. 68', 'calc', '0.00', 'beta1')
     S.row("f'm — resistencia de diseño a compresión del block", 50, 'kg/cm²', "CAPTURA. Block de concreto f'p = 100 kg/cm² con mortero tipo I. La casa es estructura Tipo I (tiene muros desplantados sobre vigas): no se pueden usar los valores por omisión del Cap. 12.",
-          E2K + " · MATERIAL \"f'm=50kg/cm2 (Mortero Tipo I, f'p=100kg/cm2)\" · " + NTCM + ' Tabla 2.8.1.4.1, p. 24 · 1.6.1 c) y 1.6.2, p. 15', 'input', '0', 'fm')
+          E2K + " · MATERIAL \"f'm=50kg/cm2 (Mortero Tipo I, f'p=100kg/cm2)\" · " + NTCM + ' Tabla 2.8.1.4.1, p. 24 · 1.6.1 c), p. 15 · 1.6.2, p. 16', 'input', '0', 'fm')
     S.row('Em — módulo de elasticidad de la mampostería', '=800*{fm}', 'kg/cm²', "CALCULADA = 800·f'm (block de concreto, cargas de corta duración). El E2K trae 40 000.", NTCM + ' ec. 2.8.5.4.a, p. 27 · ' + E2K + ' E 4.0E+08 kgf/m²', 'calc', '#,##0', 'Em')
     S.gap()
     S.section('3. FACTORES DE CARGA Y DE RESISTENCIA')
@@ -233,7 +246,7 @@ def sheet_datos(wb):
     S.row('Modificador de inercia en el modelo', 0.29914984, '—', 'DATO del modelo. Si difiere de la fila de arriba, la losa del modelo no es la misma.', E2K + ' · SHELLPROP "LR-25" M11MOD 0.29914984', 'calc', '0.0000', 'Irat_e2k')
     S.row('h_eq — espesor de losa maciza con la misma inercia', '=(12*{IT}/{s})^(1/3)', 'cm', 'CALCULADA = ∛(12·I_T / s). La norma no da espesor mínimo especial para encasetonadas: la hoja compara h_eq (no los 25 cm) contra el espesor mínimo, del lado seguro.', 'Criterio de esta hoja · ' + NTCC + ' 6.7.3.1, p. 167–168', 'key', '0.00', 'heq')
     S.row('d inferior típico (varilla preferida)', '={h}-{rec}-' + dbz('{est_sec}') + '-' + db('{var_inf}') + '/2', 'cm', 'CALCULADA = h − r − estribo − d_b/2. En TABLEROS se recalcula con la varilla real, la dirección (la del claro largo va encima de la del corto) y el recubrimiento de cada tablero.', 'Geometría', 'key', '0.00', 'd_inf')
-    S.row('d superior típico (varilla preferida)', '={h}-{rec}-2*{fim}-' + dbz('{est_sec}') + '-' + db('{var_sup}') + '/2', 'cm', 'CALCULADA = h − r − 2·Ø malla − estribo − d_b/2 (la varilla va bajo la malla). Mayor que 20 cm: no se reduce por 3.9.1 d).', 'Geometría · ' + NTCC + ' 3.9.1 d) y 3.9.2, p. 74', 'key', '0.00', 'd_sup')
+    S.row('d superior típico (varilla preferida)', '={h}-{rec}-2*{fim}-' + dbz('{est_sec}') + '-' + db('{var_sup}') + '/2', 'cm', 'CALCULADA = h − r − 2·Ø malla − estribo − d_b/2 (la varilla va bajo la malla). La reducción de 20 mm de 3.9.1 d) (d ≤ 200 mm sin la precaución anotada) se revisa renglón por renglón en TABLEROS: con r = 4 cm o con barras más gruesas d baja de 20 cm.', 'Geometría · ' + NTCC + ' 3.9.1 d) y 3.9.2, p. 74', 'key', '0.00', 'd_sup')
     S.row('p_b — cuantía balanceada', "={fpc}/{fy}*6000*{beta1}/({fy}+6000)", '—', "CALCULADA = (f''c/fy)·6000β1/(fy + 6000).", NTCC + ' ec. 5.2.1.3.1, p. 88', 'calc', '0.0000', 'pb')
     S.row('p para ε_t = 0.005 (sección controlada por tensión)', "=0.375*{beta1}*{fpc}/{fy}", '—', "CALCULADA: c ≤ 0.375·d ⇒ a ≤ 0.375·β1·d ⇒ p ≤ 0.375·β1·f''c/fy, sobre el ancho que trabaja a compresión.", NTCC + ' Tabla 3.8.2.2, p. 70 · 3.8.2.4, p. 71 (ε_ty = 0.002) · 6.3.3.3.1, p. 121', 'calc', '0.0000', 'pten')
     S.row('p_max — cuantía máxima', '=MIN({pbf}*{pb},{pten})', '—', 'CALCULADA = el menor de 0.90·p_b y el de ε_t = 0.005 (manda el segundo).', NTCC + ' 6.3.5.2.1, p. 122 · 6.3.3.3.1, p. 121 · 6.7.3.3.1, p. 169', 'key', '0.0000', 'pmax')
@@ -273,12 +286,12 @@ def sheet_datos(wb):
     S.row('No. de varilla longitudinal preferida', 4, '—', 'CAPTURA. Mínimo 2 No. 4 corridas en cada lecho donde haya tensión. Si no cabe, la hoja sube al siguiente número.', NTCC + ' 6.3.5.1.1, p. 122', 'input', 'General', 'var_np')
     S.row('No. de varilla del estribo', 3, '—', 'CAPTURA. Estribo cerrado mínimo No. 3, con dobleces a 135° y extensión de 6d_b ≥ 8 cm.', NTCC + ' 14.7.3.3 a), p. 375 · 14.3.4 a) y Tabla 14.3.2, p. 350', 'input', 'General', 'est_np')
     S.row('Mínimo de varillas por lecho', 2, 'pzas', 'CAPTURA.', NTCC + ' 6.3.5.1.1, p. 122 · 6.3.7.7.1, p. 134', 'input', '0', 'nmin_np')
-    S.row('Separación máxima de estribos (tope de obra)', 20, 'cm', 'CAPTURA. Criterio propio: la norma pide d/2 ≤ 60 cm (o d/4 ≤ 30 cm con mucho cortante), que con estos peraltes manda siempre.', 'Criterio de esta hoja · ' + NTCC + ' Tabla 6.3.7.6.2.2, p. 132', 'input', '0', 'smax_np')
+    S.row('Separación máxima de estribos (tope de obra)', 20, 'cm', 'CAPTURA. Criterio propio. La norma pide d/2 ≤ 60 cm (o d/4 ≤ 30 cm si V_s > 1.1·√f\'c·b_w·d); con d > 40 cm manda este tope de 20 cm y con d ≤ 40 cm manda d/2.', 'Criterio de esta hoja · ' + NTCC + ' Tabla 6.3.7.6.2.2, p. 132', 'input', '0', 'smax_np')
     S.gap()
     S.notice('LO QUE QUEDA PENDIENTE DE TU LADO: (1) aceptar o rechazar los castillos que se proponen bajar a cimentación (hoja APOYOS); '
              '(2) revisar las secciones propuestas para las nervaduras principales que no pasan con 15×25 (PRINCIPALES, columnas b y h: son trabes descolgadas); '
              '(3) corregir en ETABS las secciones de F80032 y F80010 de azotea, que están como «Slab1»; (4) confirmar si la sobrecarga del modelo ya trae los 40 kg/m² de 5.1.2.1; '
-             '(5) anotar en planos: concreto Clase 1A con agregado calizo de 1/2", control del ancho de nervadura y malla de la capa.', 66)
+             '(5) anotar en planos: concreto Clase 1A con agregado calizo de 1/2", las precauciones de 3.9.2 y la malla de la capa; (6) las decisiones 7 a 10 de RESUMEN: tableros que no cumplen 6.7.8.1.4, tableros fuera de 3.4.2.1 c), anclaje en bordes discontinuos y volados.', 78)
     add_cf(ws, 'C1:F%d' % S.r)
     ws.sheet_view.zoomScale = 85
     return ws
@@ -421,7 +434,7 @@ def sheet_cargas(wb):
     for c, v, how in [('Entrepiso — relleno 8 cm', 0.13, '1.60 t/m³ × 0.08 m'), ('Entrepiso — piso 3 cm', 0.06, '2.00 t/m³ × 0.03 m'), ('Entrepiso — pegapiso 3 cm', 0.05, '1.50 t/m³ × 0.03 m'),
                       ('Entrepiso — yeso 3 cm', 0.05, '1.50 t/m³ × 0.03 m'), ('Entrepiso — instalaciones', 0.02, '—'), ('Entrepiso — carga adicional', 0.04, '—')]:
         S.row(c, v, 't/m²', how, NAIM24 + ' · pág. 5, CARGAS DE ENTREPISO', 'calc', '0.00')
-    S.row('Entrepiso — TOTAL según Naim', 0.33, 't/m²', 'Suma de los renglones de arriba.', NAIM24 + ' · pág. 5', 'key', '0.00')
+    S.row('Entrepiso — TOTAL según Naim', 0.33, 't/m²', 'Naim reporta 0.33 (subtotal 0.29 + carga adicional 0.04); la suma de los renglones de arriba da 0.35 (0.338 sin redondear).', NAIM24 + ' · pág. 5', 'key', '0.00')
     for c, v, how in [('Azotea — relleno 10 cm', 0.16, '1.60 t/m³ × 0.10 m'), ('Azotea — yeso 3 cm', 0.05, '1.50 t/m³ × 0.03 m'), ('Azotea — impermeabilizante', 0.03, '1.40 t/m³ × 0.02 m'),
                       ('Azotea — instalaciones', 0.02, '—'), ('Azotea — carga adicional', 0.04, '—')]:
         S.row(c, v, 't/m²', how, NAIM24 + ' · pág. 5, CARGAS DE AZOTEA', 'calc', '0.00')
@@ -440,7 +453,7 @@ def sheet_cargas(wb):
     S.gap()
     S.section('4. CARGAS CONCENTRADAS QUE PIDE LA NORMA')
     S.header()
-    S.row('Capa entre nervaduras: carga concentrada mínima', 1000, 'kg', 'En un área de 10 × 10 cm en la posición más desfavorable. Se revisa en NERVADURA sección 9 (flexión y punzonamiento de la capa).', NTCC + ' 6.7.8.1.6, p. 187 · 6.7.8.1.8, p. 188', 'input', '0', 'Pcap')
+    S.row('Capa entre nervaduras: carga concentrada mínima', 1000, 'kg', 'En un área de 10 × 10 cm en la posición más desfavorable. Se revisa en NERVADURA sección 11 (flexión, punzonamiento y acero mínimo de la capa).', NTCC + ' 6.7.8.1.6, p. 187 · 6.7.8.1.8, p. 188', 'input', '0', 'Pcap')
     S.row('Habitación: carga en lugar de W_m cuando sea más desfavorable', 500, 'kg', 'En 50 × 50 cm. La cubre la revisión de 1 000 kg en 10 × 10 cm.', NTCCA + ' Tabla 6.1.2.2 nota [1], p. 11', 'calc', '0')
     S.row('Azotea: carga concentrada en la posición más crítica', 100, 'kg', 'La cubre la revisión de 1 000 kg. Tinacos y equipos van aparte y deben indicarse en planos.', NTCCA + ' Tabla 6.1.2.2 notas [7] y [8], p. 12', 'calc', '0')
     S.row('Carga transitoria al colar la azotea sobre el entrepiso', 150, 'kg/m²', 'Más el peso del colado y la cimbra, y 150 kg concentrados. Indicar en planos el apuntalamiento a planta baja mientras se cuela N+6.00.', NTCCA + ' 6.1.3.1, p. 10', 'calc', '0')
@@ -505,20 +518,29 @@ def sheet_tablas(wb):
     S.r = TB_V0 - 2
     S.section('B. VARILLA CORRUGADA — ÁREAS, PESOS, DESARROLLO Y TRASLAPES')
     r = TB_V0 - 1
-    for k, t in enumerate(['No.', 'db (cm)', 'As (cm²)', 'kg/m', 'L_d (cm)', 'L_dh gancho (cm)', 'Traslape B (cm)']):
+    for k, t in enumerate(['No.', 'db (cm)', 'As (cm²)', 'kg/m', 'L_d (cm)', 'L_dh gancho (cm)', 'Traslape B (cm)', 'L_d otros casos (cm)']):
         hdr_cell(ws, r, 2 + k, t)
-    hdr_cell(ws, r, 9, 'Referencia'); ws.merge_cells('I%d:K%d' % (r, r))
+    hdr_cell(ws, r, 10, 'Referencia'); ws.merge_cells('J%d:K%d' % (r, r))
     for i, (n_, d_, a_, w_) in enumerate(BARS):
         rr = TB_V0 + i
         cell(ws, rr, 2, n_, fmt='General'); cell(ws, rr, 3, d_, fmt='0.00'); cell(ws, rr, 4, a_, fmt='0.00'); cell(ws, rr, 5, w_, fmt='0.000')
-        cell(ws, rr, 6, '=MAX(%s/(6.6*SQRT(%s))*C%d,30)' % (N['fy'], N['fc'], rr), fmt='0')
-        cell(ws, rr, 7, '=MAX(0.075*%s/SQRT(%s)*C%d,8*C%d,15)' % (N['fy'], N['fc'], rr, rr), fmt='0')
-        cell(ws, rr, 8, '=MAX(1.3*F%d,30)' % rr, fmt='0')
-        ws.merge_cells('I%d:K%d' % (rr, rr))
-        cell(ws, rr, 9, ('NMX-B-506 / ASTM A615M · ' if n_ != 2 else 'Alambrón 1/4" (No. 2) · ') + 'L_d: NTC-Concreto 14.4.2.1 y Tabla 14.4.2.4, pp. 352–353 · L_dh: ec. 14.4.3.1, p. 355 · traslape clase B: Tabla 14.5.2.1, p. 367', 'ref', al='left')
+        if n_ == 2:
+            for cc in (6, 7, 8, 9):
+                cell(ws, rr, cc, 'no aplica', al='center')
+        else:
+            cell(ws, rr, 6, '=MAX(%s/(IF(B%d<=6,6.6,5.3)*SQRT(%s))*C%d,30)' % (N['fy'], rr, N['fc'], rr), fmt='0')
+            cell(ws, rr, 7, '=MAX(0.075*%s/SQRT(%s)*C%d,8*C%d,15)' % (N['fy'], N['fc'], rr, rr), fmt='0')
+            cell(ws, rr, 8, '=MAX(1.3*F%d,30)' % rr, fmt='0')
+            cell(ws, rr, 9, '=MAX(%s/(IF(B%d<=6,4.4,3.5)*SQRT(%s))*C%d,30)' % (N['fy'], rr, N['fc'], rr), fmt='0')
+        ws.merge_cells('J%d:K%d' % (rr, rr))
+        cell(ws, rr, 10, ('NMX-B-506 / ASTM A615M · L_d: NTC-Concreto 14.4.2.1 y Tabla 14.4.2.4, pp. 352–353 · L_dh: 14.4.3.1, p. 355 · traslape clase B: Tabla 14.5.2.1, p. 367' if n_ != 2 else
+                               'Alambrón liso 1/4" (No. 2): la Tabla 14.4.2.4 y 14.4.3.1 son para barras corrugadas; no se usa como refuerzo longitudinal'), 'ref', al='left')
     S.r = TB_V1 + 1
-    S.secnote('L_d = fy·d_b/(6.6·√f\'c) ≥ 30 cm: separación libre ≥ 2d_b y recubrimiento ≥ d_b, ψ = 1 (menos de 30 cm de concreto fresco abajo). Para 1.25 fy (barra inferior de integridad de cada nervadura, 6.7.8.1.7) se multiplica por 1.25. '
-              'L_dh = el mayor de 0.075·fy·d_b/√f\'c, 8d_b y 15 cm; gancho de 90° con extensión de 12d_b (Tabla 14.3.1, p. 349).', 30)
+    S.secnote('L_d (Tabla 14.4.2.4, p. 353) con separación libre ≥ 2d_b y recubrimiento ≥ d_b: fy·d_b/(6.6·√f\'c) para No. 6 y menores y fy·d_b/(5.3·√f\'c) para No. 7 a No. 11, ≥ 30 cm. '
+              '«Otros casos» (separación libre < 2d_b o recubrimiento < d_b, sin estribos): fy·d_b/(4.4·√f\'c) y fy·d_b/(3.5·√f\'c); TABLEROS usa esta columna cuando la nervadura no da la separación. '
+              'ψp = 1.0 en nervaduras secundarias (h = 25 cm) y en lechos inferiores; en el lecho superior de nervaduras principales con más de 30 cm de concreto debajo (aquí, h ≥ 40 cm) ψp = 1.3 (Tabla 14.4.2.6, p. 354): L_d y traslape × 1.3. '
+              'Para 1.25 fy (barra inferior de integridad de cada nervadura, 6.7.8.1.7) se multiplica por 1.25. '
+              'L_dh = el mayor de 0.075·fy·d_b/√f\'c, 8d_b y 15 cm; gancho de 90° con extensión de 12d_b (14.4.3.1 a) a c), p. 355; Tabla 14.3.1, p. 349).', 54)
     S.r = TB_W0 - 2
     S.section('C. MALLA ELECTROSOLDADA (fy = 5000 kg/cm²; separación 15.24 cm ≤ 5t y ≤ 30 cm entre alambres soldados)')
     r = TB_W0 - 1
