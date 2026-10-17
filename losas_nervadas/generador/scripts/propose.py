@@ -3,7 +3,7 @@ Usa el propio libro (LibreOffice recalcula) como calculadora: no replica fórmul
 import json, subprocess, sys, glob, os, time
 import openpyxl
 from openpyxl.utils import column_index_from_string as CI
-W = '/tmp/claude-0/-home-user-CASA-ROCHA/faa149e0-9f48-5f0d-b5ee-28b4c7156d8c/scratchpad/'
+W = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/'
 RECALC = glob.glob('/root/.claude/skills/synced/*/xlsx/scripts/recalc.py')[0]
 PF = W + 'work/propuesta_np.json'
 prop = json.load(open(PF)) if os.path.exists(PF) else {}

@@ -4,7 +4,8 @@ from openpyxl.styles import Alignment
 from openpyxl.comments import Comment
 from xlstyle import *
 
-W = '/tmp/claude-0/-home-user-CASA-ROCHA/faa149e0-9f48-5f0d-b5ee-28b4c7156d8c/scratchpad/'
+import os
+W = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/'
 D = json.load(open(W + 'work/data.json'))
 MOD = json.load(open(W + 'work/proyecto_modelo.json'))
 N = {}            # nombres -> referencias absolutas
