@@ -5,7 +5,7 @@ Rama de trabajo: `claude/practical-cori-l2ai0b`.
 ## Qué se está haciendo
 
 1. **Casa Rocha** (`losas_nervadas/`): aplicar al generador (`losas_nervadas/generador/scripts`) las decisiones de diseño, regenerar la hoja, recalcularla sin errores y verificarla.
-2. **Hoja general** (`hojas_generales/`): un libro `Losas_General_NTC2023.xlsx` con hojas INSTRUCCIONES, DATOS, NERVADAS, MACIZAS, DETALLE y TABLAS, armado por `hojas_generales/generador/gen_general.py`, para cualquier proyecto.
+2. **Hoja general** (`hojas_generales/`): un libro `Losas_General_NTC2023.xlsx` con hojas INSTRUCCIONES, DATOS, NERVADAS, MACIZAS, DETALLE, CROQUIS y TABLAS, armado por `hojas_generales/generador/gen_general.py`, para cualquier proyecto. **El usuario pidió croquis bien hechos**, como la hoja CROQUIS de Casa Rocha (gráficas de dispersión que se redibujan solas): planta, corte y alzado de nervadas, y planta y corte de macizas, del tablero que se escoja.
 3. Al final: subir todo y entregar al usuario los tres resultados (hoja de Casa Rocha, hoja general de nervadas y hoja general de macizas).
 
 ## Decisiones tomadas (Casa Rocha, criterio conservador)
