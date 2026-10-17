@@ -19,8 +19,12 @@ python3 <recalc.py del skill xlsx> ../out/rc.xlsx 300
 python3 inject_values.py ../out/LosasNervadas_CasaRocha.xlsx ../out/rc.xlsx ../out/final.xlsx
 ```
 
-`final.xlsx` es el archivo que se copia a `losas_nervadas/`. `summ.py` imprime
-un resumen de TABLEROS, PRINCIPALES y NERVADURA desde el libro recalculado.
+`final.xlsx` es el archivo que se copia a `losas_nervadas/`. Las decisiones de diseño D1 a D11 (RESUMEN sección 2) están
+aplicadas en los scripts: en TABLEROS cada renglón lleva su tipo de losa (columna «Losa»: NERVADA o MACIZA, por franja
+de 1 m) y su b_w (20 cm en las nervaduras de los volados, dato `bw_vol` de DATOS); el ancho del macizo de borde de los
+bordes discontinuos es el dato `b_borde`.
+
+`summ.py` imprime un resumen de TABLEROS, PRINCIPALES y NERVADURA desde el libro recalculado.
 
 | Archivo | Qué hace |
 |---|---|
