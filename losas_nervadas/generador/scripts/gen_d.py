@@ -15,6 +15,11 @@ def fx(*parts):
     return '=' + '&'.join(out)
 
 
+def endlist(x, none='ninguno.'):
+    """Lista armada con «; » entre elementos: cambia el último «; » por punto (o «ninguno.» si está vacía)."""
+    return 'SUBSTITUTE(SUBSTITUTE(%s&"|","; |","."),"|","%s")' % (x, none)
+
+
 def fxlen(*parts):
     return sum(len(p) if not isinstance(p, tuple) else 12 for p in parts)
 
@@ -30,7 +35,7 @@ def sheet_resumen(wb):
     T_ = lambda c, k: 'TABLEROS!$%s$%d' % (TC[c], TROW[k])
     T2 = T_
     S.title('RESUMEN DE LAS LOSAS NERVADAS — CASA ROCHA')
-    S.merged(fx('Losa reticular LR-25 (casetón ', ('TEXT({ac},"0")',), '×', ('TEXT({ac},"0")',), '×', ('TEXT({hc},"0")',), ', nervadura de ', ('TEXT({bw},"0")',), ' cm, capa de ', ('TEXT({t},"0")',), ' cm con malla ', ('{malla}',),
+    S.merged(fx('Losa reticular LR-25 (casetón ', ('TEXT({ac},"0")',), '×', ('TEXT({ac},"0")',), '×', ('TEXT({hc},"0")',), ', nervadura de ', ('TEXT({bw},"0")',), ' cm, capa de ', ('TEXT({t},"0")',), ' cm con malla ', ('{malla}',), ' al centro de la capa',
                 ') en entrepiso N+3.00 y azotea N+6.00; volados F80012 y F80019 nervados con nervaduras de ', ('TEXT({bw_vol},"0")',), ' cm (casetón ', ('TEXT({ac_vol},"0")',), '×', ('TEXT({ac},"0")',), '×', ('TEXT({hc},"0")',),
                 '); F80032 y F80010 de azotea: losa maciza de ', ('TEXT({h_mac},"0")',), ' cm. Apoyada en muros de block confinados y en nervaduras principales.'), font(9, i=True, color=GRAY), None, 30)
     S.gap()
@@ -55,8 +60,10 @@ def sheet_resumen(wb):
             ('Nervaduras principales que hay que PERALTAR respecto a la dala 15×25 del modelo (trabes descolgadas, D2)', '=COUNTIF(PRINCIPALES!$%s$%d:$%s$%d,"PERALTAR*")' % (PC['cambio'], P0, PC['cambio'], P1), '=COUNTA(%s)-COUNTIF(%s,"BORDE*")' % (pest, pest), 'info'),
             ('Principales con muro encima y H/L < 0.6 (NP-15, NP-26): sin arco, la trabe toma todo el muro (criterio del Responsable, D2)', '=COUNTIF(%s,"CUMPLE*H/L < 0.6*")' % pest, '=COUNTIF(PRINCIPALES!$%s$%d:$%s$%d,"*H/L < 0.6*")' % (PC['m418'], P0, PC['m418'], P1), 'ok'),
             ('Nervaduras principales que NO CUMPLEN', '=COUNTIF(%s,"NO CUMPLE*")' % pest, '=COUNTA(%s)-COUNTIF(%s,"BORDE*")' % (pest, pest), 'zero'),
-            ('Capa de compresión de 6 cm con 6x6-4/4 (D3): temperatura, diafragma, recubrimiento (zonas no expuestas y expuestas), separación, punzonamiento, acero mínimo junto a la carga (6.7.6.1.2) y flexión con 1 000 kg', '=COUNTIF(%s,"NO CUMPLE*")' % N['CAPA_RNG'], 8, 'zero'),
-            ('Anclaje en bordes discontinuos con el macizo o dala de borde de 40 cm (D9): barra inferior a 1.25 fy y bastón superior', '=COUNTIF(%s,"NO CUMPLE*")+COUNTIF(%s,"NO CUMPLE*")' % (N['n_anc1'], N['n_anc2']), 2, 'zero'),
+            ('Respaldos de los volados (D10): el M⁻ y el ΔV del volado en las nervaduras de esa dirección, con nervaduras de 20 cm junto al muro raíz', '=COUNTIF(%s,"NO CUMPLE*")' % tc_('vest'), '=COUNTIF(%s,"<>—")' % tc_('vest'), 'zero'),
+            ('Orillas laterales del volado F80012 (NP-09 y NP-14) como vigas de orilla en volado (D10) que CUMPLEN', '=%s' % '+'.join('COUNTIF(PRINCIPALES!$%s$%d,"CUMPLE*")' % (PC['estado'], PROW[np_]) for np_ in sorted(VOLLAT)), len(VOLLAT), 'ok'),
+            ('Capa de compresión de 6 cm con 6x6-4/4 al centro de la capa (D3, D12): temperatura, diafragma, recubrimiento (zonas no expuestas y expuestas), separación, punzonamiento, acero mínimo junto a la carga (6.7.6.1.2) y flexión con 1 000 kg', '=COUNTIF(%s,"NO CUMPLE*")' % N['CAPA_RNG'], 8, 'zero'),
+            ('Anclaje en bordes discontinuos con la dala de borde armada (D9): barra inferior a 1.25 fy, bastón superior, gancho de 180° y losas macizas', '=COUNTIF(%s,"NO CUMPLE*")+COUNTIF(%s,"NO CUMPLE*")+COUNTIF(%s,"NO CUMPLE*")+COUNTIF(%s,"NO CUMPLE*")' % (N['n_anc1'], N['n_anc2'], N['n_g180'], N['n_ancm']), 4, 'zero'),
             ('Nervaduras principales sin apoyo', '=COUNTIF(%s,"SIN APOYO*")' % pest, '=COUNTA(%s)' % pest, 'zero'),
             ('Castillos C1…C8 aceptados: bajan a cimentación (decisión D1)', '=COUNTIF(APOYOS!$C$1:$C$400,"SÍ")', len(D['castillos_prop']), 'info')]
     for c, f1, f2, kind in rows:
@@ -78,11 +85,13 @@ def sheet_resumen(wb):
     S.secnote('El usuario pidió decidir del lado conservador. Cada decisión queda aplicada en el libro (fórmulas vivas) y cada resultado de abajo se recalcula solo. Lo que todavía no cumple se dice tal cual.', 18)
     pr = lambda np_, c: 'PRINCIPALES!$%s$%d' % (PC[c], PROW[np_])
     lbullet('D1) CASTILLOS C1…C8 (APOYOS sección B): ACEPTADOS, bajan a cimentación (', ('COUNTIF(APOYOS!$C$1:$C$400,"SÍ")',), ' de ', str(len(D['castillos_prop'])), ' con SÍ). Sin ellos las principales de la cochera, del vacío de doble altura y de la escalera quedan en volado de 4 a 8 m. '
-            'Toda bajada que no tenga muro abajo en planta baja es columna de 25×25 como mínimo (NTC-Concreto 2023 (CDMX) 6.4.2.1.1, p. 138).')
+            'C7 (llegada de la escalera) es nuevo: no tiene castillo arriba y se coordina con arquitectura (2a). Toda bajada que no tenga muro abajo en planta baja es columna de 25×25 como mínimo (NTC-Concreto 2023 (CDMX) 6.4.2.1.1, p. 138).')
+    fl = lambda np_: (pr(np_, 'bq') + '&"×"&' + pr(np_, 'hq') + '&" cm, "&' + pr(np_, 'estado') + '&"; flecha "&TEXT(' + pr(np_, 'dlt') + ',"0.00")&" de "&TEXT(' + pr(np_, 'dlim') + ',"0.00")&" cm"&IF(' + pr(np_, 'dlt') + '>0.97*' + pr(np_, 'dlim') + '," (EN EL LÍMITE)","")',)
     lbullet('D2) PRINCIPALES CON MURO ENCIMA: se aceptan las secciones propuestas (trabes descolgadas, tabla 4). Cumplen NTC-Mampostería 2023 (CDMX) 4.1.18.4 (L/h ≤ 14 o I ≥ L³/1600, p. 46), la flecha de 4.1.18.3 (0.3 cm + L/480) y f_CM ≤ F_R·f\'m (4.1.18.2, p. 44). '
             'En NP-15 y NP-26 (H/L < 0.6, donde 4.1.18.2 no aplica): criterio del Responsable, lado seguro — sin efecto de arco, la trabe se diseña con el peso completo del muro y de la azotea que recibe, repartido en el claro, sin reducción; f_CM se sigue calculando como estimación fuera de su campo; castillos en los dos extremos de esos muros. '
-            'NP-15: ', (pr('NP-15', 'bq') + '&"×"&' + pr('NP-15', 'hq'),), ' cm, ', (pr('NP-15', 'estado'),), ' · NP-26: ', (pr('NP-26', 'bq') + '&"×"&' + pr('NP-26', 'hq'),), ' cm, ', (pr('NP-26', 'estado'),), '.')
-    lbullet('D3) CAPA DE COMPRESIÓN: capa de ', ('TEXT({t},"0")',), ' cm con casetón 60×60×', ('TEXT({hc},"0")',), ' (h sigue en ', ('TEXT({h},"0")',), ' cm, LR-25) y malla ', ('{malla}',), '. Con la capa de 5 cm del plano ninguna malla cumplía a la vez diafragma (6.8.6.4, p. 196), punzonamiento y acero mínimo junto a la carga (6.7.6.1.2, p. 175). '
+            'La flecha diferida cuenta con las varillas superiores corridas en todo el claro (ρ′): así se piden en planos. NP-15: ', fl('NP-15'), ' · NP-26: ', fl('NP-26'), '.')
+    lbullet('D3) CAPA DE COMPRESIÓN: capa de ', ('TEXT({t},"0")',), ' cm con casetón 60×60×', ('TEXT({hc},"0")',), ' (h sigue en ', ('TEXT({h},"0")',), ' cm, LR-25) y malla ', ('{malla}',), ' al centro de la capa (≈ ', ('TEXT(({t}-2*{fim})/2,"0.0")',), ' cm por cara, sobre silletas: así la revisa NERVADURA sección 11 y así entra en el d superior de TABLEROS). '
+            'Con la capa de 5 cm del plano ninguna malla cumplía a la vez diafragma (6.8.6.4, p. 196), punzonamiento y acero mínimo junto a la carga (6.7.6.1.2, p. 175). '
             'La losa pesa más (peso propio geométrico ', ('TEXT({PP},"0")',), ' kg/m²; el modelo trae ', ('TEXT({PPe2k},"0")',), '): las cargas cambiaron y las secciones de las principales se volvieron a iterar. Corregir la nota 2 del plano de cortes y la malla 6x6-10/10 de EST-03.')
     lbullet('D4) SOBRECARGA: se cuentan los ', ('TEXT({inc_losa},"0")',), ' + ', ('TEXT({inc_mort},"0")',), ' kg/m² de NTC-Criterios y Acciones 2023 (CDMX) 5.1.2.1, p. 9, además de la sobrecarga del modelo (160 a 315 kg/m²): no se puede confirmar que ésta ya traiga la «carga adicional 0.04 t/m²» de Naim, así que se cuenta (lado seguro).')
     lbullet('D5) MODELO DE ETABS: no se puede correr aquí. La lista de cambios está en la sección 2b; hasta que se corra, las reacciones (MUROS) y los momentos de los tableros fuera de 3.4.2.1 c) son los de esta hoja.')
@@ -91,38 +100,46 @@ def sheet_resumen(wb):
             'Es el camino que da la propia norma; se acepta y cada tablero lo dice en su nota (', ('COUNTIFS(%s,"NO",%s,"PERIMETRAL",%s,"NERVADA")' % (tc_('g678'), tc_('modo'), tc_('losa')),), ' tableros).')
     lbullet('D8) MÉTODO DE COEFICIENTES fuera de 3.4.2.1 c) (NTC-Concreto 2023 (CDMX) 3.4.2.1 c), p. 64): se acepta la distribución de 3.4.3.1 que ya hace la hoja (2/3 del desequilibrio con rigideces d³/a1, cada tablero con su propio d; la maciza con el suyo). Se confirma con ETABS (D5). Informativo (',
             ('COUNTIF(%s,"FUERA*")' % tc_('c342'),), ' tableros).')
-    lbullet('D9) ANCLAJE EN BORDES DISCONTINUOS: en todo borde discontinuo va un macizo o dala de borde de ', ('TEXT({b_borde},"0")',), ' cm de ancho en el peralte de la losa, en lugar de la primera franja junto al muro y apoyado en el muro de 15 cm. Quedan ', ('TEXT({b_borde}-{rec_np},"0")',),
-            ' cm para anclar: ≥ 1.25·L_dh de la barra inferior (6.7.8.1.7, p. 188) y ≥ L_dh del bastón (14.4.3.1, p. 355). Su peso extra (', ('TEXT({Wborde},"0.000")',), ' t/m) baja casi todo directo al muro; en los momentos del tablero se desprecia porque está sobre el apoyo. Anclaje: ',
-            ('IF(COUNTIF(%s,"NO CUMPLE*")+COUNTIF(%s,"NO CUMPLE*")=0,"CUMPLE","NO CUMPLE (NERVADURA sección 10)")' % (N['n_anc1'], N['n_anc2']),), '.')
+    lbullet('D9) ANCLAJE EN BORDES DISCONTINUOS: en todo borde discontinuo apoyado va una DALA DE BORDE ARMADA de ', ('TEXT({b_borde},"0")',), ' cm de ancho en el peralte de la losa (refuerzo longitudinal y estribos cerrados; armado mínimo propuesto en DATOS sección 1), en lugar de la primera franja junto al apoyo: '
+            'sobre muro se apoya en el muro de 15 cm; sobre nervadura principal es la principal ensanchada a ese ancho; en las losas macizas baja ', ('TEXT({h}-{h_mac},"0")',), ' cm bajo la maciza. Un macizo sin armar no sirve: sería losa y el apoyo sería el paño del muro. Quedan ', ('TEXT({b_borde}-{rec_np},"0")',),
+            ' cm para anclar: ≥ 1.25·L_dh de la barra inferior (6.7.8.1.7, p. 188) y ≥ L_dh del bastón (14.4.3.1, p. 355), con gancho de 180° (el de 90° parado no cabe en 25 cm). TABLEROS acomoda los casetones con ella y CUANTIFICACION la cuenta; su peso extra (',
+            ('TEXT({Wborde},"0.000")',), ' t/m) baja al muro o a la principal (PRINCIPALES ya lo suma). Anclaje: ',
+            ('IF(COUNTIF(%s,"NO CUMPLE*")+COUNTIF(%s,"NO CUMPLE*")+COUNTIF(%s,"NO CUMPLE*")+COUNTIF(%s,"NO CUMPLE*")=0,"CUMPLE","NO CUMPLE (NERVADURA sección 10)")' % (N['n_anc1'], N['n_anc2'], N['n_g180'], N['n_ancm']),), '.')
     k12, k19 = 'F80012 N+3.00', 'F80019 N+3.00'
-    vtxt = lambda k: ('"%s: "&%s&" No. "&TEXT(%s,"0.#")&" arriba por nervadura (M_u = "&TEXT(%s,"0.00")&" t·m, Mu/M_R = "&TEXT(%s,"0.00")&"), bastón de "&TEXT(%s/100,"0.00")&" m hacia el respaldo; "&%s' %
-                      (k.split()[0], T_('nNc', k), T_('vNc', k), T_('MNc', k), T_('FUNc', k), T_('Lbc', k), T_('estado', k)),)
-    dvl = '&'.join('IF(%s>0,"%s "&TEXT(%s,"0.00")&" t → "&%s&"; ","")' % (T_('dVv', key(t)), t['name'], T_('dVv', key(t)), T_('cort', key(t))) for t in TABS if t['level'] == 'N+3.00')
+    vtxt = lambda k: ('"%s: "&%s&" No. "&TEXT(%s,"0.#")&" arriba por nervadura (M_u = "&TEXT(%s,"0.00")&" t·m con los macizos de la punta, Mu/M_R = "&TEXT(%s,"0.00")&", V_u/V_cR = "&TEXT(%s/%s,"0.00")&"); 1 corrida hasta el apoyo lejano del respaldo y las demás hasta "&TEXT(%s/100,"0.00")&" m dentro del respaldo; "&%s' %
+                      (k.split()[0], T_('nNc', k), T_('vNc', k), T_('MNc', k), T_('FUNc', k), T_('Vu', k), T_('VcR', k), T_('Lbc', k), T_('estado', k)),)
+    rsp = endlist('&'.join('"%s: "&IF(LEFT(%s,2)="NO",%s,IF(%s>0,%s&" hilera(s) de 20 cm",IF(LEFT(%s,8)="CUMPLE —",MID(%s,10,40),%s))&IF(%s<0," (levanta en su apoyo lejano con 0.9·PP: la corrida se ancla ahí)",""))&"; "'
+                           % (kk, T_('vest', kk), T_('vest', kk), T_('vnh', kk), T_('vnh', kk), T_('vest', kk), T_('vest', kk), T_('vest', kk), T_('vRl', kk)) for kk in BACK))
+    lat = '&" · "&'.join('"%s: "&%s' % (np_, pr(np_, 'estado')) for np_ in sorted(VOLLAT))
     lbullet('D10) VOLADOS F80012 Y F80019 (entrepiso): «el entrepiso es nervado»: siguen NERVADOS (LR-25, h = 25 cm, casetón de ', ('TEXT({hc},"0")',), ' y capa de ', ('TEXT({t},"0")',), ' cm); en la dirección del volado las nervaduras son de ', ('TEXT({bw_vol},"0")',), ' cm con casetón ', ('TEXT({ac_vol},"0")',), '×60×', ('TEXT({hc},"0")',),
-            ' (s = 70 cm: la retícula queda alineada). Con 10 cm el M⁻ pedía una No. 8 que no cabía. ', vtxt(k12), ' · ', vtxt(k19), '. El desequilibrio de su momento sigue entrando al cortante de los tableros de respaldo (ΔV por nervadura): ', (dvl,), '')
-    mtxt = lambda k: ('"%s: inf. corto No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&", sup. corto No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&", inf. largo No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&", sup. largo No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&" cm; "&%s' %
-                      (k.split()[0], T_('vPc', k), T_('sPc', k), T_('vNc', k), T_('sNc', k), T_('vPl', k), T_('sPl', k), T_('vNl', k), T_('sNl', k), T_('estado', k)),)
+            ' (s = 70 cm). Con 10 cm el M⁻ pedía una No. 8 que no cabía. ', vtxt(k12), ' · ', vtxt(k19), '. Su M⁻ y su ΔV siguen dentro de los tableros de respaldo (los que están detrás del muro raíz; F80020 y F80021 quedan a los costados de F80019 y no los reciben): '
+            'junto al muro raíz las nervaduras siguen de 20 cm hasta donde la de 10 cm resiste con 1 varilla del volado — ', (rsp,), ' Los costados de F80012, que corren en la dirección del volado y llevan barandal, son vigas de orilla en volado (PRINCIPALES): ', (lat,), '. '
+            'El área de la orilla libre de F80019 que el DXF daba a NP-16 y el par del volado (M/L_b) bajan al muro raíz (MUROS).')
+    sup_ = lambda k, b, L, ln: '"@ "&TEXT(%s,"0.0")&" cm"&IF(2*%s>=%s," corridas","")' % (T_('s' + b, k), T_(L, k), T_(ln, k))
+    mtxt = lambda k: ('"%s: inf. corto No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&" cm, sup. corto No. "&TEXT(%s,"0.#")&" "&%s&", inf. largo No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&" cm, sup. largo No. "&TEXT(%s,"0.#")&" "&%s&"; "&%s' %
+                      (k.split()[0], T_('vPc', k), T_('sPc', k), T_('vNc', k), sup_(k, 'Nc', 'Lbc', 'ln1'), T_('vPl', k), T_('sPl', k), T_('vNl', k), sup_(k, 'Nl', 'Lbl', 'ln2'), T_('estado', k)),)
     lbullet('D11) AZOTEA F80032 Y F80010 (N+6.00): se respeta el modelo («Slab1»): LOSA MACIZA de ', ('TEXT({h_mac},"0")',), ' cm perimetralmente apoyada, con los mismos coeficientes de la Tabla 3.4.2.1 (son de losa maciza), por franja de 1 m, r = 2 cm, As mín = 0.0018·b·h y f\'c = 250 Clase 1A. '
-            'Su lecho inferior queda ', ('TEXT({h}-{h_mac},"0")',), ' cm más alto que el de la LR-25 vecina. ', mtxt('F80032 N+6.00'), ' · ', mtxt('F80010 N+6.00'), '.')
+            'Su lecho inferior queda ', ('TEXT({h}-{h_mac},"0")',), ' cm más alto que el de la LR-25 vecina; en sus bordes discontinuos remata en la dala de borde de D9 y sus dalas de orilla (NP-33, NP-34) descuelgan 5 cm bajo ella. ', mtxt('F80032 N+6.00'), ' · ', mtxt('F80010 N+6.00'), '.')
+    lbullet('D12) VOLADOS — CARA SUPERIOR PROTEGIDA: F80012 y F80019 son terrazas con impermeabilizante y piso, igual que la azotea (selector de DATOS sección 1 en «', ('{exp_vol}',), '»; en planos: «terraza con impermeabilizante y piso»). '
+            'La exposición ya no manda arriba: la malla va al centro de la capa y la capa cumple en todas las zonas (sección 1). El lecho superior de las nervaduras del volado conserva el recubrimiento de viga r_np = ', ('TEXT({rec_np},"0")',),
+            ' cm porque no cumplen 6.7.8.1.4 (losa sobre vigas, D7), del lado seguro; abajo sigue r_ext = ', ('TEXT({rec_ext},"0")',), ' cm (cara exterior). Con eso las nervaduras de 20 cm siguen cumpliendo (D10).')
     S.gap(4)
     S.section('2a. LO QUE TE QUEDA A TI')
-    capa_exp = 'COUNTIF(%s,"NO CUMPLE en*")' % N['CAPA_RNG']
     lbullet('(1) Actualizar y volver a correr el modelo de ETABS con la lista de la sección 2b (D5) y comparar reacciones contra MUROS y momentos de los tableros fuera de 3.4.2.1 c).')
     lbullet('(2) Pasar a planos las notas de la sección 7 (D6).')
-    lbullet(('IF(%s>0,"(3) PENDIENTE DE DECIDIR — capa de compresión de los volados con la cara superior expuesta: con capa de 6 cm no caben 4 cm de recubrimiento arriba de la malla y 2 cm abajo (NERVADURA sección 11). "&'
-             '"Proteger la cara superior de F80012 y F80019 con piso e impermeabilizante (y poner NO en el selector de DATOS sección 1, como en azotea) o engrosar ahí la capa.","(3) Capa de compresión: cumple en todas las zonas.")' % capa_exp,))
-    lbullet('(4) Revisar y firmar las decisiones D1 a D11: son una propuesta del calculista auxiliar, del lado conservador.')
+    lbullet('(3) Coordinar con arquitectura el castillo nuevo C7 (llegada de la escalera, sin castillo arriba) y revisar NP-07 y NP-30 con el diseño de la escalera, que está fuera del alcance (DATOS, ALCANCE).')
+    lbullet('(4) Revisar y firmar las decisiones D1 a D12: son una propuesta del calculista auxiliar, del lado conservador.')
     S.gap(4)
     S.section('2b. CAMBIOS AL MODELO DE ETABS (D5)')
-    nps_txt = '&'.join('IF(%s="BORDE DE VOLADO","","%s "&%s&"×"&%s&"; ")' % (pr(t['np'], 'cond'), t['np'], pr(t['np'], 'bq'), pr(t['np'], 'hq')) for t in NPS if t['cond'] != 'BORDE DE VOLADO')
+    nps_txt = endlist('&'.join('IF(%s="BORDE DE VOLADO","","%s "&%s&"×"&%s&"; ")' % (pr(t['np'], 'cond'), t['np'], pr(t['np'], 'bq'), pr(t['np'], 'hq')) for t in NPS if t['cond'] != 'BORDE DE VOLADO' and t['np'] not in VOLLAT))
     lbullet('(1) Losa «LR-25» con la sección nueva (casetón 60×60×', ('TEXT({hc},"0")',), ', capa de ', ('TEXT({t},"0")',), ' cm, h = ', ('TEXT({h},"0")',), ' cm): modificadores de membrana F11, F22, F12 y de peso WMOD = ', ('TEXT({wmod},"0.0000")',),
             ' (hoy 0.6688) y de flexión M11, M22, M12 = ', ('TEXT({Irat},"0.0000")',), ' (hoy 0.29915), con el mismo material «LR-25 equiv» (DATOS sección 4).')
     lbullet('(2) F2 de azotea: ponerle la sobrecarga de F80023 (270 kg/m²) y la carga viva de azotea (', ('TEXT({cv_az},"0")',), ' kg/m²); hoy no tiene cargas.')
-    lbullet('(3) Secciones propuestas de las nervaduras principales (b×h en cm, PRINCIPALES; NP-11 además se prolonga hasta la nervadura del eje F, x = 5.44): ', (nps_txt,), '')
-    lbullet('(4) Volados F80012 y F80019: crear una losa «LR-25V» (nervaduras de ', ('TEXT({bw_vol},"0")',), ' cm, casetón ', ('TEXT({ac_vol},"0")',), '×60×', ('TEXT({hc},"0")',), ') con WMOD y F = ', ('TEXT({wmodv},"0.0000")',), ', M en la dirección del volado = ', ('TEXT({Iratv},"0.0000")',),
-            ' y M en la dirección del muro = ', ('TEXT({Irat},"0.0000")',), ' (DATOS sección 4b).')
+    lbullet('(3) Secciones propuestas de las nervaduras principales (b×h en cm, PRINCIPALES; NP-11 además se prolonga hasta la nervadura del eje F, x = 5.44; NP-09 y NP-14 siguen como dalas de 15×25 en el modelo: su franja maciza es losa): ', (nps_txt,), '')
+    lbullet('(4) Volados F80012 y F80019: crear una losa «LR-25V» (nervaduras de ', ('TEXT({bw_vol},"0")',), ' cm, casetón ', ('TEXT({ac_vol},"0")',), '×60×', ('TEXT({hc},"0")',), ') con WMOD y F = ', ('TEXT({wmodv},"0.0000")',), '. Con el eje local 1 en X (el de ETABS por omisión): F80012 (volado en X) M11 = ', ('TEXT({Iratv},"0.0000")',),
+            ' y M22 = ', ('TEXT({Irat},"0.0000")',), '; F80019 (volado en Y) M11 = ', ('TEXT({Irat},"0.0000")',), ' y M22 = ', ('TEXT({Iratv},"0.0000")',), '; M12 = ', ('TEXT({Irat},"0.0000")',), ' en los dos (el de la LR-25, el menor; DATOS sección 4b).')
     lbullet('(5) F80032 y F80010 de azotea: se quedan «Slab1» (losa maciza de ', ('TEXT({h_mac},"0")',), ' cm, sin modificadores) pero con concreto f\'c = 250 kg/cm² Clase 1A (hoy 4000 psi).')
-    lbullet('(6) Volver a correr y comparar: reacciones contra la hoja MUROS, momentos de los tableros fuera de 3.4.2.1 c) (TABLEROS) y elementos mecánicos de las principales (PRINCIPALES).')
+    lbullet('(6) Volver a correr y comparar: reacciones contra la hoja MUROS (incluidos los muros raíz de los volados), momentos de los tableros fuera de 3.4.2.1 c) (TABLEROS) y elementos mecánicos de las principales (PRINCIPALES).')
     S.gap()
     S.section('3. TABLA DE NERVADURAS SECUNDARIAS (COMO LA DE NAIM)')
     r = S.r
@@ -148,7 +165,7 @@ def sheet_resumen(wb):
     S.gap()
     S.section('4. TABLA DE NERVADURAS PRINCIPALES')
     r = S.r
-    heads = ['Tramo', 'Nivel', 'Condición', 'L (m)', 'b (cm)', 'h (cm)', 'Inferior', '', 'Superior', '', 'Estribos', 'h mín. sin flecha (cm)', 'Estado']
+    heads = ['Tramo', 'Nivel', 'Condición', 'L (m)', 'b (cm)', 'h (cm)', 'Inferior (corridas)', '', 'Superior (corridas)', '', 'Estribos', 'h mín. sin flecha (cm)', 'Estado']
     for k, t in enumerate(heads):
         hdr_cell(ws, r, 2 + k, t)
     ws.merge_cells('H%d:I%d' % (r, r)); ws.merge_cells('J%d:K%d' % (r, r)); ws.row_dimensions[r].height = 30; S.r += 1
@@ -163,10 +180,11 @@ def sheet_resumen(wb):
         cell(ws, r, 12, '=' + P_('cort'), sz=8); cell(ws, r, 13, '=' + P_('hrec'), 'key', '0')
         cell(ws, r, 14, '=' + P_('estado'), al='left', sz=8)
         S.r += 1
-    S.secnote('«h mín. sin flecha» = el mínimo por flexión, Tabla 6.3.3.1.1 y NTC-M 4.1.18; la h propuesta (columna h) ya incluye la flecha de 13.4 y el acomodo de varillas: no se baja la trabe a ese valor.')
+    S.secnote('Todas las varillas de los dos lechos van corridas en todo el claro: así las cuenta CUANTIFICACION y así entra el acero de compresión de la flecha diferida (ρ′). «h mín. sin flecha» = el mínimo por flexión, Tabla 6.3.3.1.1 y NTC-M 4.1.18; '
+              'la h propuesta (columna h) ya incluye la flecha de 13.4 y el acomodo de varillas: no se baja la trabe a ese valor. NP-09 y NP-14 son las vigas de orilla del volado F80012: b es la franja maciza (dala + macizo de orilla).')
     S.gap()
     S.section('5. CANTIDADES')
-    for k, (c, u) in enumerate([('Concreto de losas (con desperdicio)', 'm³'), ('Casetones 60×60×19 (LR-25)', 'pzas'), ('Casetones 50×60×19 (volados)', 'pzas'), ('Malla electrosoldada', 'm²'),
+    for k, (c, u) in enumerate([('Concreto de losas (con desperdicio)', 'm³'), ('Casetones 60×60×19 (LR-25)', 'pzas'), ('Casetones 50×60×19 (volados y respaldos)', 'pzas'), ('Malla electrosoldada', 'm²'),
                                 ('Acero de nervaduras secundarias y losas macizas', 'kg'), ('Acero de nervaduras principales', 'kg')]):
         r = S.r
         ws.merge_cells('B%d:D%d' % (r, r)); cell(ws, r, 2, c, al='left', sz=10)
@@ -175,28 +193,40 @@ def sheet_resumen(wb):
     S.gap()
     S.section('6. CONDICIONES DE OBRA')
     for txt in ['• Castillos que se bajan a cimentación: refuerzo anclado en el cimiento con escuadra a 90° hacia adentro, empotramiento ≥ 40 cm en cimiento de piedra; traslapes sólo en el tercio medio de la planta baja con estribos @ 7.5 cm (NTC-M 4.1.16.3 a 4.1.16.5, p. 43; 4.2.7.5.2, p. 53). Dalas con 4 varillas y As ≥ 0.2(f\'c/fy)·b·h: la D-15x20 pide 3.57 cm² (2 No. 4 + 2 No. 3) (NTC-M 6.2.2.2, p. 62).',
-                '• Nervaduras principales sin muro abajo: se arman como trabe con recubrimiento de 4 cm, 2 No. 4 corridas como mínimo arriba y abajo y estribos cerrados No. 3 a 135° (gancho 8 cm) con la separación de PRINCIPALES (columna «Cortante»). En las vigas perimetrales (NP-01 y NP-33) van más cerrados en 2h junto a cada apoyo (NTC-Concreto 6.3.5.1.1, p. 122; 6.3.7.7.7 y 6.3.7.7.8, p. 134; 14.7.3.3, p. 375). Las que piden más de 25 cm quedan descolgadas.',
-                '• Toda nervadura secundaria lleva 1 No. 4 corrida abajo y 1 No. 4 corrida arriba; la inferior se ancla para 1.25 fy en el paño (6.7.6.1.3, p. 175; 6.7.8.1.7, p. 188). Bastones con el largo de TABLEROS medido desde el paño. En bordes discontinuos las dos se anclan con gancho en el macizo o dala de borde de 40 cm (decisión D9; 6.7.7.4.1.1, p. 179; 14.4.3.1, p. 355).',
+                '• Nervaduras principales sin muro abajo: se arman como trabe con recubrimiento de 4 cm; TODAS las varillas de la tabla 4 van corridas en todo el claro (2 No. 4 como mínimo arriba y abajo; la flecha diferida cuenta con las superiores, ρ′) y estribos cerrados No. 3 a 135° (gancho 8 cm) con la separación de PRINCIPALES (columna «Cortante»). '
+                'En las vigas perimetrales (NP-01 y NP-33) van más cerrados en 2h junto a cada apoyo (NTC-Concreto 6.3.5.1.1, p. 122; 6.3.7.7.7 y 6.3.7.7.8, p. 134; 14.7.3.3, p. 375). Las que piden más de 25 cm quedan descolgadas.',
                 '• Donde la hoja pide MACIZAR, se quita la hilera de casetones junto al apoyo en todo el ancho del tablero. En esquinas exteriores sobre muros se refuerza arriba y abajo en un quinto del claro largo (6.7.7.3.1, p. 178).',
                 '• En el borde común de dos tableros se arma con el mayor de los dos bastones; los momentos ya incluyen la distribución de 2/3 del desequilibrio (3.4.3.1, p. 64).',
                 '• Traslapes clase B: secundarias No. 3 ≈ 50 cm y No. 4 ≈ 66 cm; principales, lecho inferior No. 4 ≈ 66, No. 5 ≈ 83 y No. 8 ≈ 166 cm; principales con h ≥ 40 cm, lecho superior No. 4 ≈ 86 y No. 5 ≈ 108 cm (ψp = 1.3, Tabla 14.4.2.6, p. 354). '
                 'Fuera de las secciones de esfuerzo máximo y alternados; malla traslapada un cuadro + 5 cm (14.5.1.3, Tabla 14.5.2.1, 14.5.4.1).']:
         S.bullet(txt)
+    lbullet('• Toda nervadura secundaria lleva 1 No. 4 corrida abajo y 1 No. 4 corrida arriba; la inferior se ancla para 1.25 fy en el paño (6.7.6.1.3, p. 175; 6.7.8.1.7, p. 188). Bastones con el largo de TABLEROS medido desde el paño. '
+            'En bordes discontinuos las dos rematan con gancho de 180° dentro de la dala de borde armada de ', ('TEXT({b_borde},"0")',), ' cm (decisión D9; 6.7.7.4.1.1, p. 179; 14.4.3.1, p. 355).')
     S.gap()
     S.section('7. NOTAS PARA PLANOS (DECISIÓN D6)')
-    mac = lambda k: ('"%s de azotea: inf. corto No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&", sup. corto No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&" (L = "&TEXT(%s/100,"0.00")&" m desde el paño), inf. largo No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&", sup. largo No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&" cm (L = "&TEXT(%s/100,"0.00")&" m)"' %
-                     (k.split()[0], T2('vPc', k), T2('sPc', k), T2('vNc', k), T2('sNc', k), T2('Lbc', k), T2('vPl', k), T2('sPl', k), T2('vNl', k), T2('sNl', k), T2('Lbl', k)),)
-    hil = '&'.join('IF(LEFT(%s,7)="MACIZAR","%s: "&LOWER(%s)&"; ","")' % (T2('cort', key(t)), key(t), T2('cort', key(t))) for t in TABS)
+    sup2 = lambda k, b, L, ln: '" @ "&TEXT(%s,"0.0")&IF(2*%s>=%s," cm corridas"," cm (L = "&TEXT(%s/100,"0.00")&" m desde el paño)")' % (T2('s' + b, k), T2(L, k), T2(ln, k), T2(L, k))
+    mac = lambda k: ('"%s de azotea: inf. corto No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&" cm, sup. corto No. "&TEXT(%s,"0.#")&%s&", inf. largo No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&" cm, sup. largo No. "&TEXT(%s,"0.#")&%s' %
+                     (k.split()[0], T2('vPc', k), T2('sPc', k), T2('vNc', k), sup2(k, 'Nc', 'Lbc', 'ln1'), T2('vPl', k), T2('sPl', k), T2('vNl', k), sup2(k, 'Nl', 'Lbl', 'ln2')),)
+    hil = endlist('&'.join('IF(LEFT(%s,7)="MACIZAR","%s: "&LOWER(%s)&"; ","")' % (T2('cort', key(t)), key(t), T2('cort', key(t))) for t in TABS), 'ninguna.')
+    rsp20 = endlist('&'.join('IF(%s>0,"%s: "&%s&" hilera(s) junto al muro raíz de %s; ","")' % (T2('vnh', kk), kk, T2('vnh', kk), bb['vol'].split()[0]) for kk, bb in BACK.items()), 'ninguna.')
     lbullet('• Concreto Clase 1A, f\'c = ', ('TEXT({fc},"0")',), ' kg/cm², con agregado grueso CALIZO de 1/2" (TMA ≤ 2/3 del recubrimiento y de la separación libre; Ec = 14 000·√f\'c) (NTC-Concreto 2023 (CDMX) 2.2.2 a), p. 30; Tabla 2.2.1, p. 31; 2.2.5.2.1, p. 32).')
     lbullet('• Precauciones de 3.9.2 (NTC-Concreto 2023 (CDMX) 3.9.1 d) y e) y 3.9.2, p. 74): casetón de medida fija que garantiza b_w y silletas que fijan el peralte del lecho superior.')
-    lbullet('• Losa reticular LR-25: casetón de poliestireno 60×60×', ('TEXT({hc},"0")',), ', nervaduras de ', ('TEXT({bw},"0")',), ' cm @ ', ('TEXT({s},"0")',), ' cm y capa de compresión de ', ('TEXT({t},"0")',), ' cm con malla ', ('{malla}',), ' (corrige la nota 2 del plano de cortes, que dice 60×60×20 con capa de 5 cm, y la 6x6-10/10 de EST-03; decisión D3).')
-    lbullet('• Volados F80012 y F80019: nervaduras de ', ('TEXT({bw_vol},"0")',), ' cm en la dirección del volado con casetón ', ('TEXT({ac_vol},"0")',), '×60×', ('TEXT({hc},"0")',), ' (decisión D10); recubrimiento de ', ('TEXT({rec_ext},"0")',), ' cm abajo y arriba (cara expuesta); armado de TABLEROS (sección 3 de esta hoja) y bastón hacia el tablero de respaldo.')
-    lbullet('• Losas macizas de ', ('TEXT({h_mac},"0")',), ' cm en F80032 y F80010 de azotea (decisión D11), con su lecho inferior ', ('TEXT({h}-{h_mac},"0")',), ' cm más alto que el de la LR-25 vecina (desnivel en cimbra y plafón). ', mac('F80032 N+6.00'), ' · ', mac('F80010 N+6.00'), '.')
-    lbullet('• Macizo o dala de borde de ', ('TEXT({b_borde},"0")',), ' cm de ancho en el peralte de la losa en todo borde discontinuo, apoyado sobre el muro de 15 cm (decisión D9); ahí se anclan con gancho de 90° la varilla inferior de cada nervadura (1.25 fy) y el bastón superior.')
-    lbullet('• Castillos C1…C8 hasta la cimentación (APOYOS sección B, decisión D1); donde no haya muro abajo en planta baja, columna de 25×25 como mínimo (NTC-Concreto 2023 (CDMX) 6.4.2.1.1, p. 138). Castillos en los dos extremos de los muros que cargan NP-15 y NP-26 (decisión D2).')
-    lbullet('• Trabes descolgadas de las nervaduras principales con la sección de la tabla 4 (decisión D2).')
+    lbullet('• Losa reticular LR-25: casetón de poliestireno 60×60×', ('TEXT({hc},"0")',), ', nervaduras de ', ('TEXT({bw},"0")',), ' cm @ ', ('TEXT({s},"0")',), ' cm y capa de compresión de ', ('TEXT({t},"0")',), ' cm con malla ', ('{malla}',),
+            ' AL CENTRO de la capa, sobre silletas (≈ ', ('TEXT(({t}-2*{fim})/2,"0.0")',), ' cm arriba y abajo) (corrige la nota 2 del plano de cortes, que dice 60×60×20 con capa de 5 cm, y la 6x6-10/10 de EST-03; decisión D3).')
+    lbullet('• Volados F80012 y F80019: ', ('IF({exp_vol}="SÍ","cara superior a la intemperie: recubrimiento de "&TEXT({rec_ext},"0")&" cm abajo y arriba","TERRAZA CON IMPERMEABILIZANTE Y PISO (cara superior protegida, decisión D12): recubrimiento de "&TEXT({rec_ext},"0")&" cm abajo (cara exterior) y "&TEXT({rec_np},"0")&" cm arriba (recubrimiento de viga, 6.7.8.1.9)")',),
+            '; nervaduras de ', ('TEXT({bw_vol},"0")',), ' cm en la dirección del volado con casetón ', ('TEXT({ac_vol},"0")',), '×60×', ('TEXT({hc},"0")',), ' (decisión D10), alineadas con las de sus tableros de respaldo; armado de TABLEROS (sección 3 de esta hoja): 1 varilla superior corrida hasta el apoyo lejano del respaldo y las demás hasta el fin de las nervaduras de 20 cm del respaldo. '
+            'Orillas libres (NP-16 y NP-17) como dala de orilla de 15×25 con 4 No. 4 y estribos No. 3 @ 20 cm, donde rematan las varillas inferiores de las nervaduras del volado.')
+    lbullet('• Tableros de respaldo de los volados: siguen con nervaduras de ', ('TEXT({bw_vol},"0")',), ' cm (casetón ', ('TEXT({ac_vol},"0")',), '×60×', ('TEXT({hc},"0")',), ') en las hileras junto al muro raíz: ', (rsp20,), ' (TABLEROS, columnas RESPALDO, decisión D10).')
+    lbullet('• Vigas de orilla del volado F80012 (NP-09 y NP-14, sus costados): franja maciza de la sección de la tabla 4 (descuelga lo que pase de 25 cm), con sus varillas superiores corridas desde la punta hasta L_d dentro de la principal que sigue del otro lado del muro raíz (NP-10 y NP-15) y los estribos de PRINCIPALES (decisión D10).')
+    lbullet('• Losas macizas de ', ('TEXT({h_mac},"0")',), ' cm en F80032 y F80010 de azotea (decisión D11), con su lecho inferior ', ('TEXT({h}-{h_mac},"0")',), ' cm más alto que el de la LR-25 vecina (desnivel en cimbra y plafón); en sus bordes discontinuos rematan en la dala de borde de ',
+            ('TEXT({b_borde},"0")',), '×', ('TEXT({h},"0")',), ' (baja ', ('TEXT({h}-{h_mac},"0")',), ' cm bajo la maciza). ', mac('F80032 N+6.00'), ' · ', mac('F80010 N+6.00'), '.')
+    lbullet('• Dala de borde ARMADA de ', ('TEXT({b_borde},"0")',), ' cm de ancho en el peralte de la losa en todo borde discontinuo apoyado (decisión D9): sobre muro se apoya en el muro de 15 cm; sobre nervadura principal es la principal ensanchada a ese ancho con estribos que lo abarcan. '
+            'Armado mínimo propuesto: 4 No. 4 corridas y estribos cerrados No. 3 @ 20 cm de todo el ancho. Ahí rematan con GANCHO DE 180° (extensión 4d_b ≥ 6.5 cm) la varilla inferior de cada nervadura (1.25 fy en el paño interior de la dala) y el bastón superior; '
+            'el gancho de 90° parado no cabe en 25 cm (se permite el de 90° acostado, dentro del armado de la dala). Un macizo sin armar no sirve.')
+    lbullet('• Castillos C1…C8 hasta la cimentación (APOYOS sección B, decisión D1; C7 es nuevo, sin castillo arriba: coordinar con arquitectura); donde no haya muro abajo en planta baja, columna de 25×25 como mínimo (NTC-Concreto 2023 (CDMX) 6.4.2.1.1, p. 138). Castillos en los dos extremos de los muros que cargan NP-15 y NP-26 (decisión D2).')
+    lbullet('• Trabes descolgadas de las nervaduras principales con la sección de la tabla 4 y todas sus varillas corridas en todo el claro (decisión D2).')
     lbullet('• Apuntalamiento del entrepiso N+3.00 hasta planta baja mientras se cuela la azotea: 150 kg/m² más el peso del colado y la cimbra (NTC-Criterios y Acciones 2023 (CDMX) 6.1.3.1, p. 10).')
-    lbullet('• Hileras de casetones a macizar junto al apoyo, en todo el ancho del tablero: ', (hil,), '')
+    lbullet('• Hileras de casetones a macizar junto al apoyo del claro corto, en todo el ancho del tablero: ', (hil,), '')
     add_cf(ws, 'C1:N%d' % S.r)
     ws.sheet_view.zoomScale = 85
     return ws

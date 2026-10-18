@@ -51,6 +51,8 @@ for it in range(int(sys.argv[1]) if len(sys.argv) > 1 else 12):
                 nh = min(h + 5, 90); nnx = 0
         if nh / nb > 6:
             nb = min(nb + 5, 40)
+        if np_ in gen_b.VOLLAT:   # viga de orilla del volado: b es la franja maciza (fórmula en PRINCIPALES); sólo se puede peraltar
+            nb = b
         if (nb, nh, nnx) != (b, h, nx):
             prop[np_] = [nb, nh, nnx]; changed += 1
     for a, c in punta:   # el tramo que se apoya en la punta de un volado corto y ese volado son la misma trabe
