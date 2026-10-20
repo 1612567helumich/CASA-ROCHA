@@ -15,10 +15,10 @@ OPPS = {'inferior': 'superior', 'superior': 'inferior', 'izquierdo': 'derecho', 
 MEC = {'inferior': 'MeI', 'superior': 'MeS', 'izquierdo': 'MeL', 'derecho': 'MeR'}
 _tcols = ['key', 'nivel', 'modo', 'dest', 'Lx', 'Ly', 'ax', 'ay', 'a1', 'a2', 'm', 'dirc', 'ln1', 'ln2', 'bfc', 'bfl', 'rb', 'rt',
           'scm', 'cv', 'pp', 'cm', 'ws', 'wu',
-          'nd', 'ndc', 'ndl', 'cauto', 'cforce', 'caso', 'idx', 'fr', 'cNIC', 'cNIL', 'cNDC', 'cNDL', 'cPC', 'cPL', 'MeI', 'MeS', 'MeL', 'MeR', 'kX', 'kY', 'MNcd', 'MNld', 'MPcd', 'MPld', 'dVv', 'f342', 'c342', 'pbor', 'MPc', 'MNc', 'MPl', 'MNl']
+          'nd', 'ndc', 'ndl', 'cauto', 'cforce', 'caso', 'idx', 'fr', 'cNIC', 'cNIL', 'cNDC', 'cNDL', 'cPC', 'cPL', 'MeI', 'MeS', 'MeL', 'MeR', 'kX', 'kY', 'MNcd', 'MNld', 'MPcd', 'MPld', 'dVc', 'dVl', 'f342', 'w342', 'c342', 'pbor', 'MPc', 'MNc', 'MPl', 'MNl']
 for _b in BLKS:
     _tcols += ['dq' + _b, 'As' + _b, 'v' + _b, 'n' + _b, 'd' + _b, 'MR' + _b, 'FU' + _b, 'e' + _b]
-_tcols += ['g678', 'Vu', 'VcR', 'cort', 'afm', 'hmin', 'heqv', 'peral', 'tdia', 'Lbc', 'Lbl', 'ncx', 'ncy', 'apoy', 'estado', 'nota']
+_tcols += ['g678', 'Vu', 'VcR', 'Vul', 'VcRl', 'cort', 'afm', 'hmin', 'heqv', 'peral', 'tdia', 'Lbc', 'Lbl', 'ncx', 'ncy', 'apoy', 'estado', 'nota']
 for i, nm in enumerate(_tcols):
     TC[nm] = CL(2 + i)
 TC_LAST = CL(2 + len(_tcols) - 1)
@@ -118,16 +118,16 @@ def sheet_tableros(wb):
              'idx': ('col. m', 5), 'fr': ('interp.', 6), 'cNIC': ('M⁻ cont. corto', 7.5), 'cNIL': ('M⁻ cont. largo', 7.5), 'cNDC': ('M⁻ disc. corto', 7.5), 'cNDL': ('M⁻ disc. largo', 7.5),
              'cPC': ('M⁺ corto', 7.5), 'cPL': ('M⁺ largo', 7.5),
              'MeI': ('M⁻ borde inferior por nerv.', 8), 'MeS': ('M⁻ borde superior por nerv.', 8), 'MeL': ('M⁻ borde izquierdo por nerv.', 8), 'MeR': ('M⁻ borde derecho por nerv.', 8),
-             'kX': ('Rigidez d³/a1 ‖X', 8), 'kY': ('Rigidez d³/a1 ‖Y', 8), 'dVv': ('ΔV por volado vecino', 8), 'f342': ('Vecinos con M⁻ > 50 % distinto', 14),
+             'kX': ('Rigidez d³/a1 ‖X', 8), 'kY': ('Rigidez d³/a1 ‖Y', 8), 'dVc': ('ΔV por volado vecino ‖ corto', 8), 'dVl': ('ΔV por volado vecino ‖ largo', 8), 'f342': ('Vecinos con M⁻ > 50 % distinto', 14), 'w342': ('Avisos de APOYOS / volado', 14),
              'MNcd': ('M⁻ corto que deja el vecino', 8), 'MNld': ('M⁻ largo que deja el vecino', 8), 'MPcd': ('ΔM⁺ corto por distribución', 8), 'MPld': ('ΔM⁺ largo por distribución', 8), 'c342': ('3.4.2.1 c)', 16), 'pbor': ('Carga en orilla de volado', 8.5), 'MPc': ('M⁺ corto', 7.5), 'MNc': ('M⁻ corto', 7.5), 'MPl': ('M⁺ largo', 7.5), 'MNl': ('M⁻ largo', 7.5),
-             'g678': ('6.7.8 cumple', 8), 'Vu': ('V_u por nerv.', 7.5), 'VcR': ('V_cR', 7.5), 'cort': ('Estado', 15),
+             'g678': ('6.7.8 cumple', 8), 'Vu': ('V_u por nerv.', 7.5), 'VcR': ('V_cR', 7.5), 'Vul': ('V_u ‖ largo (volado vecino)', 7.5), 'VcRl': ('V_cR ‖ largo', 7.5), 'cort': ('Estado', 15),
              'afm': ('α_fm', 6.5), 'hmin': ('h mín. Tabla 6.7.3.1.2 / volado L/8', 9), 'heqv': ('h_eq / h', 7), 'peral': ('Estado', 12), 'tdia': ('Capa (diafragma)', 11),
              'Lbc': ('Bastón ‖ corto desde paño', 8), 'Lbl': ('Bastón ‖ largo desde paño', 8), 'ncx': ('Casetones ‖X', 7.5), 'ncy': ('Casetones ‖Y', 7.5), 'apoy': ('Apoyos', 15), 'estado': ('ESTADO', 26), 'nota': ('Nota', 60)}
     for blk in BLKS:
         heads['dq' + blk] = ('d para As (var. preferida)', 7); heads['As' + blk] = ('As req.', 7); heads['v' + blk] = ('Var. No.', 6); heads['n' + blk] = ('Pzas', 5.5); heads['d' + blk] = ('d', 6); heads['MR' + blk] = ('M_R', 7); heads['FU' + blk] = ('Mu/M_R', 7); heads['e' + blk] = ('ε_t', 7)
     units = {'Lx': 'm', 'Ly': 'm', 'ax': 'm', 'ay': 'm', 'a1': 'm', 'a2': 'm', 'ln1': 'cm', 'ln2': 'cm', 'bfc': 'cm', 'bfl': 'cm', 'rb': 'cm', 'rt': 'cm',
              'scm': 'kg/m²', 'cv': 'kg/m²', 'pp': 'kg/m²', 'cm': 'kg/m²', 'ws': 'kg/m²', 'wu': 'kg/m²', 'pbor': 'kg/m (serv.)',
-             'MPc': 't·m', 'MNc': 't·m', 'MPl': 't·m', 'MNl': 't·m', 'MeI': 't·m', 'MeS': 't·m', 'MeL': 't·m', 'MeR': 't·m', 'kX': 'cm²', 'kY': 'cm²', 'dVv': 't', 'MNcd': 't·m', 'MNld': 't·m', 'MPcd': 't·m', 'MPld': 't·m', 'Vu': 't', 'VcR': 't', 'hmin': 'cm', 'heqv': 'cm', 'Lbc': 'cm', 'Lbl': 'cm'}
+             'MPc': 't·m', 'MNc': 't·m', 'MPl': 't·m', 'MNl': 't·m', 'MeI': 't·m', 'MeS': 't·m', 'MeL': 't·m', 'MeR': 't·m', 'kX': 'cm²', 'kY': 'cm²', 'dVc': 't', 'dVl': 't', 'Vul': 't', 'VcRl': 't', 'MNcd': 't·m', 'MNld': 't·m', 'MPcd': 't·m', 'MPld': 't·m', 'Vu': 't', 'VcR': 't', 'hmin': 'cm', 'heqv': 'cm', 'Lbc': 'cm', 'Lbl': 'cm'}
     for blk in BLKS:
         units['dq' + blk] = 'cm'; units['As' + blk] = 'cm²'; units['MR' + blk] = 't·m'; units['d' + blk] = 'cm'; units['e' + blk] = '≥ 0.005'
     for nm, (t, w) in heads.items():
@@ -179,7 +179,7 @@ def sheet_tableros(wb):
         # rigidez d³/a1 por dirección (d del lecho superior para dimensionar: sin referencia circular)
         for dX_ in ('X', 'Y'):
             vals['k%s' % dX_] = ('=IF({modo}{r}="PERIMETRAL",IF({dirc}{r}="%s",{dqNc}{r},{dqNl}{r})^3/({a1}{r}*100),0)' % dX_, 'calc', '0')
-        gain = {'c': [], 'l': []}; redu = {'c': [], 'l': []}; fails = {}; asym = []; vols = []; dv = []
+        gain = {'c': [], 'l': []}; redu = {'c': [], 'l': []}; fails = {}; asym = []; vols = []; dv = {}
         for s_ in SIDES:
             e_ = t['bordes'][s_]
             dE = 'Y' if s_ in ('inferior', 'superior') else 'X'
@@ -194,19 +194,23 @@ def sheet_tableros(wb):
                 kb = n_ + ' ' + t['level']; rb_ = TROW[kb]
                 tb = next(x for x in TABS if key(x) == kb)
                 if tb['modo'] == 'VOLADO':
-                    vols.append(('AND(%s="CONTINUO",{modo}%d="VOLADO")' % (gA_, rb_), n_))
-                    dv.append('IF(AND(%s="CONTINUO",{modo}%d="VOLADO"),MAX(0,{MNc}%d-%s)/MAX(IF({dirc}{r}="%s",{ln1}{r},{ln2}{r})/100,0.01),0)' % (gA_, rb_, rb_, MA, dE))
+                    # sólo por el borde de empotramiento del volado (perpendicular a su vuelo: dirc del volado = dirección del momento en ese borde)
+                    cv_ = 'AND(%s="CONTINUO",{modo}%d="VOLADO",{dirc}%d="%s")' % (gA_, rb_, rb_, dE)
+                    vols.append((cv_, n_))
+                    # ΔV = (1 + 1/2)·ΔM/L_n: el desequilibrio y el traspaso al borde opuesto (cota con traspaso 1/2)
+                    for dd, op, ln_ in (('c', '=', 'ln1'), ('l', '<>', 'ln2')):
+                        dv.setdefault(dd, []).append('IF(AND(%s,{dirc}{r}%s"%s"),1.5*MAX(0,{MNc}%d-%s)/MAX({%s}{r}/100,0.01),0)' % (cv_, op, dE, rb_, MA, ln_))
                     continue
-                # borde recíproco: el del vecino que lista a este tablero (de preferencia el opuesto)
-                sbs = [q for q in [OPPS[s_]] + SIDES if t['name'] in [x.strip() for x in (tb['bordes'][q].get('vecinos') or '').split(',')]]
-                sb = sbs[0] if sbs else OPPS[s_]
+                # borde recíproco: sólo si el vecino lista a este tablero; se usa siempre su borde opuesto (misma orientación del momento)
+                sbs = [q for q in SIDES if t['name'] in [x.strip() for x in (tb['bordes'][q].get('vecinos') or '').split(',')]]
+                if not sbs:
+                    continue
+                sb = OPPS[s_]
                 MB = '{%s}%d' % (MEC[sb], rb_)
-                if sbs:
-                    gB_ = 'APOYOS!$G$%d' % EDGE[(kb, sb)]
+                gB_ = 'APOYOS!$G$%d' % EDGE[(kb, sb)]
+                if sb in sbs:
                     asym.append(('AND({modo}%d="PERIMETRAL",%s<>%s)' % (rb_, gA_, gB_), n_))
-                    cont = 'OR(%s="CONTINUO",%s="CONTINUO")' % (gA_, gB_)
-                else:
-                    cont = '%s="CONTINUO"' % gA_
+                cont = 'OR(%s="CONTINUO",%s="CONTINUO")' % (gA_, gB_)
                 cond = '%s,%s>0,%s>0' % (cont, MA, MB)
                 kA = '{k%s}{r}/MAX({k%s}{r}+{k%s}%d,1E-9)' % (dE, dE, dE, rb_)
                 gA = 'IF(AND(%s,%s>%s),%s+2/3*(%s-%s)*%s,0)' % (cond, MB, MA, MA, MB, MA, kA)
@@ -222,15 +226,17 @@ def sheet_tableros(wb):
         for dd in ('c', 'l'):
             vals['MN%sd' % dd] = ('=IF({modo}{r}="PERIMETRAL",MAX(0,%s),0)' % (','.join(gain[dd]) or '0'), 'calc', '0.000')
             vals['MP%sd' % dd] = ('=IF({modo}{r}="PERIMETRAL",(%s)/2,0)' % ('+'.join(redu[dd]) or '0'), 'calc', '0.000')
-        vals['dVv'] = ('=IF({modo}{r}="PERIMETRAL",MAX(0,%s),0)' % (','.join(dv) or '0'), 'calc', '0.000')
+        for dd in ('c', 'l'):
+            vals['dV%s' % dd] = ('=IF({modo}{r}="PERIMETRAL",MAX(0,%s),0)' % (','.join(dv.get(dd, [])) or '0'), 'calc', '0.000')
         lst = '&'.join('IF(%s," %s","")' % (fs[0] if len(fs) == 1 else 'OR(%s)' % ','.join(fs), n_) for n_, fs in fails.items())
         vals['f342'] = (('=IF({modo}{r}<>"PERIMETRAL","",%s)' % lst) if lst else '=""', 'calc', '@')
         seen = set(); tl = []
         for f_, n_ in asym:
             if n_ not in seen:
                 seen.add(n_); tl.append('IF(%s," · continuidad asimétrica con %s (cada uno con su momento; revisar APOYOS)","")' % (f_, n_))
-        tl += ['IF(%s," · junto al volado %s: se arma con su M⁻ y su cortante entra en V_u","")' % (f_, n_) for f_, n_ in vols]
-        vals['c342'] = ('=IF({modo}{r}<>"PERIMETRAL","—",IF({f342}{r}="","CUMPLE","FUERA con"&{f342}{r})%s)' % ''.join('&' + x for x in tl), 'calc', '@')
+        tl += ['IF(%s," · junto al empotramiento del volado %s: se arma con su M⁻ y su cortante entra en V_u","")' % (f_, n_) for f_, n_ in vols]
+        vals['w342'] = (('=IF({modo}{r}<>"PERIMETRAL",""%s)' % ''.join(',' + x if i_ == 0 else '&' + x for i_, x in enumerate(tl))) if tl else '=""', 'calc', '@')
+        vals['c342'] = ('=IF({modo}{r}<>"PERIMETRAL","—",IF({f342}{r}="","CUMPLE","FUERA con"&{f342}{r})&{w342}{r})', 'calc', '@')
         vals['MPc'] = ('=IF({modo}{r}="PERIMETRAL",{cPC}{r}%s+{MPcd}{r},0)' % fac, 'calc', '0.000')
         vals['MNc'] = ('=IF({modo}{r}="PERIMETRAL",MAX(MAX({cNIC}{r},{cNDC}{r})%s,{MNcd}{r}),IF({modo}{r}="VOLADO",({wu}{r}*({ln1}{r}/100)^2/2+{FCcm}*{pbor}{r}*{ln1}{r}/100)*{s}/100/1000,0))' % fac, 'calc', '0.000')
         vals['MPl'] = ('=IF({modo}{r}="PERIMETRAL",{cPL}{r}%s+{MPld}{r},0)' % fac, 'calc', '0.000')
@@ -266,16 +272,27 @@ def sheet_tableros(wb):
         vals['g678'] = ('=IF({modo}{r}="HUECO","—",IF(AND({modo}{r}="PERIMETRAL",{a1}{r}*100>=6*{ac},{ac}<=80,{bw}>=10,{h}<=3.5*{bw},{t}>=MAX({ac}/13,5)),"SÍ","NO"))', 'calc', '@')
         lam = 'MIN(1,SQRT(2/(1+0.04*{dNc}{r})))'
         pexp = '({nNc}{r}*%s/({bwc}*{dNc}{r}))' % ab('{vNc}{r}')
-        vals['Vu'] = ('=IF({modo}{r}="PERIMETRAL",MAX(0,({ln1}{r}/2-{dNc}{r})/100)*(0.95-0.5*{m}{r})*{wu}{r}*IF(AND({nd}{r}>0,{nd}{r}<4),{Vinc},1)*{s}/100/1000+{dVv}{r},'
+        vals['Vu'] = ('=IF({modo}{r}="PERIMETRAL",MAX(0,({ln1}{r}/2-{dNc}{r})/100)*(0.95-0.5*{m}{r})*{wu}{r}*IF(AND({nd}{r}>0,{nd}{r}<4),{Vinc},1)*{s}/100/1000+{dVc}{r},'
                       'IF({modo}{r}="VOLADO",({wu}{r}*MAX(0,{ln1}{r}-{dNc}{r})/100+{FCcm}*{pbor}{r})*{s}/100/1000,0))', 'calc', '0.000')
         vals['VcR'] = ('=IF({modo}{r}="HUECO",0,{FRv}*2*%s*%s^(1/3)*SQRT({fc})*{bwc}*{dNc}{r}*IF({g678}{r}="SÍ",{VcRinc},1)/1000)' % (lam, pexp), 'calc', '0.000')
+        # nervaduras del claro largo: sólo se revisan cuando les llega el desequilibrio de un volado vecino
+        vals['Vul'] = ('=IF(AND({modo}{r}="PERIMETRAL",{dVl}{r}>0),MAX(0,({ln2}{r}/2-{dNl}{r})/100)*(0.95-0.5*{m}{r})*{wu}{r}*IF(AND({nd}{r}>0,{nd}{r}<4),{Vinc},1)*{s}/100/1000+{dVl}{r},0)', 'calc', '0.000')
+        laml = 'MIN(1,SQRT(2/(1+0.04*{dNl}{r})))'
+        pexpl = '({nNl}{r}*%s/({bwc}*{dNl}{r}))' % ab('{vNl}{r}')
+        vals['VcRl'] = ('=IF(AND({modo}{r}="PERIMETRAL",{dVl}{r}>0,{nNl}{r}>0),{FRv}*2*%s*%s^(1/3)*SQRT({fc})*{bwc}*{dNl}{r}*IF({g678}{r}="SÍ",{VcRinc},1)/1000,0)' % (laml, pexpl), 'calc', '0.000')
         # largo (cm desde el paño) donde V > V_cR; se compara contra el macizo de orilla que ya da el acomodo de casetones
-        xper = 'IF({VcR}{r}<={dVv}{r},{ln1}{r},{ln1}{r}/2-({VcR}{r}-{dVv}{r})/MAX({Vu}{r}-{dVv}{r},1E-9)*({ln1}{r}/2-{dNc}{r}))'
+        xper = 'IF({VcR}{r}<={dVc}{r},{ln1}{r},{ln1}{r}/2-({VcR}{r}-{dVc}{r})/MAX({Vu}{r}-{dVc}{r},1E-9)*({ln1}{r}/2-{dNc}{r}))'
         xvol = '({ln1}{r}-({VcR}{r}*1E5/{s}-{FCcm}*{pbor}{r})*100/{wu}{r})'
         ncs = 'INT(({a1}{r}*100-{bp}+{bw})/{s})'
         oril = 'IF(%s>0,({a1}{r}*100-{bp}-(%s*{ac}+(%s-1)*{bw}))/2,{a1}{r}*100/2)' % (ncs, ncs, ncs)
-        hil = 'MAX(0,CEILING((IF({modo}{r}="VOLADO",%s,%s)-%s)/{s},1))' % (xvol, xper, oril)
-        vals['cort'] = ('=IF({modo}{r}="HUECO","—",IF({Vu}{r}<={VcR}{r},"CUMPLE",IF(%s<=0,"CUMPLE (basta el macizo de orilla)","MACIZAR "&%s&" hilera(s)")))' % (hil, hil), 'calc', '@')
+        hilc = 'IF({Vu}{r}<={VcR}{r},0,MIN(MAX(%s,1),MAX(0,CEILING((IF({modo}{r}="VOLADO",%s,%s)-%s)/{s},1))))' % (ncs, xvol, xper, oril)
+        xpl = 'IF({VcRl}{r}<={dVl}{r},{ln2}{r},{ln2}{r}/2-({VcRl}{r}-{dVl}{r})/MAX({Vul}{r}-{dVl}{r},1E-9)*({ln2}{r}/2-{dNl}{r}))'
+        ncl = 'INT(({a2}{r}*100-{bp}+{bw})/{s})'
+        orl = 'IF(%s>0,({a2}{r}*100-{bp}-(%s*{ac}+(%s-1)*{bw}))/2,{a2}{r}*100/2)' % (ncl, ncl, ncl)
+        hill = 'IF(OR({dVl}{r}=0,{Vul}{r}<={VcRl}{r}),0,MIN(MAX(%s,1),MAX(0,CEILING((%s-%s)/{s},1))))' % (ncl, xpl, orl)
+        hil = 'MAX(%s,%s)' % (hilc, hill)
+        okv = 'AND({Vu}{r}<={VcR}{r},OR({dVl}{r}=0,{Vul}{r}<={VcRl}{r}))'
+        vals['cort'] = ('=IF({modo}{r}="HUECO","—",IF(%s,"CUMPLE",IF(%s<=0,"CUMPLE (basta el macizo de orilla)","MACIZAR "&%s&" hilera(s)"&IF(%s>%s," junto al volado (nervaduras del claro largo)",""))))' % (okv, hil, hil, hill, hilc), 'calc', '@')
         afs = [edge_af(t, s_, k) for s_ in SIDES]
         vals['afm'] = ('=IF({modo}{r}="PERIMETRAL",(%s)/4,0)' % '+'.join(afs), 'calc', '0.00')
         disc_nobeam = 'OR(' + ','.join('AND(%s,%s<0.8)' % (D_[s_], a_) for s_, a_ in zip(SIDES, afs)) + ')'
@@ -326,7 +343,7 @@ def sheet_tableros(wb):
         vals['estado'] = ('=IF({modo}{r}="HUECO","HUECO — marco de nervaduras principales",IF(AND(%s<=1,NOT(%s),NOT(%s),{peral}{r}="CUMPLE",{tdia}{r}="CUMPLE"),'
                           'IF({apoy}{r}="OK",IF(LEFT({cort}{r},6)="CUMPLE","CUMPLE","CUMPLE — "&{cort}{r})&IF(LEFT({c342}{r},5)="FUERA"," · fuera de 3.4.2.1 c)",""),IF({apoy}{r}="VER PRINCIPALES","VER PRINCIPALES","REVISAR APOYOS")),'
                           'IF(AND(%s<=1,NOT(%s),NOT(%s),{peral}{r}="CALCULAR FLECHA"),"REVISAR: calcular flecha (h_eq < h mín.)",'
-                          '"NO CUMPLE: "&IF(%s>1,"flexión ","")&IF(%s,"no caben ","")&IF(%s,"ε_t < 0.005 ","")&IF({peral}{r}="NO CUMPLE","peralte ","")&IF({tdia}{r}<>"CUMPLE","capa < 6 cm",""))))'
+                          '"NO CUMPLE: "&IF(%s>1,"flexión ","")&IF(%s,"no caben ","")&IF(%s,"ε_t < 0.005 ","")&IF({peral}{r}="NO CUMPLE","peralte ","")&IF({tdia}{r}<>"CUMPLE","capa < 6 cm","")&IF(LEFT({cort}{r},7)="MACIZAR"," · cortante: "&{cort}{r},""))))'
                           % (fus, nn, etl, fus, nn, etl, fus, nn, etl), 'key', '@')
         notes = []
         if t['rep_nota']:
@@ -344,7 +361,8 @@ def sheet_tableros(wb):
         txtf = '&'.join('"%s"' % txt[i_:i_ + 200].replace('"', '""') for i_ in range(0, len(txt), 200))
         vals['nota'] = ('=IF(AND({modo}{r}="PERIMETRAL",MIN({ncx}{r},{ncy}{r})=0),"Tablero macizo (no cabe un casetón en el claro corto): no aplica 6.7.8. La resistencia se revisa con una nervadura de 10 cm cada 70 cm y r_np (conservador); "&"como losa maciza lleva además As,mín = 0.0018·Ag en cada dirección cerca de la cara a tensión (6.7.6.1.1, p. 175). ",IF(AND({g678}{r}="NO",{modo}{r}="PERIMETRAL"),"No cumple 6.7.8.1.4 (a_c = "&{ac}&" cm > claro corto/6 = "&TEXT({a1}{r}*100/6,"0")&" cm): se diseña como losa apoyada en vigas (6.7.8.1.9): '
                         'nervaduras con recubrimiento de viga r_np = "&{rec_np}&" cm (Tabla 4.14.16.a), V_cR sin ×1.1 y cortante sin estribos por 5.5.3.8.1 (criterio del Proyectista). Para que cuente como encasetonada: casetón de "&TEXT(FLOOR(MIN(80,{a1}{r}*100/6),1),"0")&" cm o menor. ",""))'
-                        '&IF(LEFT({c342}{r},5)="FUERA","M⁻ del borde común "&{c342}{r}&": difieren más de 50%% (3.4.2.1 c); se distribuyen 2/3 del desequilibrio (3.4.3.1) y conviene confirmar los momentos con el modelo. ","")&%s' % txtf, 'calc', '@')
+                        '&IF({f342}{r}<>"","M⁻ del borde común con"&{f342}{r}&": difieren más de 50%% del menor (3.4.2.1 c); se distribuyen 2/3 del desequilibrio (3.4.3.1) y conviene confirmar los momentos con el modelo. ","")'
+                        '&IF({w342}{r}<>"","Avisos:"&MID({w342}{r},3,999)&". ","")&%s' % txtf, 'calc', '@')
         for nm in _tcols:
             v, kind, fmt = vals[nm]
             if isinstance(v, str) and v.startswith('='):
@@ -447,7 +465,8 @@ def sheet_nervadura(wb):
     S.secnote('V por metro a d del paño = (L_n/2 − d)·(0.95 − 0.5·m)·w_u, × 1.15 si hay bordes continuos y discontinuos (fórmula de la NTC 2017 que la 2023 ya no trae; se usa como método reconocido, 3.4.1.1). Por nervadura × s. '
               'V_cR sin estribos con la ec. 5.5.3.2.1 y la cuantía del acero superior.', 42)
     S.header()
-    S.row('V_u por nervadura', '=' + tv('Vu'), 't', 'Incluye ΔV = (M⁻ del volado vecino − M⁻ propio)/L_n cuando las nervaduras rematan en un volado (si llegan por el claro largo se suma igual, del lado seguro); ese ΔV no baja a lo largo del claro y entra así en las hileras a macizar. En volado: V = (w_u·(L_n − d) + 1.3·P)·s.', NTCC + ' 3.4.1.1, p. 64 · 6.7.4.3.2, p. 172 (sección crítica a d del paño)', 'key', '0.000', 'n_Vu')
+    S.row('V_u por nervadura', '=' + tv('Vu'), 't', 'Incluye ΔV = 1.5·(M⁻ del volado − M⁻ propio)/L_n cuando las nervaduras del claro corto rematan en el empotramiento de un volado (desequilibrio más el traspaso al borde opuesto, con cota 1/2); ese ΔV no baja a lo largo del claro y entra así en las hileras a macizar. Si llega por las nervaduras del claro largo, se revisa con el V_cR y el claro de ese lecho (renglón de abajo). En volado: V = (w_u·(L_n − d) + 1.3·P)·s.', NTCC + ' 3.4.1.1, p. 64 · 6.7.4.3.2, p. 172 (sección crítica a d del paño)', 'key', '0.000', 'n_Vu')
+    S.row('V_u / V_cR de las nervaduras del claro largo (sólo con volado vecino)', '=TEXT(' + tv('Vul') + ',"0.000")&" / "&TEXT(' + tv('VcRl') + ',"0.000")', 't', 'Sólo cuando el desequilibrio de un volado llega por las nervaduras del claro largo: V con L_n largo más ΔV, contra V_cR con el d y el acero del lecho largo.', NTCC + ' ec. 5.5.3.2.1.a, p. 95', 'calc', '@')
     S.row('p — cuantía del acero superior en el apoyo', '={n_nNc}*%s/({bwc}*{n_dNc})' % ab('{n_vNc}'), '—', 'As_sup / (b_w·d).', NTCC + ' 5.5.3.2.1, p. 95', 'calc', '0.0000', 'n_p')
     S.row('λs — factor de tamaño', '=MIN(1,SQRT(2/(1+0.04*{n_dNc})))', '—', '√(2/(1 + 0.04d)) ≤ 1, d en cm.', NTCC + ' ec. 5.5.3.2.1.b, p. 95', 'calc', '0.000', 'n_ls')
     S.row('¿Cumple 6.7.8 (losa encasetonada)?', '=' + tv('g678'), '—', 'Claro corto ≥ 6·a_c, a_c ≤ 80, b_w ≥ 10, h ≤ 3.5b_w, t ≥ máx(a_c/13, 5). Si NO, se diseña como losa apoyada en vigas: nervaduras con recubrimiento de viga (r_np) y sin el ×1.1.', NTCC + ' 6.7.8.1.2 a 6.7.8.1.4, p. 187 · 6.7.8.1.9, p. 188', 'key', '@', 'n_678')

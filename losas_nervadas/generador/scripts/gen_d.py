@@ -19,7 +19,7 @@ def sheet_resumen(wb):
     est = 'TABLEROS!$%s$%d:$%s$%d' % (TC['estado'], T0, TC['estado'], T1)
     pest = 'PRINCIPALES!$%s$%d:$%s$%d' % (PC['estado'], P0, PC['estado'], P1)
     rows = [('Tableros que CUMPLEN (nervaduras secundarias)', '=COUNTIF(%s,"CUMPLE*")' % est, '=COUNTA(%s)-COUNTIF(%s,"HUECO*")' % (est, est), 'ok'),
-            ('Tableros que piden MACIZAR casetones junto al apoyo', '=COUNTIF(%s,"*MACIZAR*")' % est, '=COUNTA(%s)' % est, 'info'),
+            ('Tableros que piden MACIZAR casetones junto al apoyo (incluye los volados)', '=COUNTIF(TABLEROS!$%s$%d:$%s$%d,"MACIZAR*")' % (TC['cort'], T0, TC['cort'], T1), '=COUNTA(%s)' % est, 'info'),
             ('Tableros que esperan a una nervadura principal', '=COUNTIF(%s,"VER PRINCIPALES*")' % est, '=COUNTA(%s)' % est, 'zero'),
             ('Tableros que NO CUMPLEN', '=COUNTIF(%s,"NO CUMPLE*")' % est, '=COUNTA(%s)' % est, 'zero'),
             ('Tableros donde h_eq < espesor mínimo (calcular flecha)', '=COUNTIF(%s,"REVISAR: calcular flecha*")' % est, '=COUNTA(%s)' % est, 'zero'),
@@ -64,7 +64,7 @@ def sheet_resumen(wb):
                 'Opciones: dala o cadena de borde de ≥ 30–36 cm de ancho en esos bordes, barras con cabeza (14.4.4) o justificación del Responsable en planos (NERVADURA sección 10).',
                 '10) VOLADOS F80012 Y F80019 (NO CUMPLEN): sus nervaduras no son «viguetas» (6.7.8.1.4) y van como vigas con 4 cm de recubrimiento en las dos caras; además su cara superior queda sin techo (exposición A2, Tabla 4.3.1 c). En 10 cm de ancho cabe una sola varilla y el M⁻ del empotramiento (≈ 1.8 t·m por nervadura) pide una No. 8 que no cabe. '
                 'Opciones: nervaduras más anchas en los volados (casetón más chico o nervadura de 15–20 cm), volado macizo con su propio diseño, o volado más corto. La malla de la capa en esas zonas pide protección (piso o impermeabilizante; selector en DATOS) o capa más gruesa. '
-                'Mientras sigan, el desequilibrio de su momento sube el cortante de los tableros de respaldo (F80016, F80018, F80020, F80021): F80020 y F80021 piden macizar (TABLEROS, columna «ΔV por volado vecino»).']:
+                'Mientras sigan, el desequilibrio de su momento sube el cortante de sus tableros de respaldo: F80016, F80017 y F80018 (por F80019) y F80010 y F80014 (por F80012), con lo que algunos piden macizar junto al volado (TABLEROS, columnas «ΔV por volado vecino» y de cortante). Los propios volados piden macizar junto al muro; esas hileras se rehacen al rediseñarlos.']:
         S.bullet(txt)
     S.gap()
     S.section('3. TABLA DE NERVADURAS SECUNDARIAS (COMO LA DE NAIM)')
