@@ -3,7 +3,8 @@ import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from ezdxf.addons.drawing import RenderContext, Frontend
 from ezdxf.addons.drawing.matplotlib import MatplotlibBackend
-W='/tmp/claude-0/-home-user-CASA-ROCHA/faa149e0-9f48-5f0d-b5ee-28b4c7156d8c/scratchpad/'
+import os
+W = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/'
 d=ezdxf.readfile(W+'in/264d7eb7-001_PLANO_CROCHA_R3.0.dxf')
 m=json.load(open(W+'work/model.json'))
 y0=193.61

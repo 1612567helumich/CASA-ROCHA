@@ -3,7 +3,8 @@ import json, math
 from shapely.geometry import LineString, Point, Polygon, box
 from shapely.ops import unary_union
 import ezdxf
-W='/tmp/claude-0/-home-user-CASA-ROCHA/faa149e0-9f48-5f0d-b5ee-28b4c7156d8c/scratchpad/'
+import os
+W = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/'
 m=json.load(open(W+'work/model.json')); geo=json.load(open(W+'work/geo.json'))
 T=0.03
 def merge_lines(segs):

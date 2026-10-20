@@ -1,5 +1,5 @@
-import sys, openpyxl
-sys.path.insert(0, '/tmp/claude-0/-home-user-CASA-ROCHA/faa149e0-9f48-5f0d-b5ee-28b4c7156d8c/scratchpad/scripts')
+import os, sys, openpyxl
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from openpyxl.utils import column_index_from_string as CI
 import gen_b
 TC, PC = gen_b.TC, gen_b.PC

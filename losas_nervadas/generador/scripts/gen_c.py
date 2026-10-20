@@ -24,6 +24,10 @@ def colpair(i):
     return CL(i), CL(i + 1)
 
 
+def tv(c):
+    return 'INDEX(%s,{nr})' % tcol(c)
+
+
 # ---------------------------------------------------------------- CROQUIS (parámetros)
 def sheet_croquis(wb):
     ws = wb.create_sheet('CROQUIS'); S = Narr(ws, N)
@@ -38,6 +42,9 @@ def sheet_croquis(wb):
     S.row('Tablero', '={sel}', '—', 'Enlazado a NERVADURA.', 'NERVADURA', 'key', '@', 'k_sel')
     S.row('Nivel', '={n_niv}', '—', '—', 'NERVADURA', 'calc', '@', 'k_niv')
     S.row('Modo', '={n_modo}', '—', '—', 'NERVADURA', 'calc', '@', 'k_modo')
+    S.row('Losa', '={n_losa}', '—', 'NERVADA (LR-25) o MACIZA (decisión D11).', 'NERVADURA', 'calc', '@', 'k_losa')
+    S.row('h de la losa', '={n_h}', 'cm', '—', 'NERVADURA', 'calc', '0', 'k_h')
+    S.row('Ancho del alma en el corte', '=IF({k_losa}="MACIZA",{s},{n_bwt})', 'cm', 'b_w de la nervadura del claro corto (20 cm en los volados, D10); en la maciza se dibuja una franja de ancho s.', 'NERVADURA', 'calc', '0', 'k_bwd')
     S.row('a_x', '={n_ax}*100', 'cm', 'NERVADURA × 100.', 'NERVADURA', 'calc', '0', 'k_ax')
     S.row('a_y', '={n_ay}*100', 'cm', 'NERVADURA × 100.', 'NERVADURA', 'calc', '0', 'k_ay')
     S.row('Claro corto paralelo a', '=IF({k_ax}<={k_ay},"X","Y")', '—', '—', 'NERVADURA', 'calc', '@', 'k_dir')
@@ -45,10 +52,12 @@ def sheet_croquis(wb):
     S.row('Escala del dibujo de planta', '=82/MAX({k_ax},{k_ay})', 'u/cm', 'El tablero se ajusta a un cuadro de 82 unidades.', 'Sólo dibujo', 'calc', '0.0000', 'k_sc')
     S.row('Origen X del dibujo', '=12+(82-{k_ax}*{k_sc})/2', 'u', 'Centra el tablero.', 'Sólo dibujo', 'calc', '0.00', 'k_ox')
     S.row('Origen Y del dibujo', '=12+(82-{k_ay}*{k_sc})/2', 'u', 'Centra el tablero.', 'Sólo dibujo', 'calc', '0.00', 'k_oy')
-    S.row('Inferior ‖ claro corto', '={n_nPc}&" No. "&TEXT({n_vPc},"0.#")&" corrida(s)"', '—', 'Enlazado a NERVADURA sección 4.', 'NERVADURA', 'calc', '@', 'k_tPc')
-    S.row('Superior ‖ claro corto', '="1 No. "&TEXT({n_vNc},"0.#")&" corrida"&IF({n_nNc}>1," + "&({n_nNc}-1)&" bastón(es) No. "&TEXT({n_vNc},"0.#")&", L = "&TEXT({n_Lbc}/100,"0.00")&" m desde el paño"," (no requiere bastones)")', '—', 'Largo desde el paño: punto de inflexión + máx(d, 12d_b, L_n/16), y ≥ L_d (NERVADURA sección 10).', 'NERVADURA secciones 5 y 10', 'calc', '@', 'k_tNc')
-    S.row('Inferior ‖ claro largo', '={n_nPl}&" No. "&TEXT({n_vPl},"0.#")&" corrida(s)"', '—', '—', 'NERVADURA sección 6', 'calc', '@', 'k_tPl')
-    S.row('Superior ‖ claro largo', '="1 No. "&TEXT({n_vNl},"0.#")&" corrida"&IF({n_nNl}>1," + "&({n_nNl}-1)&" bastón(es) No. "&TEXT({n_vNl},"0.#")&", L = "&TEXT({n_Lbl}/100,"0.00")&" m desde el paño"," (no requiere bastones)")', '—', '—', 'NERVADURA secciones 7 y 10', 'calc', '@', 'k_tNl')
+    S.row('Inferior ‖ claro corto', '=IF({k_losa}="MACIZA","No. "&TEXT({n_vPc},"0.#")&" @ "&TEXT({n_sPc},"0.0")&" cm corridas",{n_nPc}&" No. "&TEXT({n_vPc},"0.#")&" corrida(s)")', '—', 'Enlazado a NERVADURA sección 4.', 'NERVADURA', 'calc', '@', 'k_tPc')
+    S.row('Superior ‖ claro corto', '=IF({k_losa}="MACIZA","No. "&TEXT({n_vNc},"0.#")&" @ "&TEXT({n_sNc},"0.0")&" cm, "&IF(2*{n_Lbc}>=' + tv('ln1') + ',"corridas (los bastones de los dos apoyos se traslapan)","L = "&TEXT({n_Lbc}/100,"0.00")&" m desde el paño"),'
+          'IF({k_modo}="VOLADO",{n_nNc}&" No. "&TEXT({n_vNc},"0.#")&" arriba: 1 de la punta al apoyo lejano del respaldo"&IF({n_nNc}>1," y "&({n_nNc}-1)&" hasta "&TEXT({n_Lbc}/100,"0.00")&" m dentro del respaldo (fin de las nervaduras de 20 cm)",""),'
+          '"1 No. "&TEXT({n_vNc},"0.#")&" corrida"&IF({n_nNc}>1," + "&({n_nNc}-1)&" bastón(es) No. "&TEXT({n_vNc},"0.#")&", L = "&TEXT({n_Lbc}/100,"0.00")&" m desde el paño"," (no requiere bastones)")))', '—', 'Largo desde el paño: punto de inflexión + máx(d, 12d_b, L_n/16), y ≥ L_d (NERVADURA sección 10). En el volado, las varillas cruzan el muro raíz y siguen dentro del tablero de respaldo.', 'NERVADURA secciones 5 y 10', 'calc', '@', 'k_tNc')
+    S.row('Inferior ‖ claro largo', '=IF({k_losa}="MACIZA","No. "&TEXT({n_vPl},"0.#")&" @ "&TEXT({n_sPl},"0.0")&" cm corridas",{n_nPl}&" No. "&TEXT({n_vPl},"0.#")&" corrida(s)")', '—', '—', 'NERVADURA sección 6', 'calc', '@', 'k_tPl')
+    S.row('Superior ‖ claro largo', '=IF({k_losa}="MACIZA","No. "&TEXT({n_vNl},"0.#")&" @ "&TEXT({n_sNl},"0.0")&" cm, "&IF(2*{n_Lbl}>=' + tv('ln2') + ',"corridas (los bastones de los dos apoyos se traslapan)","L = "&TEXT({n_Lbl}/100,"0.00")&" m desde el paño"),"1 No. "&TEXT({n_vNl},"0.#")&" corrida"&IF({n_nNl}>1," + "&({n_nNl}-1)&" bastón(es) No. "&TEXT({n_vNl},"0.#")&", L = "&TEXT({n_Lbl}/100,"0.00")&" m desde el paño"," (no requiere bastones)"))', '—', '—', 'NERVADURA secciones 7 y 10', 'calc', '@', 'k_tNl')
     S.gap()
     S.section('2. NERVADURA PRINCIPAL QUE SE DIBUJA')
     S.header()
@@ -74,7 +83,7 @@ def sheet_croquis(wb):
     S.row('Paso del achurado de los apoyos', 4, 'u', 'CAPTURA. Sólo dibujo.', 'Sólo dibujo', 'input', '0', 'k_hatch')
     S.gap()
     S.section('3. DIBUJOS')
-    S.secnote('Arriba: plantas N+3.00 y N+6.00 (azul = tablero escogido, naranja = nervadura principal escogida, rojo = principales sin muro, gris grueso = muros que cargan, morado = vacíos, rombos rojos = castillos propuestos). '
+    S.secnote('Arriba: plantas N+3.00 y N+6.00 (azul = tablero escogido, naranja = nervadura principal escogida, rojo = principales sin muro, gris grueso = muros que cargan, morado = vacíos, rombos rojos = castillos C1…C8 que bajan a cimentación, decisión D1). '
               'Abajo: planta del tablero, corte y alzado de la nervadura secundaria, corte de la principal.', 42)
     N['k_chartrow'] = S.r
     add_cf(ws, 'C1:F%d' % S.r)
@@ -119,25 +128,33 @@ def build_croquis_datos(wb, wsK):
     b2 = '{bp}/2*%s' % sc
     dyn('Paño de principales', lambda k: rx(k, '%s+%s' % (ox, b2), 0, '%s+%s-%s' % (ox, W, b2), 0), lambda k: ry(k, 0, '%s+%s' % (oy, b2), 0, '%s+%s-%s' % (oy, H, b2)))
     # casetones: aristas verticales en serpentina
-    def serp(ncell, mcell, along_len, cross_m, cross_len, vertical):
-        # j = indice de linea, w = 0/1 dentro de la linea
+    def serp(ncell, mcell, along_len, cross_m, cross_m1, cross_len, vertical, acell):
+        # j = indice de linea, w = 0/1 dentro de la linea; acell = lado del casetón en esa dirección (50 cm a lo largo del muro en los volados, D10)
+        # mcell = macizo de orilla del lado de origen en esta dirección; cross_m / cross_m1 = los de los dos lados en la otra dirección (con la dala de borde, D9)
         def xf(k):
             j = 'MIN(INT((%s-1)/2),MAX(2*%s-1,0))' % (k, ncell)
-            pos = '({bp}/2+%s+INT(%s/2)*{s}+MOD(%s,2)*{ac})' % (mcell, j, j)
+            pos = '({bp}/2+%s+INT(%s/2)*{s}+MOD(%s,2)*%s)' % (mcell, j, j, acell)
             return 'IF(%s=0,%s,%s)' % (ncell, '%s+%s/2' % (ox, W) if vertical else '%s+%s/2' % (oy, H), ('%s+%s*%s' % (ox, pos, sc)) if vertical else ('%s+%s*%s' % (oy, pos, sc)))
         def yf(k):
             j = 'MIN(INT((%s-1)/2),MAX(2*%s-1,0))' % (k, ncell)
             w = 'IF(INT((%s-1)/2)>MAX(2*%s-1,0),1,MOD(%s-1,2))' % (k, ncell, k)
             lo = '({bp}/2+%s)' % cross_m
-            hi = '(%s-{bp}/2-%s)' % (cross_len, cross_m)
+            hi = '(%s-{bp}/2-%s)' % (cross_len, cross_m1)
             v = 'IF(MOD(%s,2)=0,IF(%s=0,%s,%s),IF(%s=0,%s,%s))' % (j, w, lo, hi, w, hi, lo)
             base = oy if vertical else ox
             return 'IF(%s=0,%s,%s+%s*%s)' % (ncell, '%s+%s/2' % (oy, H) if vertical else '%s+%s/2' % (ox, W), base, v, sc)
         return (xf, yf) if vertical else (yf, xf)
-    fx, fy = serp('{n_ncx}', '{n_mx}', '{k_ax}', '{n_my}', '{k_ay}', True)
+    fx, fy = serp('{n_ncx}', '{n_mx0}', '{k_ax}', '{n_my0}', '{n_my1}', '{k_ay}', True, '{n_acx}')
     dyn('Casetones (aristas ‖ Y)', fx, fy)
-    fx, fy = serp('{n_ncy}', '{n_my}', '{k_ay}', '{n_mx}', '{k_ax}', False)
+    fx, fy = serp('{n_ncy}', '{n_my0}', '{k_ay}', '{n_mx0}', '{n_mx1}', '{k_ax}', False, '{n_acy}')
     dyn('Casetones (aristas ‖ X)', fx, fy)
+    # dala de borde (D9): paño interior de la dala en cada borde discontinuo apoyado (b_borde − b_p/2 desde el eje)
+    dd = '({b_borde}-{bp}/2)*%s' % sc
+    for nm_, flag, xs_, ys_ in (('Dala de borde (D9)', '{n_dI}', ('%s+%s' % (ox, dd), '%s+%s' % (ox, dd)), (oy, '%s+%s' % (oy, H))),
+                                ('dala der', '{n_dD}', ('%s+%s-%s' % (ox, W, dd), '%s+%s-%s' % (ox, W, dd)), (oy, '%s+%s' % (oy, H))),
+                                ('dala inf', '{n_dB}', (ox, '%s+%s' % (ox, W)), ('%s+%s' % (oy, dd), '%s+%s' % (oy, dd))),
+                                ('dala sup', '{n_dS}', (ox, '%s+%s' % (ox, W)), ('%s+%s-%s' % (oy, H, dd), '%s+%s-%s' % (oy, H, dd)))):
+        dyn(nm_, (lambda k, f=flag, a=xs_: 'IF(%s=1,IF(%s<=1,%s,%s),-100)' % (f, k, a[0], a[1])), (lambda k, f=flag, a=ys_: 'IF(%s=1,IF(%s<=1,%s,%s),-100)' % (f, k, a[0], a[1])), 2)
     # nervadura representativa del claro corto (al centro) y del largo
     def bar(dirv, frac0, frac1, off):
         """barra horizontal (dirv='X') o vertical a lo largo del tablero, de frac0 a frac1 del claro, desplazada off unidades del centro."""
@@ -173,52 +190,59 @@ def build_croquis_datos(wb, wsK):
         return g, f
     dyn('Cota a_x', *cota_h(ox, '%s+%s' % (ox, W), '%s-5' % oy), 7)
     dyn('Cota a_y', *cota_v(oy, '%s+%s' % (oy, H), '%s-5' % ox), 7)
-    dyn('Cota s', *cota_h('%s+({bp}/2+{n_mx})*%s' % (ox, sc), '%s+({bp}/2+{n_mx}+{s})*%s' % (ox, sc), '%s+%s+4' % (oy, H)), 7)
+    dyn('Cota s', *cota_h('%s+({bp}/2+{n_mx0})*%s' % (ox, sc), '%s+({bp}/2+{n_mx0}+{s})*%s' % (ox, sc), '%s+%s+4' % (oy, H)), 7)
     label('Tablero', '="Tablero "&{k_sel}&" — "&TEXT({k_ax}/100,"0.00")&" × "&TEXT({k_ay}/100,"0.00")&" m"')
     label('Paño de principales', '="Paño de nervaduras principales / dalas (b = "&{bp}&" cm)"')
-    label('Casetones (aristas ‖ Y)', '="Casetones "&{ac}&"×"&{ac}&"×"&{hc}&": "&{n_ncx}&" × "&{n_ncy}&" pzas"')
-    label('Casetones (aristas ‖ X)', '="Macizo en orillas: "&TEXT({n_mx},"0")&" cm en X, "&TEXT({n_my},"0")&" cm en Y"')
+    label('Casetones (aristas ‖ Y)', '=IF({k_losa}="MACIZA","Losa maciza de "&{k_h}&" cm: sin casetones (D11)",IF({n_ncx}*{n_ncy}=0,"Tablero macizo: no cabe ningún casetón (con la dala de borde de D9)","Casetones "&{n_acx}&"×"&{n_acy}&"×"&{hc}&": "&{n_ncx}&" × "&{n_ncy}&" pzas"))')
+    label('Casetones (aristas ‖ X)', '=IF({k_losa}="MACIZA","(maciza)","Macizo de orilla (cm): izq. "&TEXT({n_mx0},"0")&" / der. "&TEXT({n_mx1},"0")&" · inf. "&TEXT({n_my0},"0")&" / sup. "&TEXT({n_my1},"0")&IF({n_vnh}>0," · junto al volado: "&{n_vnh}&" hilera(s) de casetón "&{ac_vol}&"×"&{ac}&"×"&{hc}&" (nervaduras de 20 cm, D10)",""))')
+    label('Dala de borde (D9)', '="Dala de borde armada de "&{b_borde}&" cm en los bordes discontinuos (D9): paño interior"')
+    label('dala der', '="(dala de borde)"')
+    label('dala inf', '="(dala de borde)"')
+    label('dala sup', '="(dala de borde)"')
     label('ncorto_inf', '="Claro corto · inferior: "&{k_tPc}')
     label('ncorto_sup', '="Claro corto · superior: "&{k_tNc}')
-    label('ncorto_bI', '=IF({n_nNc}<2,"Claro corto · bastones: no lleva","Claro corto · bastones: "&({n_nNc}-1)&" No. "&TEXT({n_vNc},"0.#")&" en cada apoyo")')
+    label('ncorto_bI', '=IF({k_losa}="MACIZA","Claro corto · bastones: No. "&TEXT({n_vNc},"0.#")&" @ "&TEXT({n_sNc},"0.0")&" cm "&IF(2*{n_Lbc}>=' + tv('ln1') + ',"corridos (se traslapan)","en cada apoyo"),IF({n_nNc}<2,"Claro corto · bastones: no lleva",IF({k_modo}="VOLADO","Claro corto · "&({n_nNc}-1)&" No. "&TEXT({n_vNc},"0.#")&" hasta "&TEXT({n_Lbc}/100,"0.00")&" m dentro del respaldo","Claro corto · bastones: "&({n_nNc}-1)&" No. "&TEXT({n_vNc},"0.#")&" en cada apoyo")))')
     label('ncorto_bD', '="(bastón del otro apoyo)"')
     label('nlargo_inf', '="Claro largo · inferior: "&{k_tPl}')
     label('nlargo_sup', '="Claro largo · superior: "&{k_tNl}')
-    label('nlargo_bI', '=IF({n_nNl}<2,"Claro largo · bastones: no lleva","Claro largo · bastones: "&({n_nNl}-1)&" No. "&TEXT({n_vNl},"0.#")&" en cada apoyo")')
+    label('nlargo_bI', '=IF({k_losa}="MACIZA","Claro largo · bastones: No. "&TEXT({n_vNl},"0.#")&" @ "&TEXT({n_sNl},"0.0")&" cm "&IF(2*{n_Lbl}>=' + tv('ln2') + ',"corridos (se traslapan)","en cada apoyo"),IF({n_nNl}<2,"Claro largo · bastones: no lleva","Claro largo · bastones: "&({n_nNl}-1)&" No. "&TEXT({n_vNl},"0.#")&" en cada apoyo"))')
     label('nlargo_bD', '="(bastón del otro apoyo)"')
     label('Cota a_x', '="a_x = "&TEXT({k_ax}/100,"0.00")&" m"')
     label('Cota a_y', '="a_y = "&TEXT({k_ay}/100,"0.00")&" m"')
     label('Cota s', '="s = "&{s}&" cm"')
     # ------------------------------------------------ Ch4: corte nervadura secundaria (cm reales)
     hs = '{s}/2'
-    poly = ['-%s' % hs, hs, hs, '{bw}/2', '{bw}/2', '-{bw}/2', '-{bw}/2', '-%s' % hs, '-%s' % hs]
-    polyy = ['{h}', '{h}', '{hc}', '{hc}', '0', '0', '{hc}', '{hc}', '{h}']
+    # nervada: sección T con la b_w del claro corto (20 cm en volados); maciza: rectángulo de ancho s y h = h_mac (el alma ocupa todo el ancho)
+    poly = ['-%s' % hs, hs, hs, '{k_bwd}/2', '{k_bwd}/2', '-{k_bwd}/2', '-{k_bwd}/2', '-%s' % hs, '-%s' % hs]
+    polyy = ['{k_h}', '{k_h}', '{hc}', '{hc}', '0', '0', '{hc}', '{hc}', '{k_h}']
     dyn('Concreto', lambda k: 'CHOOSE(MIN(MAX(%s,1),9),%s)' % (k, ','.join(poly)), lambda k: 'CHOOSE(MIN(MAX(%s,1),9),%s)' % (k, ','.join(polyy)), 9)
-    dyn('Casetón izq.', lambda k: rx(k, '-%s' % hs, 0, '-{bw}/2', 0), lambda k: ry(k, 0, '0', 0, '{hc}'), 5)
-    dyn('Casetón der.', lambda k: rx(k, '{bw}/2', 0, hs, 0), lambda k: ry(k, 0, '0', 0, '{hc}'), 5)
-    dyn('Malla', lambda k: 'IF(%s<=1,-%s+1,%s-1)' % (k, hs, hs), lambda k: '{h}-{rec}-{fim}', 2)
+    hidem = lambda f: 'IF({k_losa}="MACIZA",-100,%s)' % f
+    dyn('Casetón izq.', lambda k: hidem(rx(k, '-%s' % hs, 0, '-{k_bwd}/2', 0)), lambda k: ry(k, 0, '0', 0, '{hc}'), 5)
+    dyn('Casetón der.', lambda k: hidem(rx(k, '{k_bwd}/2', 0, hs, 0)), lambda k: ry(k, 0, '0', 0, '{hc}'), 5)
+    # malla al centro de la capa; sólo baja a r_ext de la cara superior si esa cara queda expuesta (selectores de DATOS)
+    dyn('Malla', lambda k: hidem('IF(%s<=1,-%s+1,%s-1)' % (k, hs, hs)), lambda k: '{h}-IF(OR(AND({k_modo}="VOLADO",{exp_vol}="SÍ"),AND({k_niv}="N+6.00",{exp_az}="SÍ")),{rec_ext}+{fim},{t}/2)', 2)
     dbe = dbz('{est_sec}')
-    def barpos(n, var, ytop):
+    def barpos(n, var, ytop, sep):
         dbb = db(var)
-        x = lambda k: 'IF(%s<=1,0,-1)*0+IF(%s=1,0,IF(MIN(%s,%s)=1,-1,1)*(MAX({slib},%s)/2+%s/2))' % (k, n, k, n, dbb, dbb)
-        y = lambda k: 'IF(%s=0,-100,%s)' % (n, '{n_dNc}' if ytop else '{h}-{n_dPc}')
+        x = lambda k: 'IF({k_losa}="MACIZA",IF(%s<=1,-1,1)*%s/2,IF(%s=1,0,IF(MIN(%s,%s)=1,-1,1)*(MAX({slib},%s)/2+%s/2)))' % (k, sep, n, k, n, dbb, dbb)
+        y = lambda k: 'IF(%s=0,-100,%s)' % (n, '{n_dNc}' if ytop else '{k_h}-{n_dPc}')
         return x, y
-    dyn('Varillas inferiores', *barpos('{n_nPc}', '{n_vPc}', False), 2)
-    dyn('Bastones', *barpos('{n_nNc}', '{n_vNc}', True), 2)
+    dyn('Varillas inferiores', *barpos('{n_nPc}', '{n_vPc}', False, '{n_sPc}'), 2)
+    dyn('Bastones', *barpos('{n_nNc}', '{n_vNc}', True, '{n_sNc}'), 2)
     dyn('Estribo / grapa', lambda k: rx(k, '-({bw}/2-{rec})', 0, '({bw}/2-{rec})', 0), lambda k: 'IF({est_sec}=0,-100,%s)' % ry(k, 0, '{rec}', 0, '{h}-{rec}'), 5)
-    dyn('Cota b_w', *cota_h('-{bw}/2', '{bw}/2', '-4'), 7)
-    dyn('Cota s (corte)', *cota_h('-%s' % hs, hs, '{h}+4'), 7)
-    dyn('Cota h', *cota_v('0', '{h}', '%s+4' % hs), 7)
-    label('Concreto', '="Nervadura "&{bw}&" cm + capa "&{t}&" cm (h = "&{h}&" cm)"')
-    label('Casetón izq.', '="Casetón de poliestireno "&{ac}&"×"&{hc}')
+    dyn('Cota b_w', *cota_h('-{k_bwd}/2', '{k_bwd}/2', '-4'), 7)
+    dyn('Cota s (corte)', *cota_h('-%s' % hs, hs, '{k_h}+4'), 7)
+    dyn('Cota h', *cota_v('0', '{k_h}', '%s+4' % hs), 7)
+    label('Concreto', '=IF({k_losa}="MACIZA","Losa maciza h = "&{k_h}&" cm (D11): se diseña por franja de 100 cm; se dibuja un tramo de "&{s}&" cm","Nervadura "&{k_bwd}&" cm + capa "&{t}&" cm (h = "&{h}&" cm)")')
+    label('Casetón izq.', '=IF({k_losa}="MACIZA","(sin casetón)","Casetón de poliestireno "&{n_acx}&"×"&{n_acy}&"×"&{hc})')
     label('Casetón der.', '="(casetón)"')
-    label('Malla', '="Malla "&{malla}')
+    label('Malla', '=IF({k_losa}="MACIZA","(sin malla: parrilla de varillas)","Malla "&{malla}&" al centro de la capa (silletas)")')
     label('Varillas inferiores', '="Inferior claro corto: "&{k_tPc}')
     label('Bastones', '="Superior claro corto: "&{k_tNc}')
     label('Estribo / grapa', '=IF({est_sec}=0,"Sin estribo: el cortante lo toma el concreto (5.5.3.8.1); si no alcanza, se maciza","Estribo No. "&TEXT({est_sec},"0.#"))')
-    label('Cota b_w', '="b_w = "&{bw}&" cm"')
-    label('Cota s (corte)', '="s = "&{s}&" cm"')
-    label('Cota h', '="h = "&{h}&" cm"')
+    label('Cota b_w', '=IF({k_losa}="MACIZA","tramo dibujado de "&{s}&" cm","b_w = "&{k_bwd}&" cm")')
+    label('Cota s (corte)', '=IF({k_losa}="MACIZA","tramo dibujado de "&{s}&" cm (diseño por metro)","s = "&{s}&" cm")')
+    label('Cota h', '="h = "&{k_h}&" cm"')
     # ------------------------------------------------ Ch5: alzado de la nervadura del claro corto (x 0..100, alto exagerado)
     Hy = '12'
     dyn('Nervadura (alzado)', lambda k: rx(k, '0', 0, '100', 0), lambda k: ry(k, 0, '0', 0, Hy), 5)
@@ -230,12 +254,12 @@ def build_croquis_datos(wb, wsK):
     dyn('Bastón izq. (alzado)', lambda k: 'IF({n_nNc}<2,-50,CHOOSE(MIN(MAX(%s,1),3),-1.5,-1.5,IF(%s,98.5,%s)))' % (k, vol, fbz), lambda k: 'CHOOSE(MIN(MAX(%s,1),3),6,10.7,10.7)' % k, 3)
     dyn('Bastón der. (alzado)', lambda k: 'IF(OR({n_nNc}<2,%s),-50,CHOOSE(MIN(MAX(%s,1),3),101.5,101.5,100-%s))' % (vol, k, fbz), lambda k: 'CHOOSE(MIN(MAX(%s,1),3),6,10.7,10.7)' % k, 3)
     dyn('Cota a1', *cota_h('0', '100', '-14'), 7)
-    label('Nervadura (alzado)', '="Nervadura del claro corto ("&IF({k_modo}="VOLADO","VOLADO","apoyada en sus dos extremos")&") — alto exagerado"')
+    label('Nervadura (alzado)', '=IF({k_losa}="MACIZA","Franja de 1 m del claro corto","Nervadura del claro corto")&" ("&IF({k_modo}="VOLADO","VOLADO","apoyada en sus dos extremos")&") — alto exagerado"')
     label('Apoyo izquierdo', '=IF({k_modo}="VOLADO","Apoyo del volado: nervadura principal o muro (punta libre)","Apoyos: nervadura principal o muro")')
     label('Apoyo derecho', '=IF({k_modo}="VOLADO","(volado: sin apoyo en la punta)","(apoyo)")')
     label('Inferior (alzado)', '="Inferior corrido: "&{k_tPc}')
-    label('Superior corrido (alzado)', '="Superior corrido: 1 No. "&TEXT({n_vNc},"0.#")&" (6.7.6.1.3)"')
-    label('Bastón izq. (alzado)', '=IF({n_nNc}<2,"Sin bastones: basta la corrida superior","Bastones: "&({n_nNc}-1)&" No. "&TEXT({n_vNc},"0.#")&", "&TEXT({n_Lbc}/100,"0.00")&" m desde el paño")')
+    label('Superior corrido (alzado)', '=IF({k_losa}="MACIZA","Superior: "&{k_tNc},"Superior corrido: 1 No. "&TEXT({n_vNc},"0.#")&" (6.7.6.1.3)")')
+    label('Bastón izq. (alzado)', '=IF({k_losa}="MACIZA","(bastones de la maciza: ver arriba)",IF({n_nNc}<2,"Sin bastones: basta la corrida superior",IF({k_modo}="VOLADO","Superior del volado: "&({n_nNc}-1)&" No. "&TEXT({n_vNc},"0.#")&" hasta "&TEXT({n_Lbc}/100,"0.00")&" m dentro del respaldo","Bastones: "&({n_nNc}-1)&" No. "&TEXT({n_vNc},"0.#")&", "&TEXT({n_Lbc}/100,"0.00")&" m desde el paño")))')
     label('Bastón der. (alzado)', '="(bastón del otro apoyo)"')
     label('Cota a1', '="a1 = "&TEXT({n_a1},"0.00")&" m"')
     # ------------------------------------------------ Ch6: corte de la nervadura principal
@@ -342,7 +366,7 @@ def build_croquis_datos(wb, wsK):
     for i, c in enumerate(D['castillos_prop']):
         r = Y0 + 40 + i
         ws.cell(r, lb_c, c['id']); ws.cell(r, lb_c + 1, c['x']); ws.cell(r, lb_c + 2, c['y']); ws.cell(r, lb_c + 3, c['level'])
-        ws.cell(r, lb_c + 4, '=IF(%s="SÍ",%s&" (propuesto)",%s&" RECHAZADO")' % (PROPROW[c['id']], '"%s"' % c['id'], '"%s"' % c['id']))
+        ws.cell(r, lb_c + 4, '=IF(%s="SÍ",%s&" (D1)",%s&" RECHAZADO")' % (PROPROW[c['id']], '"%s"' % c['id'], '"%s"' % c['id']))
     for name, f in [('k', None)]:
         pass
     ws['A%d' % (LAB0 - 1)] = 'TEXTOS DE LAS LEYENDAS'; ws['A%d' % (LAB0 - 1)].font = font(10, True, color=HDR_FG)
@@ -430,6 +454,9 @@ def build_croquis_datos(wb, wsK):
     add(ch, series_cols['Paño de principales'], labels['Paño de principales'], color='C00000', w=1.0, dash='dash')
     add(ch, series_cols['Casetones (aristas ‖ Y)'], labels['Casetones (aristas ‖ Y)'], color='A6A6A6', w=0.75)
     add(ch, series_cols['Casetones (aristas ‖ X)'], labels['Casetones (aristas ‖ X)'], color='A6A6A6', w=0.75)
+    add(ch, series_cols['Dala de borde (D9)'], labels['Dala de borde (D9)'], color='7F4F00', w=1.5, dash='dash')
+    for nm_ in ('dala der', 'dala inf', 'dala sup'):
+        add(ch, series_cols[nm_], labels[nm_], noleg=True, color='7F4F00', w=1.5, dash='dash')
     add(ch, series_cols['ncorto_inf'], labels['ncorto_inf'], color='0070C0', w=2.5)
     add(ch, series_cols['ncorto_sup'], labels['ncorto_sup'], color='7F4F00', w=1.5)
     add(ch, series_cols['ncorto_bI'], labels['ncorto_bI'], color='C00000', w=2.5)
@@ -480,26 +507,27 @@ def build_croquis_datos(wb, wsK):
 # ---------------------------------------------------------------- CUANTIFICACION
 def sheet_cuant(wb):
     ws = wb.create_sheet('CUANTIFICACION')
-    S = Narr(ws, N, {'A': 1.78, 'B': 18, 'C': 9, 'D': 10, 'E': 11, 'F': 11, 'G': 12, 'H': 12, 'I': 12, 'J': 40}, last='J')
+    S = Narr(ws, N, {'A': 1.78, 'B': 18, 'C': 9, 'D': 10, 'E': 10, 'F': 11, 'G': 11, 'H': 12, 'I': 12, 'J': 12, 'K': 40}, last='K')
     S.title('CUANTIFICACIÓN — CONCRETO, CASETONES, MALLA Y ACERO DE NERVADURAS')
-    S.subtitle('Cantidades aproximadas para presupuesto. Los casetones se cuentan con el rectángulo envolvente y se escalan por el área real del tablero; el acero de nervaduras secundarias '
-               'supone una nervadura por cada hilera de casetones más las de orilla, con el armado de TABLEROS.', 30)
+    S.subtitle('Cantidades aproximadas para presupuesto. Los casetones se cuentan con el rectángulo de diseño (a_x × a_y, con la dala de borde de D9 en los bordes discontinuos) y se escalan por el área real del tablero; el acero de nervaduras secundarias '
+               'supone una nervadura por cada hilera de casetones más las de orilla, con el armado de TABLEROS. Volados (D10): casetón 50×60×19 y nervaduras de 20 cm, que siguen en las primeras hileras de sus tableros de respaldo. '
+               'Losas macizas de azotea (D11): concreto h·área, sin casetón ni malla, y acero «No. x @ y» por m².', 42)
     S.gap()
     S.section('1. DATOS DE CUANTIFICACIÓN')
     S.header(('Concepto', 'Valor', 'Unidad', 'Cómo se usa', 'Referencia'))
-    ws.column_dimensions['E'].width = 11
     for k, (c, v, u, how, nm) in enumerate([('Desperdicio de concreto', 1.05, '—', 'Multiplica el volumen.', 'q_dc'), ('Desperdicio de acero', 1.07, '—', 'Multiplica el peso.', 'q_da'),
                                             ('Traslape / anclaje por extremo de varilla', 0.30, 'm', 'Se suma a cada varilla.', 'q_tr')]):
         r = S.r
         cell(ws, r, 2, c, al='left'); cell(ws, r, 3, v, 'input', '0.00'); cell(ws, r, 4, u)
-        ws.merge_cells('E%d:I%d' % (r, r)); cell(ws, r, 5, how, al='left'); cell(ws, r, 10, 'Práctica de obra', 'ref', al='left')
+        ws.merge_cells('E%d:J%d' % (r, r)); cell(ws, r, 5, how, al='left'); cell(ws, r, 11, 'Práctica de obra', 'ref', al='left')
         N[nm] = 'CUANTIFICACION!$C$%d' % r; S.r += 1
     S.gap()
     S.section('2. POR TABLERO')
     r = S.r
-    heads = ['Tablero', 'Área (m²)', 'Casetones (pzas)', 'Concreto (m³)', 'Malla (m²)', 'Acero ‖ corto (kg)', 'Acero ‖ largo (kg)', 'Acero total (kg)', 'Nota']
+    heads = ['Tablero', 'Área (m²)', 'Casetones (pzas)', 'De ellos 50×60×19 (pzas)', 'Concreto (m³)', 'Malla (m²)', 'Acero ‖ corto (kg)', 'Acero ‖ largo (kg)', 'Acero total (kg)', 'Nota']
     for k, t in enumerate(heads):
         hdr_cell(ws, r, 2 + k, t)
+    ws.row_dimensions[r].height = 30
     S.r += 1
     first = S.r
     for t in TABS:
@@ -507,34 +535,58 @@ def sheet_cuant(wb):
         T_ = lambda c: 'TABLEROS!$%s$%d' % (TC[c], tr)
         cell(ws, r, 2, key(t), al='left')
         cell(ws, r, 3, t['area'], 'data', '0.00')
-        cell(ws, r, 4, '=IF(%s="HUECO",0,ROUND(%s*%s*C%d/(%s*%s),0))' % (T_('modo'), T_('ncx'), T_('ncy'), r, T_('Lx'), T_('Ly')), fmt='0')
-        cell(ws, r, 5, '=IF(%s="HUECO",0,C%d*{h}/100-D%d*({ac}/100)^2*({hc}/100))'.format(**N) % (T_('modo'), r, r), fmt='0.000')
-        cell(ws, r, 6, '=IF(%s="HUECO",0,C%d)' % (T_('modo'), r), fmt='0.00')
+        cell(ws, r, 4, '=IF(%s="HUECO",0,ROUND(%s*%s*C%d/(%s*%s),0))' % (T_('modo'), T_('ncx'), T_('ncy'), r, T_('ax'), T_('ay')), fmt='0')
+        # casetones de 50 cm: todos los del volado; en un tablero de respaldo, las hileras con nervaduras de 20 cm junto al muro raíz por los casetones que caben a lo largo del tramo común con el volado
+        bb = BACK.get(key(t))
+        if t['modo'] == 'VOLADO':
+            c50 = '=IF(%s="VOLADO",D%d,0)' % (T_('modo'), r)
+        elif bb:
+            ncr = T_('ncy') if bb['side'] in ('izquierdo', 'derecho') else T_('ncx')
+            c50 = '=MIN(D%d,ROUND(%s*%s*%.4f,0))' % (r, T_('vnh'), ncr, bb['ov'] / bb['Ledge'] if bb['Ledge'] else 1)
+        else:
+            c50 = 0
+        cell(ws, r, 5, c50, fmt='0')
+        # concreto: maciza h·área; nervada h·área − casetones (los de 50 cm con (s − b_w del volado) × a_c × h_c)
+        cell(ws, r, 6, ('=IF(%s="HUECO",0,IF(%s="MACIZA",C%d*{h_mac}/100,C%d*{h}/100-(D%d-E%d)*{ac}/100*{ac}/100*({hc}/100)-E%d*{ac_vol}/100*{ac}/100*({hc}/100)))' % (T_('modo'), T_('losa'), r, r, r, r, r)).format(**N), fmt='0.000')
+        cell(ws, r, 7, '=IF(OR(%s="HUECO",%s="MACIZA"),0,C%d)' % (T_('modo'), T_('losa'), r), fmt='0.00')
         # nervaduras ‖ claro corto: tantas como hileras de casetones en la otra dirección + 1; largo = a1 + 2 traslapes
         ncross_c = 'IF(%s="X",%s,%s)' % (T_('dirc'), T_('ncy'), T_('ncx'))
         ncross_l = 'IF(%s="X",%s,%s)' % (T_('dirc'), T_('ncx'), T_('ncy'))
         kg = lambda v: 'INDEX(%s,MATCH(%s,%s,0))' % (KGCOL, v, BARCOL)
-        # inferiores corridas; arriba 1 corrida + (n − 1) bastones en cada apoyo (en volado: todas hasta el respaldo)
-        topc = 'IF(%s="VOLADO",%s*(%s+%s/100+{q_tr})*%s,(%s+2*{q_tr})*%s+MAX(%s-1,0)*2*(%s/100+{bp}/200+{q_tr})*%s)' % (T_('modo'), T_('nNc'), T_('a1'), T_('Lbc'), kg(T_('vNc')), T_('a1'), kg(T_('vNc')), T_('nNc'), T_('Lbc'), kg(T_('vNc')))
+        # inferiores corridas; arriba 1 corrida + (n − 1) bastones en cada apoyo. Volado: 1 corrida hasta el apoyo lejano del respaldo más largo y (n − 1) hasta L_bc dentro del respaldo
+        lbv = t['volado']['Lb'] if t['modo'] == 'VOLADO' else 0
+        topc = 'IF(%s="VOLADO",(%s+%.3f+2*{q_tr})*%s+MAX(%s-1,0)*(%s+%s/100+{q_tr})*%s,(%s+2*{q_tr})*%s+MAX(%s-1,0)*2*(%s/100+{bp}/200+{q_tr})*%s)' % (
+            T_('modo'), T_('a1'), lbv, kg(T_('vNc')), T_('nNc'), T_('a1'), T_('Lbc'), kg(T_('vNc')), T_('a1'), kg(T_('vNc')), T_('nNc'), T_('Lbc'), kg(T_('vNc')))
         topl = '((%s+2*{q_tr})*%s+MAX(%s-1,0)*2*(%s/100+{bp}/200+{q_tr})*%s)' % (T_('a2'), kg(T_('vNl')), T_('nNl'), T_('Lbl'), kg(T_('vNl')))
         corto = '(%s+1)*(%s*(%s+2*{q_tr})*%s+%s)' % (ncross_c, T_('nPc'), T_('a1'), kg(T_('vPc')), topc)
         largo = '(%s+1)*(%s*(%s+2*{q_tr})*%s+%s)' % (ncross_l, T_('nPl'), T_('a2'), kg(T_('vPl')), topl)
-        cell(ws, r, 7, ('=IF(%s="HUECO",0,%s)' % (T_('modo'), corto)).format(**N), fmt='0.0')
-        cell(ws, r, 8, ('=IF(%s="HUECO",0,%s)' % (T_('modo'), largo)).format(**N), fmt='0.0')
-        cell(ws, r, 9, '=G%d+H%d' % (r, r), 'key', '0.0')
-        cell(ws, r, 10, 'Rectángulo representativo' if t['rep_nota'] else '—', al='left', sz=8)
+        # maciza: n = varillas por metro (100/separación); acero por m² × área: inferiores corridas + bastones en los dos apoyos (o corridos si se traslapan)
+        mc = '(%s*(%s+2*{q_tr})*%s+%s*MIN(2*(%s/100+{bp}/200+{q_tr}),%s+2*{q_tr})*%s)/%s*C%d' % (T_('nPc'), T_('a1'), kg(T_('vPc')), T_('nNc'), T_('Lbc'), T_('a1'), kg(T_('vNc')), T_('a1'), r)
+        ml = '(%s*(%s+2*{q_tr})*%s+%s*MIN(2*(%s/100+{bp}/200+{q_tr}),%s+2*{q_tr})*%s)/%s*C%d' % (T_('nPl'), T_('a2'), kg(T_('vPl')), T_('nNl'), T_('Lbl'), T_('a2'), kg(T_('vNl')), T_('a2'), r)
+        # nervada: el número de nervaduras sale del rectángulo de diseño (a_x × a_y): se escala por el área real, igual que los casetones
+        sca = '*C%d/(%s*%s)' % (r, T_('ax'), T_('ay'))
+        cell(ws, r, 8, ('=IF(%s="HUECO",0,IF(%s="MACIZA",%s,%s%s))' % (T_('modo'), T_('losa'), mc, corto, sca)).format(**N), fmt='0.0')
+        cell(ws, r, 9, ('=IF(%s="HUECO",0,IF(%s="MACIZA",%s,%s%s))' % (T_('modo'), T_('losa'), ml, largo, sca)).format(**N), fmt='0.0')
+        cell(ws, r, 10, '=H%d+I%d' % (r, r), 'key', '0.0')
+        rep_ = ' · rectángulo representativo' if t['rep_nota'] else ''
+        if bb:
+            nt = '=IF(E%d>0,"Respaldo del volado %s: "&%s&" hilera(s) con nervaduras de 20 cm (casetón 50×60×19, D10)%s","%s")' % (r, bb['vol'].split()[0], T_('vnh'), rep_, 'Rectángulo representativo' if t['rep_nota'] else '—')
+        else:
+            nt = '=IF(%s="VOLADO","Volado: casetón 50×60×19, nervaduras de "&{bw_vol}&" cm (D10)%s",IF(%s="MACIZA","Losa maciza h = "&{h_mac}&" cm (D11)%s","%s"))'.format(**N) % (T_('modo'), rep_, T_('losa'), rep_, 'Rectángulo representativo' if t['rep_nota'] else '—')
+        cell(ws, r, 11, nt, al='left', sz=8)
         S.r += 1
     last = S.r - 1
     r = S.r
     cell(ws, r, 2, 'TOTAL', bold=True, al='left'); cell(ws, r, 3, '=SUM(C%d:C%d)' % (first, last), 'key', '0.00'); cell(ws, r, 4, '=SUM(D%d:D%d)' % (first, last), 'key', '0')
-    cell(ws, r, 5, '=SUM(E%d:E%d)' % (first, last), 'key', '0.00'); cell(ws, r, 6, '=SUM(F%d:F%d)' % (first, last), 'key', '0.0')
-    cell(ws, r, 7, '=SUM(G%d:G%d)' % (first, last), 'key', '0'); cell(ws, r, 8, '=SUM(H%d:H%d)' % (first, last), 'key', '0'); cell(ws, r, 9, '=SUM(I%d:I%d)' % (first, last), 'key', '0')
-    N['q_area'] = 'CUANTIFICACION!$C$%d' % r; N['q_cas'] = 'CUANTIFICACION!$D$%d' % r; N['q_conc'] = 'CUANTIFICACION!$E$%d' % r
-    N['q_malla'] = 'CUANTIFICACION!$F$%d' % r; N['q_acs'] = 'CUANTIFICACION!$I$%d' % r
+    cell(ws, r, 5, '=SUM(E%d:E%d)' % (first, last), 'key', '0')
+    cell(ws, r, 6, '=SUM(F%d:F%d)' % (first, last), 'key', '0.00'); cell(ws, r, 7, '=SUM(G%d:G%d)' % (first, last), 'key', '0.0')
+    cell(ws, r, 8, '=SUM(H%d:H%d)' % (first, last), 'key', '0'); cell(ws, r, 9, '=SUM(I%d:I%d)' % (first, last), 'key', '0'); cell(ws, r, 10, '=SUM(J%d:J%d)' % (first, last), 'key', '0')
+    N['q_area'] = 'CUANTIFICACION!$C$%d' % r; N['q_cas'] = 'CUANTIFICACION!$D$%d' % r; N['q_cas50'] = 'CUANTIFICACION!$E$%d' % r; N['q_conc'] = 'CUANTIFICACION!$F$%d' % r
+    N['q_malla'] = 'CUANTIFICACION!$G$%d' % r; N['q_acs'] = 'CUANTIFICACION!$J$%d' % r
     S.r += 2
     S.section('3. NERVADURAS PRINCIPALES')
     r = S.r
-    for k, t in enumerate(['Tramo', 'L (m)', 'b × h (cm)', 'Concreto extra (m³)', 'Long. (kg)', 'Estribos (kg)', 'Total (kg)', '', 'Nota']):
+    for k, t in enumerate(['Tramo', 'L (m)', 'b × h (cm)', 'Concreto que descuelga (m³)', 'Long. (kg)', 'Estribos (kg)', 'Total (kg)', '', 'Nota']):
         hdr_cell(ws, r, 2 + k, t)
     S.r += 1
     f2 = S.r
@@ -543,12 +595,15 @@ def sheet_cuant(wb):
         P_ = lambda c: 'PRINCIPALES!$%s$%d' % (PC[c], pr)
         kg = lambda v: 'INDEX(%s,MATCH(%s,%s,0))' % (KGCOL, v, BARCOL)
         cell(ws, r, 2, t['np']); cell(ws, r, 3, '=' + P_('L'), fmt='0.00'); cell(ws, r, 4, '=%s&" × "&%s' % (P_('bq'), P_('hq')))
-        cell(ws, r, 5, ('=%s*(%s/100*%s/100-%s/100*{Vm2})' % (P_('L'), P_('bq'), P_('hq'), P_('bq'))).format(**N), fmt='0.000')
+        # sólo lo que descuelga bajo la losa: la parte de la principal dentro del peralte ya está en el concreto del tablero (macizo de orilla; en la viga de orilla
+        # del volado, su franja maciza). Dala de una maciza: descuelga bajo los 20 cm de la maciza.
+        hsl = '{h_mac}' if t['np'] in MACNP else '{h}'
+        cell(ws, r, 5, ('=%s*%s/100*MAX(0,%s-%s)/100' % (P_('L'), P_('bq'), P_('hq'), hsl)).format(**N), fmt='0.000')
         cell(ws, r, 6, ('=(%s*%s+%s*%s)*(%s+2*{q_tr})' % (P_('nP'), kg('MAX(%s,2)' % P_('vP')), P_('nN'), kg('MAX(%s,2)' % P_('vN')), P_('L'))).format(**N), fmt='0.0')
         nst = '(2*ROUNDUP(2*%s/%s,0)+ROUNDUP(MAX(0,%s*100-4*%s)/%s,0)+1)' % (P_('hq'), P_('sext'), P_('L'), P_('hq'), P_('se'))
         cell(ws, r, 7, ('=IF(AND(%s>0,%s>0),%s*(2*((%s-2*{rec_np})+(%s-2*{rec_np}))+16)/100*%s,0)' % (P_('se'), P_('sext'), nst, P_('bq'), P_('hq'), kg('{est_np}'))).format(**N), fmt='0.0')
         cell(ws, r, 8, '=F%d+G%d' % (r, r), 'key', '0.0')
-        ws.merge_cells('I%d:J%d' % (r, r)); cell(ws, r, 9, '=' + P_('estado'), al='left', sz=8)
+        ws.merge_cells('I%d:K%d' % (r, r)); cell(ws, r, 9, '=' + P_('estado'), al='left', sz=8)
         S.r += 1
     l2 = S.r - 1
     r = S.r
@@ -557,16 +612,17 @@ def sheet_cuant(wb):
     S.r += 2
     S.section('4. TOTALES A PEDIR')
     S.header(('Concepto', 'Cantidad', 'Unidad', 'Cómo se calcula', 'Referencia'))
-    for qi, (c, f, u, how) in enumerate([('Concreto de losas (con desperdicio)', '=({q_conc}+{q_cnp})*{q_dc}', 'm³', 'Tableros + exceso de principales, × desperdicio.'),
-                         ('Casetones de poliestireno 60×60×20', '={q_cas}', 'pzas', 'Suma por tablero.'),
-                         ('Malla electrosoldada', '={q_malla}*1.10', 'm²', 'Área de losa + 10% de traslapes.'),
-                         ('Acero de nervaduras secundarias (con desperdicio)', '={q_acs}*{q_da}', 'kg', '—'),
+    for qi, (c, f, u, how) in enumerate([('Concreto de losas (con desperdicio)', '=({q_conc}+{q_cnp})*{q_dc}', 'm³', 'Tableros (nervados y macizos, con la dala de borde de D9 en el acomodo de casetones) + lo que descuelgan las principales, × desperdicio.'),
+                         ('Casetones de poliestireno 60×60×19 (LR-25, decisión D3)', '={q_cas}-{q_cas50}', 'pzas', 'Suma por tablero, sin los de 50 cm.'),
+                         ('Casetones de poliestireno 50×60×19 (volados y primeras hileras de sus respaldos, decisión D10)', '={q_cas50}', 'pzas', 'Volados y hileras con nervaduras de 20 cm junto al muro raíz (TABLEROS, RESPALDO).'),
+                         ('Malla electrosoldada', '={q_malla}*1.10', 'm²', 'Área de losa nervada + 10% de traslapes (las macizas no llevan malla).'),
+                         ('Acero de nervaduras secundarias y losas macizas (con desperdicio)', '={q_acs}*{q_da}', 'kg', '—'),
                          ('Acero de nervaduras principales (con desperdicio)', '={q_anp}*{q_da}', 'kg', '—')]):
         r = S.r
         cell(ws, r, 2, c, al='left'); ws.cell(r, 2).font = font(10)
         cell(ws, r, 3, f.format(**N), 'key', '#,##0.0'); cell(ws, r, 4, u)
-        ws.merge_cells('E%d:I%d' % (r, r)); cell(ws, r, 5, how, al='left')
-        cell(ws, r, 10, '—', 'ref'); S.r += 1
+        ws.merge_cells('E%d:J%d' % (r, r)); cell(ws, r, 5, how, al='left')
+        cell(ws, r, 11, '—', 'ref'); S.r += 1
         N['qT%d' % qi] = 'CUANTIFICACION!$C$%d' % r
-    add_cf(ws, 'I1:J%d' % S.r)
+    add_cf(ws, 'I1:K%d' % S.r)
     return ws

@@ -4,7 +4,8 @@ from openpyxl.styles import Alignment
 from openpyxl.comments import Comment
 from xlstyle import *
 
-W = '/tmp/claude-0/-home-user-CASA-ROCHA/faa149e0-9f48-5f0d-b5ee-28b4c7156d8c/scratchpad/'
+import os
+W = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/'
 D = json.load(open(W + 'work/data.json'))
 MOD = json.load(open(W + 'work/proyecto_modelo.json'))
 N = {}            # nombres -> referencias absolutas
@@ -55,6 +56,72 @@ for _u in NPS:
             _c, _sv = (_py, _px) if _t['ori'] == 'H' else (_px, _py)
             if abs(_c - _t['c']) < 0.05 and _t['s0'] - 0.01 <= _sv <= _t['s1'] + 0.01:
                 D['transfer'].append(dict(de=_u['np'], extremo=_k, a=_t['np'], pos=round(min(max(_sv - _t['s0'], 0), _t['L']), 3), via='muro'))
+
+
+# ---------- volados (D10): borde raíz, tableros de respaldo, orillas laterales y muro raíz ----------
+def _seg(t, side):
+    """Segmento de un borde del rectángulo del tablero: ('H' o 'V', coordenada fija, de, a)."""
+    if side in ('inferior', 'superior'):
+        return 'H', (t['y0'] if side == 'inferior' else t['y1']), min(t['x0'], t['x1']), max(t['x0'], t['x1'])
+    return 'V', (t['x0'] if side == 'izquierdo' else t['x1']), min(t['y0'], t['y1']), max(t['y0'], t['y1'])
+
+
+def _ov(a0, a1, b0, b1):
+    return max(0.0, min(a1, b1) - max(a0, b0))
+
+
+_TBK = {key(t): t for t in TABS}
+BACK = {}      # tablero de respaldo -> dict(vol=clave del volado, side=su borde junto al muro raíz, ov=largo común en m)
+VOLLAT = {}    # NP de una orilla lateral de volado (corre en la dirección del volado) -> (clave del volado, lado)
+VOLROOT = {}   # clave del volado -> [(DM del muro raíz, largo común en m)]
+for _t in TABS:
+    if _t['modo'] != 'VOLADO':
+        continue
+    _v = _t['volado']; _rs = _v['raiz']; _o, _c, _a0, _a1 = _seg(_t, _rs)
+    for _n in [x.strip() for x in (_t['bordes'][_rs].get('vecinos') or '').split(',') if x.strip()]:
+        _nb = _TBK.get(_n + ' ' + _t['level'])
+        if not _nb or _nb['modo'] != 'PERIMETRAL':
+            continue
+        for _q in SIDES:
+            if _t['name'] in [x.strip() for x in (_nb['bordes'][_q].get('vecinos') or '').split(',')]:
+                _o2, _c2, _b0, _b1 = _seg(_nb, _q)
+                BACK[key(_nb)] = dict(vol=key(_t), side=_q, ov=round(_ov(_a0, _a1, _b0, _b1), 3), Ledge=round(_b1 - _b0, 3))
+                break
+    for _s in SIDES:
+        if _s in (_rs, _v['borde_libre']):
+            continue
+        _e = _t['bordes'][_s]
+        if _e['apoyo'].startswith('NERV') and _e.get('nps'):
+            VOLLAT[_e['nps'][0]] = (key(_t), _s)
+    VOLROOT[key(_t)] = [(_d['np'], round(_ov(_a0, _a1, _d['s0'], _d['s1']), 3)) for _d in DMS
+                        if _d['level'] == _t['level'] and _d['ori'] == _o and abs(_d['c'] - _c) < 0.01 and _ov(_a0, _a1, _d['s0'], _d['s1']) > 0.01]
+TBK, segm, ovl = _TBK, _seg, _ov   # para gen_b (import * no trae nombres con guion bajo)
+# claro de respaldo del volado: el MÁS LARGO de sus tableros de respaldo (con 0.9·PP todo el respaldo queda en negativo)
+VOLB = {}
+for _k, _b in BACK.items():
+    _nb = _TBK[_k]
+    VOLB[_b['vol']] = max(VOLB.get(_b['vol'], 0), _nb['ay'] if _b['side'] in ('inferior', 'superior') else _nb['ax'])
+for _t in TABS:
+    if _t['modo'] == 'VOLADO':
+        _t['volado']['Lb'] = VOLB[key(_t)]
+# el área que el DXF da a la orilla libre del volado (nervadura de borde, sin apoyo propio) baja por el volado al muro raíz
+_FREE = {}
+for _t in TABS:
+    if _t['modo'] == 'VOLADO':
+        _e = _t['bordes'][_t['volado']['borde_libre']]
+        for _np in _e.get('nps') or []:
+            _FREE[(_np, _t['name'], _t['level'])] = key(_t)
+_tr2 = []
+for _x in D['trib']:
+    _kv = _FREE.get((_x['tramo'], _x['tablero'], _x['level']))
+    if _kv and VOLROOT.get(_kv):
+        _tot = sum(o for _, o in VOLROOT[_kv])
+        for _dm, _o in VOLROOT[_kv]:
+            _tr2.append(dict(tramo=_dm, tablero=_x['tablero'], level=_x['level'], area=round(_x['area'] * _o / _tot, 4),
+                             nota='Orilla libre del volado (el DXF la da a %s, que no tiene apoyo propio): baja por el volado al muro raíz, repartida por largo.' % _x['tramo']))
+    else:
+        _tr2.append(_x)
+D['trib'] = _tr2
 # ---------- layouts fijos de las hojas de tabla ----------
 T0 = 9                     # primera fila de datos en TABLEROS
 TROW = {key(t): T0 + i for i, t in enumerate(TABS)}
@@ -82,7 +149,7 @@ TB_W0 = TB_V1 + 5
 TB_W1 = TB_W0 + len(MALLAS) - 1
 TB_L0 = TB_W1 + 5          # listas
 LISTS = [('Caso de tablero', ['AUTO'] + ['INTERIOR', 'BORDE-CORTO', 'BORDE-LARGO', 'ESQUINA', 'EXTREMO-LARGO', 'EXTREMO-CORTO', 'AISLADO']),
-         ('Modo', ['PERIMETRAL', 'VOLADO', 'HUECO']), ('Destino', ['HABITACIÓN', 'AZOTEA']), ('Extremo de nervadura', ['FIRME', 'NERVADURA', 'PUNTA', 'LIBRE'])]
+         ('Modo', ['PERIMETRAL', 'VOLADO', 'HUECO']), ('Destino', ['HABITACIÓN', 'AZOTEA']), ('Extremo de nervadura', ['FIRME', 'NERVADURA', 'PUNTA', 'LIBRE']), ('Losa', ['NERVADA', 'MACIZA'])]
 for _j, (_nm, _vals) in enumerate(LISTS):
     N['LIST_%d' % _j] = "TABLAS!$%s$%d:$%s$%d" % (chr(66 + _j), TB_L0 + 1, chr(66 + _j), TB_L0 + len(_vals))
 BARCOL = "TABLAS!$B$%d:$B$%d" % (TB_V0, TB_V1)
@@ -100,6 +167,17 @@ N['CKEY'] = "TABLAS!$B$%d:$B$%d" % (TB_C0, TB_C1)
 N['CVAL'] = "TABLAS!$D$%d:$J$%d" % (TB_C0, TB_C1)
 N['TKEYS'] = "TABLEROS!$B$%d:$B$%d" % (T0, T1)
 N['NPKEYS'] = "PRINCIPALES!$B$%d:$B$%d" % (P0, P1)
+
+
+def ftx(*parts):
+    """Texto vivo para una celda: los literales se parten en trozos de ≤ 200 caracteres (Excel no acepta literales de más de 255); las tuplas son expresiones."""
+    out = []
+    for p_ in parts:
+        if isinstance(p_, tuple):
+            out.append(p_[0])
+        else:
+            out += ['"%s"' % p_[i:i + 200].replace('"', '""') for i in range(0, len(p_), 200)]
+    return '=' + '&'.join(out)
 
 
 def db(var):
@@ -128,28 +206,46 @@ def ldo(var):
 def sheet_datos(wb):
     ws = wb.create_sheet('DATOS'); S = Narr(ws, N)
     S.title('LOSAS NERVADAS CASA ROCHA — DATOS DE ENTRADA')
-    S.subtitle('Casa habitación de dos niveles · muros de block de 15 cm confinados con castillos K-15x15 y dalas D-15x20 · losa reticular LR-25 en entrepiso (N+3.00) y azotea (N+6.00). '
-               'Se diseñan las nervaduras secundarias de cada tablero y las nervaduras principales (dalas que quedan sin muro abajo y trabajan como trabe).')
+    S.subtitle('Casa habitación de dos niveles · muros de block de 15 cm confinados con castillos K-15x15 y dalas D-15x20 · losa reticular LR-25 en entrepiso (N+3.00) y azotea (N+6.00), salvo F80032 y F80010 de azotea, que el modelo trae como losa maciza de 20 cm («Slab1») y así se diseñan (decisión D11). '
+               'Se diseñan las nervaduras secundarias de cada tablero, las dos losas macizas y las nervaduras principales (dalas que quedan sin muro abajo y trabajan como trabe).')
     S.gap()
     S.notice('CÓMO SE USA: sólo se tocan las celdas AMARILLAS con número AZUL. Todo lo demás está calculado y se rompe si lo escribes encima. '
              'La columna «CÓMO SE CALCULA» dice de dónde sale el número y la columna «REFERENCIA» dice qué documento, norma o archivo lo respalda.')
-    S.notice('ALCANCE: (1) nervaduras secundarias de 32 tableros con el método de coeficientes de la NTC-Concreto para losas apoyadas en su perímetro; '
-             '(2) dos tableros en volado (F80012 y F80019); (3) 34 nervaduras principales sin muro abajo diseñadas como trabe, incluida la revisión de muros sobre vigas de la NTC-Mampostería; (4) carga de la losa sobre los muros. '
-             'NO incluye la escalera, el pergolado de vigas VP-15x40, la revisión de los muros por sismo ni la cimentación.', 42)
+    S.notice('ALCANCE: (1) nervaduras secundarias de los tableros de losa reticular con el método de coeficientes de la NTC-Concreto para losas apoyadas en su perímetro; '
+             '(2) dos tableros en volado (F80012 y F80019), nervados con nervaduras de 20 cm en la dirección del volado (decisión D10); (3) dos losas macizas de 20 cm en azotea (F80032 y F80010, decisión D11) con el mismo método de coeficientes; '
+             '(4) 34 nervaduras principales sin muro abajo diseñadas como trabe, incluida la revisión de muros sobre vigas de la NTC-Mampostería; (5) carga de la losa sobre los muros. '
+             'NO incluye la escalera, el pergolado de vigas VP-15x40, la revisión de los muros por sismo ni la cimentación.', 54)
     S.notice('NORMAS: NTC-Concreto 2023, NTC-Criterios y Acciones 2023 y NTC-Mampostería 2023 (CDMX). Cada fórmula se cotejó contra el texto oficial del compendio NTC 2023 '
              'y se cita con su numeral y la página impresa de cada norma (p. ej. «6.7.8.1.4, p. 187»). Los criterios que la norma deja al calculista se marcan como «criterio de esta hoja». '
              'ACI 318-19 ya no se usa para nada que la NTC 2023 resuelva.', 54)
     S.gap()
     S.section('1. GEOMETRÍA DE LA LOSA NERVADA LR-25 Y RECUBRIMIENTOS')
-    S.secnote('Casetón de poliestireno 60×60×20, nervadura de 10 cm y capa de 5 cm, como dice la nota 2 del plano de cortes. El E2K lo confirma: sus modificadores de la losa LR-25 salen exactos con esta geometría (ver sección 4).')
+    S.secnote('Casetón de poliestireno 60×60×19, nervadura de 10 cm y capa de 6 cm (decisión D3): el peralte sigue en 25 cm (LR-25). La nota 2 del plano de cortes y el E2K traen 60×60×20 con capa de 5 cm; '
+              'con capa de 5 cm ninguna malla cumple a la vez diafragma, punzonamiento y acero mínimo junto a la carga (NERVADURA sección 11). Los modificadores del modelo ya no coinciden: se actualizan en ETABS (sección 4 y decisión D5).', 42)
     S.header()
     S.row('a_c — lado del casetón (separación libre entre nervaduras)', 60, 'cm', 'CAPTURA. Debe ser ≤ 80 cm y ≤ claro/6 para que la losa cuente como encasetonada (se revisa en TABLEROS).', DXFA + ' · NOTAS DE CORTES, nota 2 · ' + NTCC + ' 6.7.8.1.4, p. 187', 'input', '0', 'ac')
-    S.row('h_c — altura del casetón', 20, 'cm', 'CAPTURA.', DXFA + ' · NOTAS DE CORTES, nota 2', 'input', '0', 'hc')
+    S.row('h_c — altura del casetón', 19, 'cm', 'CAPTURA. Decisión D3: casetón de 19 cm para que, con la capa de 6 cm, la losa siga en h = 25 cm. El plano dice 20 cm: corregir la nota 2 del plano de cortes.', DXFA + ' · NOTAS DE CORTES, nota 2 (dice 20)', 'input', '0', 'hc')
     S.row('b_w — ancho de la nervadura secundaria', 10, 'cm', 'CAPTURA. Mínimo 10 cm en cualquier punto del peralte.', DXFA + ' · nota 2 · ' + NTCC + ' 6.7.8.1.2, p. 187', 'input', '0', 'bw')
-    S.row('t — espesor de la capa de compresión', 5, 'cm', 'CAPTURA. Mínimo el mayor de a_c/13 y 5 cm; 6 cm si algún tablero tiene claro ≥ 6 m (diafragma).', DXFA + ' · nota 2 · ' + NTCC + ' 6.7.8.3.1, p. 188 y 6.8.3.1.2, p. 189', 'input', '0', 't')
+    S.row('b_w de las nervaduras de los volados F80012 y F80019 (las que corren en la dirección del volado)', 20, 'cm',
+          'CAPTURA. Decisión D10: el entrepiso es nervado y los volados también; con 10 cm el M⁻ del empotramiento pide una No. 8 que no cabe. Casetón de (s − b_w) × a_c × h_c = 50×60×19 (los 50 cm entre las nervaduras del volado): '
+          's sigue en 70 cm y la retícula queda alineada con la del resto del entrepiso. Las nervaduras paralelas al muro siguen de 10 cm. Si con 20 cm no alcanzara, se pasa a 25 cm (casetón 45×60).',
+          'Decisión D10 · ' + NTCC + ' 6.7.8.1.2 y 6.7.8.1.3, p. 187', 'input', '0', 'bw_vol')
+    S.row('t — espesor de la capa de compresión', 6, 'cm', 'CAPTURA. Mínimo el mayor de a_c/13 y 5 cm; 6 cm si algún tablero tiene claro ≥ 6 m (diafragma). Decisión D3: 6 cm con malla 6x6-4/4, que cumple diafragma (6.8.6.4), punzonamiento y acero mínimo junto a la carga (6.7.6.1.2).',
+          DXFA + ' · nota 2 (dice 5) · ' + NTCC + ' 6.7.8.3.1, p. 188 y 6.8.3.1.2, p. 189', 'input', '0', 't')
     S.row('h — peralte total de la losa', '=({hc}+{t})', 'cm', 'CALCULADA = h_c + t. Debe dar 25: es la LR-25 del modelo. Máximo 3.5·b_w.', E2K + ' · SHELLPROP "LR-25" SLABTHICKNESS 0.25 · ' + NTCC + ' 6.7.8.1.3, p. 187', 'key', '0', 'h')
     S.row('s — separación entre ejes de nervaduras', '=({ac}+{bw})', 'cm', 'CALCULADA = a_c + b_w. Es el ancho tributario de cada nervadura.', 'Geometría', 'key', '0', 's')
+    S.row('a_c del volado — lado del casetón entre las nervaduras de 20 cm (s − b_w del volado)', '={s}-{bw_vol}', 'cm', 'CALCULADA = s − b_w del volado (s sigue en 70 cm). Casetón de los volados y de las hileras de respaldo que siguen con nervaduras de 20 cm (TABLEROS, «RESPALDO»): (s − b_w) × a_c × h_c = 50×60×19.', 'Decisión D10 · Geometría', 'calc', '0', 'ac_vol')
     S.row('b_p — ancho de la nervadura principal / dala', 15, 'cm', 'CAPTURA. Es el ancho de las dalas D-15x20 del modelo. En PRINCIPALES cada tramo lleva su propia sección propuesta.', E2K + ' · FRAMESECTION "002_D-15x20" B 0.15', 'input', '0', 'bp')
+    S.row('b_borde — ancho de la DALA DE BORDE armada en los bordes discontinuos', 40, 'cm',
+          'CAPTURA. Decisión D9: en todo borde discontinuo apoyado (sobre muro o sobre nervadura principal) va una DALA DE BORDE ARMADA de b_borde de ancho total en el peralte de la losa, en lugar de la primera franja junto al apoyo: '
+          'sobre muro se apoya en el muro de 15 cm; sobre nervadura principal es la propia principal ensanchada a b_borde en el peralte de la losa, con estribos que abarcan ese ancho. Recibe las nervaduras en su paño interior. '
+          'Armado mínimo propuesto (lo revisa y firma el Responsable): 4 No. 4 corridas en las esquinas (cubren las 2 No. 4 + 2 No. 3 de la dala D-15x20, NTC-M 6.2.2.2) y estribos cerrados No. 3 @ 20 cm que abarcan todo el ancho. '
+          'Un macizo SIN armar no sirve: sería parte de la losa, el apoyo sería el paño del muro y no habría dónde anclar (NERVADURA sección 10). En las losas macizas de azotea (D11) es una dala de b_borde × h que baja h − h_maciza bajo la maciza. '
+          'Debe ser ≥ 1.25·L_dh + r_np para anclar la barra inferior a 1.25 fy y el bastón superior con gancho de 180°. TABLEROS acomoda los casetones con este ancho en esos bordes.',
+          'Decisión D9 · ' + NTCC + ' 6.7.8.1.7, p. 188 · 6.7.7.4.1.1, p. 179 · 14.4.3.1, p. 355 · ' + NTCM + ' 6.2.2.2, p. 62', 'input', '0', 'b_borde')
+    S.row('h de las losas macizas de azotea F80032 y F80010', 20, 'cm',
+          'CAPTURA. Decisión D11: el modelo las trae como «Slab1», losa maciza de 20 cm; se respeta. Su lecho inferior queda 5 cm más alto que el de la LR-25 vecina (desnivel en planos).',
+          E2K + ' · SHELLPROP "Slab1" (maciza 0.20 m) · Decisión D11', 'input', '0', 'h_mac')
     S.row('¿Se anotan en planos las precauciones de 3.9.2? (casetón de medida fija que garantiza b_w y silletas que fijan el peralte del lecho superior)', 'SÍ', '—',
           'SELECTOR. b_w = 10 cm < 200 mm y, donde el lecho superior queda con d ≤ 200 mm, la norma pide calcular con 20 mm menos, salvo que se tomen precauciones que garanticen la dimensión y se anoten en planos. '
           'Si dices NO, la hoja usa b_w − 2 cm en cortante y en flexión negativa, y d − 2 cm en el lecho superior de cada tablero cuyo d sea ≤ 20 cm.',
@@ -170,10 +266,11 @@ def sheet_datos(wb):
           'SELECTOR. Con relleno, entortado e impermeabilizante encima la hoja la toma como protegida (criterio del Responsable: la norma no lo dice expresamente). Si dices SÍ, el lecho superior de azotea usa r_ext.',
           NTCC + ' 4.3.2 y Tabla 4.3.1, p. 76 · Tabla 4.14.16.a, p. 85', 'input', '@', 'exp_az')
     dv_list(ws, N['exp_az'].split('!')[1].replace('$', ''), '"SÍ,NO"')
-    S.row('¿La cara superior de los volados F80012 y F80019 queda expuesta a la intemperie?', 'SÍ', '—',
-          'SELECTOR. Los dos volados del N+3.00 quedan fuera de la azotea (sin techo encima): su cara superior recibe la lluvia directa (exposición A2) y su lecho superior lleva r_ext, igual que la malla. '
-          'Si dices NO, escribe en planos el criterio de protección del Responsable (piso o impermeabilizante que cubra la losa), como en azotea.',
-          NTCC + ' Tabla 4.3.1 c), p. 76 · 4.3.2, p. 76 · Tabla 4.14.16.a, p. 85', 'input', '@', 'exp_vol')
+    S.row('¿La cara superior de los volados F80012 y F80019 queda expuesta a la intemperie?', 'NO', '—',
+          'SELECTOR. Decisión D12: los dos volados del N+3.00 son terrazas con la cara superior PROTEGIDA con impermeabilizante y piso, igual que la azotea; el plano debe decir «terraza con impermeabilizante y piso». '
+          'Con NO la exposición ya no manda arriba: la malla va al centro de la capa de 6 cm (≈ 2.4 cm por cara) y el lecho superior de las nervaduras del volado conserva el recubrimiento de viga r_np = 4 cm, porque esas nervaduras no cumplen 6.7.8.1.4 '
+          '(losa sobre vigas, 6.7.8.1.9, decisión D7): del lado seguro. Abajo sigue r_ext (cara exterior). Si dices SÍ (cara a la intemperie, exposición A2) el lecho superior y la malla llevan r_ext y la malla no cabe con 2 cm abajo (NERVADURA sección 11).',
+          NTCC + ' Tabla 4.3.1 c), p. 76 · 4.3.2, p. 76 · Tabla 4.14.16.a, p. 85 · 6.7.8.1.9, p. 188 · Decisión D12', 'input', '@', 'exp_vol')
     dv_list(ws, N['exp_vol'].split('!')[1].replace('$', ''), '"SÍ,NO"')
     S.row('No. de estribo en la nervadura secundaria (0 = sin estribo)', 0, '—',
           'CAPTURA. Las nervaduras de 10 cm no llevan estribo: la fuerza cortante la toma el concreto con la ec. 5.5.3.2.1 y donde no alcanza se maciza junto al apoyo. Si algún día se ponen, deben ser de varilla o alambre CORRUGADO (no alambrón liso).',
@@ -181,7 +278,7 @@ def sheet_datos(wb):
     S.row('No. de varilla preferida — lecho INFERIOR de nervaduras secundarias', 4, '—', 'CAPTURA. Mínimo No. 4: toda nervadura lleva al menos 1 No. 4 abajo y 1 No. 4 arriba, corridas. Si con el máximo de varillas no alcanza, la hoja sube sola al siguiente número.',
           NTCC + ' 6.7.6.1.3, p. 175', 'input', 'General', 'var_inf')
     S.row('No. de varilla preferida — lecho SUPERIOR de nervaduras secundarias', 4, '—', 'CAPTURA. Misma regla: una varilla del lecho superior es corrida y las demás son bastones.', NTCC + ' 6.7.6.1.3, p. 175', 'input', 'General', 'var_sup')
-    S.row('Máximo de varillas por lecho en una nervadura de 10 cm', 2, 'pzas', 'CAPTURA. La hoja revisa además que quepan con la separación libre mínima.', 'Geometría · ' + NTCC + ' 14.2.1, p. 347', 'input', '0', 'nmax_sec')
+    S.row('Máximo de varillas por lecho en una nervadura secundaria', 2, 'pzas', 'CAPTURA. Vale también para las nervaduras de 20 cm de los volados (D10). La hoja revisa además que quepan con la separación libre mínima.', 'Geometría · ' + NTCC + ' 14.2.1, p. 347', 'input', '0', 'nmax_sec')
     S.row('Mínimo de varillas por lecho y por nervadura', 1, 'pzas',
           'CAPTURA. 1 No. 4 corrida. Si As colocada < 4/3 de la requerida, la hoja pide 2 varillas y As mín de viga.',
           NTCC + ' 6.7.6.1.3, p. 175 · 6.3.5.1.1 y 6.3.5.1.3, p. 122', 'input', '0', 'nmin_sec')
@@ -189,13 +286,15 @@ def sheet_datos(wb):
           NTCC + ' 2.2.5.2.1, p. 32', 'input', '0.00', 'tmag')
     S.row('¿El agregado cabe? (≤ 2/3 de r y de la separación libre)', '=IF({tmag}<=2/3*MIN({rec},MAX(2.5,1.5*{tmag})),"CUMPLE","NO CUMPLE — usa agregado más chico")', '—', 'CALCULADA.', NTCC + ' 2.2.5.2.1, p. 32', 'calc', '@')
     S.row('Separación libre mínima entre varillas', '=MAX(2.5,1.5*{tmag})', 'cm', 'CALCULADA = el mayor de 25 mm, d_b y 1.5·TMA (d_b se revisa barra por barra).', NTCC + ' 14.2.1, p. 347', 'calc', '0.00', 'slib')
-    S.row('Ancho libre para varillas dentro de la nervadura secundaria', '={bw}-2*{rec}-2*' + dbz('{est_sec}'), 'cm', 'CALCULADA = b_w − 2r − 2·estribo con r = 2 cm (tableros que cumplen 6.7.8.1.4). Informativa: TABLEROS revisa renglón por renglón con su r; con r = 4 cm (tableros que no cumplen 6.7.8.1.4 y volados) quedan 2 cm y cabe una sola varilla de d_b ≤ 2 cm.', 'Geometría', 'calc', '0.00', 'av_sec')
-    S.row('Malla electrosoldada en la capa de compresión', '6x6-6/6', '—',
-          'SELECTOR. La lista está en TABLAS. Debe cubrir: contracción y temperatura (0.0018·t), cortante de diafragma (0.0025·t), flexión de la capa con 1 000 kg entre nervaduras, acero mínimo alrededor de la carga concentrada (6.7.6.1.2) y caber con 2 cm de recubrimiento por cara (r_ext = 4 cm donde la cara superior queda expuesta: azotea o volados según los selectores de arriba) (NERVADURA sección 11). Con capa de 5 cm ninguna malla cumple a la vez diafragma, punzonamiento y acero mínimo junto a la carga (RESUMEN, decisión 3). Con capa de 5 cm la 6x6-6/6 es la que mejor cumple; la 6x6-4/4 ya no cabe con su recubrimiento.',
+    S.row('Ancho libre para varillas dentro de la nervadura secundaria', '={bw}-2*{rec}-2*' + dbz('{est_sec}'), 'cm', 'CALCULADA = b_w − 2r − 2·estribo con r = 2 cm (tableros que cumplen 6.7.8.1.4). Informativa: TABLEROS revisa renglón por renglón con su r y su b_w; con r = 4 cm (tableros que no cumplen 6.7.8.1.4) quedan 2 cm y cabe una sola varilla de d_b ≤ 2 cm; en las nervaduras de 20 cm de los volados (D10) quedan 12 cm.', 'Geometría', 'calc', '0.00', 'av_sec')
+    S.row('Malla electrosoldada en la capa de compresión', '6x6-4/4', '—',
+          'SELECTOR. La lista está en TABLAS. Debe cubrir: contracción y temperatura (0.0018·t), cortante de diafragma (0.0025·t), flexión de la capa con 1 000 kg entre nervaduras, acero mínimo alrededor de la carga concentrada (6.7.6.1.2) y caber con 2 cm de recubrimiento por cara (NERVADURA sección 11). '
+          'La malla va AL CENTRO de la capa, sobre silletas de ≈ 2.4 cm: (t − 2Ø)/2 por cara; así la revisa la sección 11 (d = t/2) y así se dibuja. Donde la cara superior quedara expuesta (selectores de arriba) bajaría a r_ext de la cara superior y se revisa aparte; con la decisión D12 no hay zonas expuestas. '
+          'Decisión D3: capa de 6 cm con 6x6-4/4, que cumple todas las revisiones; con capa de 5 cm ninguna malla las cumplía. El plano EST-03 dice 6x6-10/10: corregirlo.',
           NTCC + ' 13.8.2.1.1, p. 345 · 6.7.8.1.8, p. 188 · 6.8.6.4, p. 196 · 6.7.6.1.2, p. 175 · Tabla 6.7.4.2.2.3, p. 171 · Tabla 4.14.16.a, p. 85 · ' + NAIMPL + ' · EST-03 (dice 6x6-10/10)', 'input', '@', 'malla')
     dv_list(ws, N['malla'].split('!')[1].replace('$', ''), '=TABLAS!$B$%d:$B$%d' % (TB_W0, TB_W1))
     S.row('Ø del alambre de la malla', '=INDEX(TABLAS!$C$%d:$C$%d,MATCH({malla},TABLAS!$B$%d:$B$%d,0))/10' % (TB_W0, TB_W1, TB_W0, TB_W1), 'cm',
-          'CALCULADA. La malla va con r = 2 cm a la cara superior y las varillas superiores de las nervaduras pasan DEBAJO de ella: su d pierde 2·Ø.', 'TABLAS sección C', 'calc', '0.000', 'fim')
+          'CALCULADA. La malla va al centro de la capa y las varillas superiores de las nervaduras pasan DEBAJO de ella: su d se mide con el mayor de r del tablero y (t − 2Ø)/2 hasta la cara superior de la malla, menos 2·Ø.', 'TABLAS sección C', 'calc', '0.000', 'fim')
     S.gap()
     S.section('2. MATERIALES')
     S.header()
@@ -234,25 +333,46 @@ def sheet_datos(wb):
     S.row('Relación M⁻/M⁺ para nervaduras principales apoyadas', 0.667, '—', 'CAPTURA. Equivale a wL²/12 contra wL²/8: arriba se arma para empotramiento, abajo para apoyo simple (envolvente conservadora).', 'Criterio de esta hoja — no viene de norma', 'input', '0.000', 'Mrat')
     S.gap()
     S.section('4. PROPIEDADES DE LA SECCIÓN NERVADA — Y COMPROBACIÓN CONTRA EL MODELO')
-    S.secnote('Si estos dos cocientes coinciden con los del E2K, la hoja y el modelo están hablando de la misma losa.')
+    S.secnote('Con la sección de la decisión D3 (casetón de 19 cm y capa de 6 cm) estos cocientes YA NO coinciden con los del E2K, que trae la de 20 + 5: el modelo de ETABS se actualiza con los modificadores de esta sección (decisión D5). '
+              'Los valores del modelo se dejan para comparar.', 30)
     S.header()
     S.row('Volumen de concreto por m² de losa', '=({h}/100-({ac}/100)^2*({hc}/100)/({s}/100)^2)', 'm³/m²', 'CALCULADA = h − a_c²·h_c / s² (lo macizo menos los huecos de casetón).', 'Geometría', 'calc', '0.0000', 'Vm2')
     S.row('Peso propio geométrico de la losa nervada', '=({Vm2}*{gc}+({ac}/100)^2*({hc}/100)/({s}/100)^2*{gpol})*1000', 'kg/m²', 'CALCULADA = V·γc + casetón·γ_pol. A esto se le suma el incremento de la sección 5.', 'Geometría', 'key', '0.0', 'PP')
-    S.row('Peso propio que trae el modelo', '=1503.75*0.25*0.6688', 'kg/m²', 'CALCULADA = 1503.75 kg/m³ × 0.25 m × WMOD 0.6688. Sin casetón: por eso sale 2 kg/m² abajo.', E2K + ' · MATERIAL "LR-25 equiv" 1503.75 kg/m³ y SHELLPROP "LR-25" WMOD 0.6688', 'calc', '0.0', 'PPe2k')
+    S.row('Peso propio que trae el modelo', '=1503.75*0.25*0.6688', 'kg/m²', 'CALCULADA = 1503.75 kg/m³ × 0.25 m × WMOD 0.6688. Es el de la sección vieja (20 + 5) sin casetón; con la capa de 6 cm la losa pesa más: actualizar el WMOD del modelo (fila «WMOD para ETABS», decisión D5).', E2K + ' · MATERIAL "LR-25 equiv" 1503.75 kg/m³ y SHELLPROP "LR-25" WMOD 0.6688', 'calc', '0.0', 'PPe2k')
     S.row('A_T — área de la sección T de una nervadura', '={s}*{t}+{bw}*{hc}', 'cm²', 'CALCULADA = s·t + b_w·h_c.', 'Geometría', 'calc', '0.0', 'AT')
     S.row('ȳ — centroide medido desde arriba', '=({s}*{t}*{t}/2+{bw}*{hc}*({t}+{hc}/2))/{AT}', 'cm', 'CALCULADA.', 'Geometría', 'calc', '0.00', 'ybar')
     S.row('I_T — inercia bruta de una nervadura con su patín', '={s}*{t}^3/12+{s}*{t}*({ybar}-{t}/2)^2+{bw}*{hc}^3/12+{bw}*{hc}*({t}+{hc}/2-{ybar})^2', 'cm⁴', 'CALCULADA (Steiner).', 'Geometría', 'calc', '#,##0', 'IT')
-    S.row('I_T / I de losa maciza del mismo peralte', '={IT}/({s}*{h}^3/12)', '—', 'CALCULADA. Debe coincidir con el modificador de inercia del modelo.', 'Geometría', 'key', '0.0000', 'Irat')
-    S.row('Modificador de inercia en el modelo', 0.29914984, '—', 'DATO del modelo. Si difiere de la fila de arriba, la losa del modelo no es la misma.', E2K + ' · SHELLPROP "LR-25" M11MOD 0.29914984', 'calc', '0.0000', 'Irat_e2k')
+    S.row('I_T / I de losa maciza del mismo peralte', '={IT}/({s}*{h}^3/12)', '—', 'CALCULADA. Es el modificador de inercia (M11, M22, M12) que va en ETABS con la sección de la decisión D3 (D5); el del modelo (fila de abajo) es el de la sección vieja.', 'Geometría · Decisión D5', 'key', '0.0000', 'Irat')
+    S.row('Modificador de inercia en el modelo', 0.29914984, '—', 'DATO del modelo (sección vieja 20 + 5). Ya no coincide con la fila de arriba porque la sección cambió (D3): en ETABS va el valor de arriba (D5).', E2K + ' · SHELLPROP "LR-25" M11MOD 0.29914984', 'calc', '0.0000', 'Irat_e2k')
     S.row('h_eq — espesor de losa maciza con la misma inercia', '=(12*{IT}/{s})^(1/3)', 'cm', 'CALCULADA = ∛(12·I_T / s). La norma no da espesor mínimo especial para encasetonadas: la hoja compara h_eq (no los 25 cm) contra el espesor mínimo, del lado seguro.', 'Criterio de esta hoja · ' + NTCC + ' 6.7.3.1, p. 167–168', 'key', '0.00', 'heq')
     S.row('d inferior típico (varilla preferida)', '={h}-{rec}-' + dbz('{est_sec}') + '-' + db('{var_inf}') + '/2', 'cm', 'CALCULADA = h − r − estribo − d_b/2. En TABLEROS se recalcula con la varilla real, la dirección (la del claro largo va encima de la del corto) y el recubrimiento de cada tablero.', 'Geometría', 'key', '0.00', 'd_inf')
-    S.row('d superior típico (varilla preferida)', '={h}-{rec}-2*{fim}-' + dbz('{est_sec}') + '-' + db('{var_sup}') + '/2', 'cm', 'CALCULADA = h − r − 2·Ø malla − estribo − d_b/2 (la varilla va bajo la malla). La reducción de 20 mm de 3.9.1 d) (d ≤ 200 mm sin la precaución anotada) se revisa renglón por renglón en TABLEROS: con r = 4 cm o con barras más gruesas d baja de 20 cm.', 'Geometría · ' + NTCC + ' 3.9.1 d) y 3.9.2, p. 74', 'key', '0.00', 'd_sup')
+    S.row('d superior típico (varilla preferida)', '={h}-MAX({rec},({t}-2*{fim})/2)-2*{fim}-' + dbz('{est_sec}') + '-' + db('{var_sup}') + '/2', 'cm', 'CALCULADA = h − máx(r, (t − 2Ø)/2) − 2·Ø malla − estribo − d_b/2: la varilla va bajo la malla, que va al centro de la capa. Con r = 2 cm manda la malla centrada; con r_np = 4 cm (tableros que no cumplen 6.7.8.1.4) se descuenta además el espesor de la malla, del lado seguro. La reducción de 20 mm de 3.9.1 d) (d ≤ 200 mm sin la precaución anotada) se revisa renglón por renglón en TABLEROS.', 'Geometría · ' + NTCC + ' 3.9.1 d) y 3.9.2, p. 74', 'key', '0.00', 'd_sup')
     S.row('p_b — cuantía balanceada', "={fpc}/{fy}*6000*{beta1}/({fy}+6000)", '—', "CALCULADA = (f''c/fy)·6000β1/(fy + 6000).", NTCC + ' ec. 5.2.1.3.1, p. 88', 'calc', '0.0000', 'pb')
     S.row('p para ε_t = 0.005 (sección controlada por tensión)', "=0.375*{beta1}*{fpc}/{fy}", '—', "CALCULADA: c ≤ 0.375·d ⇒ a ≤ 0.375·β1·d ⇒ p ≤ 0.375·β1·f''c/fy, sobre el ancho que trabaja a compresión.", NTCC + ' Tabla 3.8.2.2, p. 70 · 3.8.2.4, p. 71 (ε_ty = 0.002) · 6.3.3.3.1, p. 121', 'calc', '0.0000', 'pten')
     S.row('p_max — cuantía máxima', '=MIN({pbf}*{pb},{pten})', '—', 'CALCULADA = el menor de 0.90·p_b y el de ε_t = 0.005 (manda el segundo).', NTCC + ' 6.3.5.2.1, p. 122 · 6.3.3.3.1, p. 121 · 6.7.3.3.1, p. 169', 'key', '0.0000', 'pmax')
     S.row('p_min — cuantía mínima por flexión (vigas y nervaduras)', '=MAX(0.8*SQRT({fc}),14)/{fy}', '—', "CALCULADA = el mayor de 0.80·√f'c/fy y 14/fy, sobre b_w·d. Con f'c = 250 manda 14/fy = 0.00333. Se dispensa si la As colocada es ≥ 4/3 de la requerida.",
           NTCC + ' 6.3.5.1.2 y 6.3.5.1.3, p. 122', 'calc', '0.00000', 'pmin')
     S.row('As mín de losa por nervadura = 0.0018·A_g', '=0.0018*({s}*{t}+{bw}*{hc})', 'cm²', 'CALCULADA. La cubre de sobra la No. 4 corrida (1.27 cm²).', NTCC + ' 6.7.6.1.1, p. 175', 'calc', '0.00', 'Asl')
+    S.row('WMOD para ETABS — modificador de peso de la LR-25 con la sección nueva', '={Vm2}*{gc}*1000/(1503.75*{h}/100)', '—',
+          'CALCULADA = V·γc / (1503.75 kg/m³ × h), con el material «LR-25 equiv» que ya trae el modelo (sin casetón, como el modelo). El modelo usa el mismo valor en los modificadores de membrana F11, F22 y F12: seguir ese criterio. Decisión D5.',
+          E2K + ' · SHELLPROP "LR-25" (WMOD 0.6688 con la sección vieja) · Decisión D5', 'key', '0.0000', 'wmod')
+    S.row('Carga muerta extra de la dala de borde (D9) por metro de borde discontinuo', '=({b_borde}-{bp})/100*({h}/100-{Vm2})*{gc}', 't/m',
+          'CALCULADA = (b_borde − b_p)·(h − V)·γc: el concreto de la dala de borde que no tendría la losa nervada (servicio). Baja directo al muro (súmala en su revisión, MUROS) o a la nervadura principal de ese borde (PRINCIPALES ya la suma en «w peso extra»); '
+          'en los momentos del tablero se desprecia porque está sobre el apoyo. El macizo de orilla que deja el acomodo de casetones (TABLEROS) puede ser algo más ancho; como en los demás bordes, su peso se toma con el promedio de la losa.',
+          'Decisión D9 · Geometría', 'calc', '0.000', 'Wborde')
+    S.gap()
+    S.section('4b. SECCIÓN DE LOS VOLADOS (D10) Y DE LAS LOSAS MACIZAS DE AZOTEA (D11)')
+    S.secnote('Volados F80012 y F80019: misma LR-25 (h_c = 19, t = 6), con las nervaduras de la dirección del volado de b_w = 20 cm y casetón 50×60×19; las paralelas al muro siguen de 10 cm. '
+              'Las losas macizas son de h = 20 cm. Los modificadores de abajo son los que van en ETABS (D5).', 30)
+    S.header()
+    S.row('Volados — volumen de concreto por m²', '={h}/100-{ac_vol}/100*{ac}/100*{hc}/100/({s}/100)^2', 'm³/m²', 'CALCULADA = h − (s − b_w)·a_c·h_c / s².', 'Geometría · Decisión D10', 'calc', '0.0000', 'Vm2v')
+    S.row('Volados — peso propio geométrico', '=({Vm2v}*{gc}+{ac_vol}/100*{ac}/100*{hc}/100/({s}/100)^2*{gpol})*1000', 'kg/m²', 'CALCULADA = V·γc + casetón·γ_pol. TABLEROS lo calcula renglón por renglón con la b_w de cada tablero.', 'Geometría · Decisión D10', 'key', '0.0', 'PPv')
+    S.row('Volados — A_T de una nervadura con su patín (b_w del volado)', '={s}*{t}+{bw_vol}*{hc}', 'cm²', 'CALCULADA = s·t + b_w·h_c.', 'Geometría', 'calc', '0.0', 'ATv')
+    S.row('Volados — ȳ medido desde arriba', '=({s}*{t}*{t}/2+{bw_vol}*{hc}*({t}+{hc}/2))/{ATv}', 'cm', 'CALCULADA.', 'Geometría', 'calc', '0.00', 'ybarv')
+    S.row('Volados — I_T de una nervadura con su patín', '={s}*{t}^3/12+{s}*{t}*({ybarv}-{t}/2)^2+{bw_vol}*{hc}^3/12+{bw_vol}*{hc}*({t}+{hc}/2-{ybarv})^2', 'cm⁴', 'CALCULADA (Steiner).', 'Geometría', 'calc', '#,##0', 'ITv')
+    S.row('Volados — modificador de inercia en la dirección del volado (M11 o M22)', '={ITv}/({s}*{h}^3/12)', '—', 'CALCULADA. Con el eje local 1 de la losa en X (el que pone ETABS por omisión en losas horizontales): F80012 (volado en X) lleva éste en M11 y el de la LR-25 (sección 4) en M22; F80019 (volado en Y) lleva el de la LR-25 en M11 y éste en M22. En M12 (torsión) va el de la LR-25 en los dos, que es el menor (lado conservador).', 'Geometría · Decisión D5', 'key', '0.0000', 'Iratv')
+    S.row('Volados — WMOD para ETABS', '={Vm2v}*{gc}*1000/(1503.75*{h}/100)', '—', 'CALCULADA con el material «LR-25 equiv» del modelo (sin casetón). Crear en ETABS una losa «LR-25V» para los dos volados.', E2K + ' · Decisión D5', 'key', '0.0000', 'wmodv')
+    S.row('Losas macizas — peso propio geométrico', '={h_mac}/100*{gc}*1000', 'kg/m²', 'CALCULADA = h·γc. En ETABS «Slab1» sin modificadores, con el concreto f\'c = 250 (hoy trae 4000 psi).', E2K + ' · SHELLPROP "Slab1" · Decisión D11', 'key', '0.0', 'PPm')
     S.gap()
     S.section('5. CARGAS VIVAS UNITARIAS E INCREMENTOS DE CARGA MUERTA')
     S.secnote('Valores de la tabla de cargas vivas de la NTC. Son los mismos que trae el modelo en cada tablero y los que usa Naim. En TABLEROS cada tablero dice si es HABITACIÓN o AZOTEA y de ahí toma W_m (diseño) y W (flechas diferidas).')
@@ -265,7 +385,7 @@ def sheet_datos(wb):
     S.row('Azotea con pendiente ≤ 5% — W (media)', 15, 'kg/m²', 'CAPTURA.', NTCCA + ' Tabla 6.1.2.2 h), p. 11', 'input', '0', 'cvw_az')
     S.row('Incremento del peso propio por losa colada en el lugar', 20, 'kg/m²', 'CAPTURA. Se suma al peso propio geométrico en todos los tableros.', NTCCA + ' 5.1.2.1, p. 9', 'input', '0', 'inc_losa')
     S.row('Incremento por capa de mortero sobre la losa (pegapiso, firme o entortado)', 20, 'kg/m²',
-          'CAPTURA. Si la sobrecarga del modelo ya trae la «carga adicional 0.04 t/m²» de Naim, pon aquí 0 y en la fila de arriba 0 para no contarla dos veces. No se aplica donde la carga muerta es favorable.',
+          'CAPTURA. Decisión D4: se cuentan los 20 + 20 kg/m² además de la sobrecarga del modelo (160 a 315 kg/m²), porque no se puede confirmar que ésta ya traiga la «carga adicional 0.04 t/m²» de Naim: lado seguro. No se aplica donde la carga muerta es favorable.',
           NTCCA + ' 5.1.2.1 y 5.1.2.2, p. 9 · ' + NAIM24 + ' pág. 5 (carga adicional 0.04 t/m²)', 'input', '0', 'inc_mort')
     S.row('W_g — granizo en azotea (Grupo B, pendiente < 5°)', '=900*0.125*1', 'kg/m²', 'CALCULADA = 900·H_s·C_s con H_s = 0.125 m y C_s = 1.0. Va con FC = 1.1 y sin carga viva.',
           NTCCA + ' ec. 7.3.2.1, p. 17 · Tablas 7.3.2.2 y 7.3.2.3, p. 18', 'calc', '0.0', 'Wg')
@@ -288,10 +408,27 @@ def sheet_datos(wb):
     S.row('Mínimo de varillas por lecho', 2, 'pzas', 'CAPTURA.', NTCC + ' 6.3.5.1.1, p. 122 · 6.3.7.7.1, p. 134', 'input', '0', 'nmin_np')
     S.row('Separación máxima de estribos (tope de obra)', 20, 'cm', 'CAPTURA. Criterio propio. La norma pide d/2 ≤ 60 cm (o d/4 ≤ 30 cm si V_s > 1.1·√f\'c·b_w·d); con d > 40 cm manda este tope de 20 cm y con d ≤ 40 cm manda d/2.', 'Criterio de esta hoja · ' + NTCC + ' Tabla 6.3.7.6.2.2, p. 132', 'input', '0', 'smax_np')
     S.gap()
-    S.notice('LO QUE QUEDA PENDIENTE DE TU LADO: (1) aceptar o rechazar los castillos que se proponen bajar a cimentación (hoja APOYOS); '
-             '(2) revisar las secciones propuestas para las nervaduras principales que no pasan con 15×25 (PRINCIPALES, columnas b y h: son trabes descolgadas); '
-             '(3) corregir en ETABS las secciones de F80032 y F80010 de azotea, que están como «Slab1»; (4) confirmar si la sobrecarga del modelo ya trae los 40 kg/m² de 5.1.2.1; '
-             '(5) anotar en planos: concreto Clase 1A con agregado calizo de 1/2", las precauciones de 3.9.2 y la malla de la capa; (6) la decisión 3 de RESUMEN (capa de compresión: capa de 6 cm con 6x6-4/4) y las decisiones 7 a 10: tableros que no cumplen 6.7.8.1.4, tableros fuera de 3.4.2.1 c), anclaje en bordes discontinuos y volados.', 78)
+    S.section('8. LOSAS MACIZAS DE AZOTEA (F80032 Y F80010) — DECISIÓN D11')
+    S.secnote('Se diseñan con el mismo método de coeficientes de la Tabla 3.4.2.1 (que es para losas macizas), por franja de 1 m, con r = 2 cm (lecho superior con r_ext si la azotea se marca expuesta en la sección 1). '
+              'En TABLEROS son los renglones con «MACIZA» en la columna «Losa»; su armado sale como «No. x @ y cm».', 30)
+    S.header()
+    S.row('No. de varilla preferida en las losas macizas', 3, '—', 'CAPTURA. Si con ella la separación sale menor que la mínima de abajo, la hoja sube sola al siguiente número.', NTCC + ' 6.7.6.1.1, p. 175', 'input', 'General', 'var_mac')
+    S.row('Separación mínima práctica en las losas macizas', 10, 'cm', 'CAPTURA. Criterio de obra; la libre mínima de 14.2.1 (2.5 cm) queda muy por debajo.', 'Criterio de esta hoja · ' + NTCC + ' 14.2.1, p. 347', 'input', '0', 'smin_mac')
+    S.row('Separación máxima en las losas macizas (tope absoluto)', 45, 'cm',
+          'CAPTURA. TABLEROS usa el menor de 2h y este valor en todas las secciones (lado seguro: es el tope de las secciones críticas de losas en dos direcciones y queda abajo de 5h y 45 cm del acero de temperatura y del diafragma).',
+          'Criterio de esta hoja · ' + NTCC + ' 6.8.7.3, p. 196 (5t y 45 cm) · 13.8.2.1.1, p. 345', 'input', '0', 'smax_mac')
+    S.row('As mín por metro = 0.0018·b·h (cada dirección, cerca de la cara en tensión)', '=0.0018*100*{h_mac}', 'cm²/m', 'CALCULADA. Contracción y temperatura y acero mínimo de losa; TABLEROS la aplica en los cuatro lechos.', NTCC + ' 6.7.6.1.1, p. 175 · 13.8.2.1.1, p. 345', 'calc', '0.00', 'Asm_mac')
+    S.row('Desnivel del lecho inferior respecto a la LR-25 vecina', '={h}-{h_mac}', 'cm', 'CALCULADA = h − h_maciza. La cara superior queda al mismo nivel; abajo, la maciza queda más alta: anotarlo en planos (cimbra y plafón).', 'Decisión D11', 'key', '0')
+    S.row('Dala de borde en los bordes discontinuos de las macizas (D9)', '=TEXT({b_borde},"0")&" × "&TEXT({h},"0")&" cm (baja "&TEXT({h}-{h_mac},"0")&" cm bajo la maciza)"', '—',
+          'CALCULADA. Igual que en la LR-25: en todo borde discontinuo la maciza remata en una dala de borde armada de b_borde × h, al ras del lecho inferior de la LR-25 vecina. Su paño interior es el apoyo de la losa: ahí se anclan el bastón superior y la varilla inferior (NERVADURA sección 10). '
+          'Sin ella, en el muro de 15 cm sólo quedan b_p − r y la No. 3 no se desarrolla. Si el borde está sobre una nervadura principal (NP-33), esa principal es la dala de borde: se ensancha a b_borde en el peralte de la losa.',
+          'Decisión D9 · Decisión D11 · ' + NTCC + ' 6.7.7.4.1.1, p. 179 · 14.4.3.1, p. 355', 'calc', '@')
+    S.gap()
+    S.notice('DECISIONES TOMADAS (D1 a D12, RESUMEN sección 2; propuesta del calculista auxiliar para que la revise y firme el Responsable): castillos C1…C8 a cimentación (D1; C7 es nuevo); secciones propuestas de las principales, y en NP-15 y NP-26 (H/L < 0.6) la trabe toma todo el muro sin efecto de arco (D2); '
+             'capa de 6 cm con casetón de 19 cm y malla 6x6-4/4 al centro de la capa (D3); se cuentan los 20 + 20 kg/m² de 5.1.2.1 (D4); tableros chicos como losa sobre vigas (D7); distribución de 3.4.3.1 donde no se cumple 3.4.2.1 c) (D8); dala de borde armada de 40 cm en los bordes discontinuos (D9); '
+             'volados nervados con nervaduras de 20 cm que siguen dentro de sus tableros de respaldo, con vigas de orilla en los costados libres de F80012 (D10); F80032 y F80010 de azotea macizas de 20 cm (D11); cara superior de los volados protegida: terraza con impermeabilizante y piso (D12). '
+             'LO QUE QUEDA DE TU LADO: (1) actualizar y volver a correr el modelo de ETABS (D5) y comparar; (2) pasar a planos las notas de D6 (RESUMEN sección 7); (3) coordinar con arquitectura el castillo nuevo C7 (llegada de la escalera, sin castillo arriba) '
+             'y revisar NP-07 y NP-30 con el diseño de la escalera, que está fuera del alcance; (4) revisar y firmar D1 a D12.', 90)
     add_cf(ws, 'C1:F%d' % S.r)
     ws.sheet_view.zoomScale = 85
     return ws
@@ -310,17 +447,17 @@ def sheet_apoyos(wb):
         '1) AZOTEA (N+6.00): casi todos los bordes caen sobre muros del primer nivel. Sólo 4 tramos cortos quedan sin muro (bordes de los tragaluces, la ventana del área de tendido y el borde del vacío de la escalera) y todos llegan a muros en sus dos extremos.',
         '2) ENTREPISO (N+3.00): en planta baja sólo hay muros en los ejes A y J y en dos núcleos (baño junto a la cochera y servicios atrás). La cochera mide 8.70 m libres y la sala tiene el vacío de doble altura: muchas dalas del modelo quedan sin muro abajo y en realidad son NERVADURAS PRINCIPALES que trabajan como trabe.',
         '3) En el modelo tal cual, varias de esas principales rematan en nudos que no tienen nada abajo: las esquinas de la cochera (x = 4.327 y = 1.919; x = 5.923 y = 2.921), las esquinas del vacío (x = 4.327 con y = 7.871 y 14.021), la esquina de la escalera (F-8) y la esquina C-10. Así quedan en volado de 4 a 8 m: con 25 cm de peralte NO funcionan.',
-        '4) En esos mismos nudos el primer nivel SÍ tiene castillo, pero no baja a planta baja (31 castillos sin continuidad, lista F). La propuesta de esta hoja es bajar 7 de ellos a cimentación y agregar uno nuevo en la llegada de la escalera (lista B). Con eso todas las principales quedan apoyadas en sus dos extremos.',
-        '5) F80012 (área de tendido, fuera del eje A) y F80019 (terraza entre los ejes 14 y 15) son VOLADOS de 2.00 m. Sus orillas libres llevan nervadura de borde, no trabe. La de F80019 recibe el barandal de 333.7 kg/m que trae el modelo.',
+        '4) En esos mismos nudos el primer nivel SÍ tiene castillo, pero no baja a planta baja (31 castillos sin continuidad, lista F). Decisión D1: se bajan 7 de ellos a cimentación y se agrega uno nuevo, C7, en la llegada de la escalera (lista B, ACEPTADOS); C7 no tiene castillo arriba: coordinarlo con arquitectura. Con eso todas las principales quedan apoyadas en sus dos extremos. Toda bajada que no tenga muro abajo en planta baja es columna de 25×25 como mínimo (NTC-Concreto 2023 (CDMX) 6.4.2.1.1, p. 138).',
+        '5) F80012 (área de tendido, fuera del eje A) y F80019 (terraza entre los ejes 14 y 15) son VOLADOS de 2.00 m. Sus orillas libres llevan nervadura de borde, no trabe. La de F80019 recibe el barandal de 333.7 kg/m que trae el modelo. Decisión D10: siguen nervados (LR-25) con las nervaduras de la dirección del volado de 20 cm (casetón 50×60×19), que siguen dentro de sus tableros de respaldo hasta donde la nervadura de 10 cm ya resiste (TABLEROS, «RESPALDO»). Los costados de F80012 (y = 14.021 y 17.446) corren en la dirección del volado y llevan también barandal: NP-09 y NP-14 se diseñan como vigas de orilla en volado (PRINCIPALES). F80019 tiene muros en sus dos costados (DM-43 y DM-53).',
         '6) VACÍOS: doble altura de la sala (4.17 × 6.00 m), cubo de la escalera curva, vacío sobre la escalera en azotea y tres tragaluces de 0.30 m en azotea. F80028 y F80029 son prácticamente hueco (quedan 0.60 y 0.53 m² de losa): se tratan como marco de hueco, no como tablero.',
-        '7) En azotea, F80032 y F80010 están en el modelo como «Slab1» (maciza de 20 cm, concreto 4000 psi), no como LR-25. El plano dice losa reticular: aquí se diseñan como LR-25 y conviene corregirlos en ETABS.',
-        '8) F2 (azotea, sobre la terraza del frente) no tiene cargas en el modelo. Aquí se le pone la misma sobrecarga que al tablero vecino F80023 (270 kg/m²): REVISAR.',
+        '7) En azotea, F80032 y F80010 están en el modelo como «Slab1» (losa maciza de 20 cm, concreto 4000 psi). Decisión D11: se respeta el modelo y se diseñan como LOSAS MACIZAS de 20 cm perimetralmente apoyadas (TABLEROS, columna «Losa»), con f\'c = 250 Clase 1A como el resto de la obra: en ETABS cambiar su concreto de 4000 psi a f\'c = 250.',
+        '8) F2 (azotea, sobre la terraza del frente) no tiene cargas en el modelo. Aquí se le pone la misma sobrecarga que al tablero vecino F80023 (270 kg/m²); en ETABS hay que ponérsela (decisión D5).',
     ]:
         S.bullet(txt)
     S.gap()
     cf0 = S.r
-    S.section('B. CASTILLOS QUE SE PROPONE BAJAR A CIMENTACIÓN — TÚ DECIDES')
-    S.secnote('Si pones NO, los tramos que dependen de ese castillo pasan a volado en PRINCIPALES y la hoja te dice si así aguantan. '
+    S.section('B. CASTILLOS QUE BAJAN A CIMENTACIÓN — ACEPTADOS (DECISIÓN D1)')
+    S.secnote('Decisión D1: los ocho se aceptan y bajan a cimentación; donde una bajada queda sin muro abajo en planta baja es columna de 25×25 como mínimo (NTC-Concreto 2023 (CDMX) 6.4.2.1.1, p. 138). Si pones NO, los tramos que dependen de ese castillo pasan a volado en PRINCIPALES y la hoja te dice si así aguantan. '
               'OJO: si rechazas un castillo que parte un tramo en dos (C2, C4), junta a mano los dos renglones de PRINCIPALES en uno solo con el claro completo.', 42)
     r = S.r
     for k, t in enumerate(['Castillo', '¿Se acepta?', 'x (m)', 'y (m)', 'Ejes', 'Tramos que dependen', 'Por qué', '']):
@@ -334,7 +471,7 @@ def sheet_apoyos(wb):
                 dep.setdefault(p, []).append(t['np'])
     for c in D['castillos_prop']:
         r = S.r
-        cell(ws, r, 2, '%s — %s' % (c['id'], 'PROPUESTO'), 'calc', al='left', bold=True)
+        cell(ws, r, 2, '=IF(C%d="SÍ","%s — ACEPTADO (D1)","%s — RECHAZADO: ver PRINCIPALES")' % (r, c['id'], c['id']), 'calc', al='left', bold=True)
         cell(ws, r, 3, 'SÍ', 'input')
         dv_list(ws, 'C%d' % r, '"SÍ,NO"')
         cell(ws, r, 4, c['x'], 'calc', '0.000'); cell(ws, r, 5, c['y'], 'calc', '0.000')
@@ -394,18 +531,18 @@ def sheet_apoyos(wb):
         S.bullet('• %s (%.2f m): %s en el modelo.' % (eje, t['L'], 'VOLADO' if t['cond'] == 'VOLADO' else 'SIN APOYO en ninguno de sus extremos'))
     S.gap()
     S.section('F. CASTILLOS DEL PRIMER NIVEL QUE NO BAJAN A PLANTA BAJA (31)')
-    S.secnote('Castillos K-15x15 del primer nivel (entrepiso N+6.00 del E2K) que no tienen castillo ni muro abajo: descargan sobre la losa N+3.00. Los marcados como propuestos están en la lista B.')
+    S.secnote('Castillos K-15x15 del primer nivel (entrepiso N+6.00 del E2K) que no tienen castillo ni muro abajo: descargan sobre la losa N+3.00. Los marcados con (D1) bajan a cimentación (lista B).')
     r = S.r
-    for k, t in enumerate(['Ubicación', 'x (m)', 'y (m)', '¿Propuesto?', 'Nota', '', '', '']):
+    for k, t in enumerate(['Ubicación', 'x (m)', 'y (m)', '¿Baja a cimentación? (D1)', 'Nota', '', '', '']):
         hdr_cell(ws, r, 2 + k, t)
     S.r += 1
     props = {(round(c['x'], 2), round(c['y'], 2)): c['id'] for c in D['castillos_prop']}
     for c in D['castillos_sin_cont']:
         r = S.r; pid = props.get((round(c['x'], 2), round(c['y'], 2)))
         cell(ws, r, 2, c['ref'], al='left'); cell(ws, r, 3, c['x'], fmt='0.000'); cell(ws, r, 4, c['y'], fmt='0.000')
-        cell(ws, r, 5, pid + ' PROPUESTO' if pid else '—')
+        cell(ws, r, 5, pid + ' (D1)' if pid else '—')
         ws.merge_cells('F%d:I%d' % (r, r))
-        cell(ws, r, 6, 'Descarga sobre una nervadura principal o un tablero del N+3.00; su carga ya viene en el muro de arriba (wall load) de PRINCIPALES.' if not pid else 'Se propone bajarlo a cimentación.', al='left', sz=8)
+        cell(ws, r, 6, 'Descarga sobre una nervadura principal o un tablero del N+3.00; su carga ya viene en el muro de arriba (wall load) de PRINCIPALES.' if not pid else 'Baja a cimentación (lista B, decisión D1).', al='left', sz=8)
         S.r += 1
     add_cf(ws, 'B%d:I%d' % (cf0, S.r))
     ws.freeze_panes = 'C1'
@@ -418,15 +555,17 @@ def sheet_cargas(wb):
     from gen_b import TC
     ws = wb.create_sheet('CARGAS'); S = Narr(ws, N)
     S.title('CARGAS — PESO PROPIO, SOBRECARGA, CARGA VIVA Y CARGAS LINEALES')
-    S.subtitle('La sobrecarga de cada tablero se toma del modelo (varía de 160 a 315 kg/m²) y vive en TABLEROS. Aquí está el desglose de referencia de Naim, los incrementos de la NTC y las cargas lineales del modelo.', 30)
+    S.subtitle('La sobrecarga de cada tablero se toma del modelo (varía de 160 a 315 kg/m²) y vive en TABLEROS; encima se cuentan los 20 + 20 kg/m² de 5.1.2.1 (decisión D4). Aquí está el desglose de referencia de Naim, los incrementos de la NTC y las cargas lineales del modelo.', 30)
     S.gap()
-    S.section('1. PESO PROPIO DE LA LOSA NERVADA')
+    S.section('1. PESO PROPIO DE LA LOSA')
     S.header()
-    S.row('Peso propio geométrico LR-25 (con casetón)', '={PP}', 'kg/m²', 'Enlazado a DATOS sección 4.', 'DATOS', 'calc', '0.0')
+    S.row('Peso propio geométrico LR-25 (con casetón 60×60×19 y capa de 6 cm)', '={PP}', 'kg/m²', 'Enlazado a DATOS sección 4.', 'DATOS', 'calc', '0.0')
     S.row('Incremento por losa colada en el lugar', '={inc_losa}', 'kg/m²', 'DATOS sección 5.', NTCCA + ' 5.1.2.1, p. 9', 'calc', '0')
     S.row('Incremento por capa de mortero', '={inc_mort}', 'kg/m²', 'DATOS sección 5. No se aplica donde la carga muerta es favorable (p. ej. el claro que equilibra un volado).', NTCCA + ' 5.1.2.1 y 5.1.2.2, p. 9', 'calc', '0')
-    S.row('Peso propio de diseño', '={PP}+{inc_losa}+{inc_mort}', 'kg/m²', 'Suma de los tres renglones. Es el que usa TABLEROS.', NTCCA + ' 5.1.2.1, p. 9', 'key', '0.0', 'PPd')
-    S.row('Peso propio que trae el modelo', '={PPe2k}', 'kg/m²', 'Enlazado a DATOS sección 4.', E2K, 'calc', '0.0')
+    S.row('Peso propio de diseño', '={PP}+{inc_losa}+{inc_mort}', 'kg/m²', 'Suma de los tres renglones. Es el que usa TABLEROS en la LR-25 (casetón 60×60×19, capa de 6 cm, decisión D3).', NTCCA + ' 5.1.2.1, p. 9', 'key', '0.0', 'PPd')
+    S.row('Peso propio de diseño de los volados (nervaduras de 20 cm, casetón 50×60×19)', '={PPv}+{inc_losa}+{inc_mort}', 'kg/m²', 'DATOS sección 4b + los dos incrementos. Decisión D10: más concreto que la LR-25 normal.', NTCCA + ' 5.1.2.1, p. 9 · Decisión D10', 'key', '0.0', 'PPdv')
+    S.row('Peso propio de diseño de las losas macizas de azotea (h = 20 cm)', '={PPm}+{inc_losa}+{inc_mort}', 'kg/m²', 'DATOS sección 4b + los dos incrementos. Decisión D11.', NTCCA + ' 5.1.2.1, p. 9 · Decisión D11', 'key', '0.0', 'PPdm')
+    S.row('Peso propio que trae el modelo', '={PPe2k}', 'kg/m²', 'Enlazado a DATOS sección 4. Es el de la sección vieja (20 + 5): se actualiza en ETABS (decisión D5).', E2K, 'calc', '0.0')
     S.gap()
     S.section('2. SOBRECARGA MUERTA — DESGLOSE DE REFERENCIA (NAIM)')
     S.secnote('Sólo de referencia: no entra en ningún cálculo. Sirve para juzgar si las sobrecargas del modelo (columna SCM de TABLEROS) son razonables. Ojo: la «carga adicional 0.04 t/m²» de Naim es el mismo incremento de 40 kg/m² de 5.1.2.1.')
@@ -460,7 +599,7 @@ def sheet_cargas(wb):
     S.row('Temperatura en la estructura', 'se omite', '—', 'Dimensiones < 30 m, miembros de ejes rectos y azotea protegida (relleno + impermeabilizante; la norma pide «al menos un enladrillado»: confirmarlo).', NTCCA + ' 6.2.3.1, p. 13', 'calc', '@')
     S.gap()
     S.section('5. CARGAS LINEALES QUE TRAE EL MODELO (BARANDALES, MUROS BAJOS, PRETILES Y ESCALERA)')
-    S.secnote('Se suman a la nervadura principal sobre la que caen (PRINCIPALES, columnas SCM y CV lineal). Las de 333.7 kg/m en las orillas de F80012 y F80019 entran como carga en la orilla del volado.')
+    S.secnote('Se suman a la nervadura principal sobre la que caen (PRINCIPALES, columnas SCM y CV lineal). Las de 333.7 kg/m en las orillas libres de F80012 y F80019 entran como carga en la punta de cada nervadura del volado (TABLEROS) y, en los costados de F80012, en las vigas de orilla NP-09 y NP-14 (PRINCIPALES).')
     S.header(('Viga · nivel · caso', 'w', 'Unidad', 'Dónde (de – a) y largo cargado', 'Fuente'))
     for l in D['lineloads']:
         S.row('%s · %s · %s' % (l['beam'], l['level'], l['lc']), l['w'], 'kg/m', 'de (%.3f, %.3f) a (%.3f, %.3f) · %.2f m' % (l['x0'], l['y0'], l['x1'], l['y1'], l['L']),
@@ -540,7 +679,8 @@ def sheet_tablas(wb):
               '«Otros casos» (separación libre < 2d_b o recubrimiento < d_b, sin estribos): fy·d_b/(4.4·√f\'c) y fy·d_b/(3.5·√f\'c); TABLEROS usa esta columna cuando la nervadura no da la separación. '
               'ψp = 1.0 en nervaduras secundarias (h = 25 cm) y en lechos inferiores; en el lecho superior de nervaduras principales con más de 30 cm de concreto debajo (aquí, h ≥ 40 cm) ψp = 1.3 (Tabla 14.4.2.6, p. 354): L_d y traslape × 1.3. '
               'Para 1.25 fy (barra inferior de integridad de cada nervadura, 6.7.8.1.7) se multiplica por 1.25. '
-              'L_dh = el mayor de 0.075·fy·d_b/√f\'c, 8d_b y 15 cm; gancho de 90° con extensión de 12d_b (14.4.3.1 a) a c), p. 355; Tabla 14.3.1, p. 349).', 54)
+              'L_dh = el mayor de 0.075·fy·d_b/√f\'c, 8d_b y 15 cm, igual para el gancho estándar de 90° (extensión 12d_b) que para el de 180° (extensión 4d_b ≥ 6.5 cm) (14.4.3.1 a) a c), p. 355; Tabla 14.3.1, p. 349). '
+              'En los bordes discontinuos de esta losa se pide el de 180°: el de 90° parado (16d_b de alto) no cabe en 25 cm con 4 cm de recubrimiento arriba y abajo (NERVADURA sección 10).', 54)
     S.r = TB_W0 - 2
     S.section('C. MALLA ELECTROSOLDADA (fy = 5000 kg/cm²; separación 15.24 cm ≤ 5t y ≤ 30 cm entre alambres soldados)')
     r = TB_W0 - 1

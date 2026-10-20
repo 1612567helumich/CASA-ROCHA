@@ -2,7 +2,8 @@
 import ezdxf, json, re
 from shapely.geometry import Polygon, LineString, Point, box
 from shapely.ops import unary_union
-W='/tmp/claude-0/-home-user-CASA-ROCHA/faa149e0-9f48-5f0d-b5ee-28b4c7156d8c/scratchpad/'
+import os
+W = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/'
 m=json.load(open(W+'work/model.json')); geo=json.load(open(W+'work/geo.json'))
 T=0.03; TC=0.05
 LV=['N+3.00','N+6.00']; DX={'N+3.00':0.0,'N+6.00':14.0}

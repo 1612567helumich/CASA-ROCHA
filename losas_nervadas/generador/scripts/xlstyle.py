@@ -106,6 +106,8 @@ class Narr:
             v.font = font(10)
         v.number_format = fmt
         u = ws.cell(r, 4, unit); u.font = font(9, color=GRAY); u.alignment = Alignment(horizontal='center', vertical='center'); u.border = BOX
+        if isinstance(how, str) and how.startswith('='):
+            how = how.format(**self.N)
         e = ws.cell(r, 5, how); e.font = font(9, color=GRAY); e.alignment = Alignment(horizontal='left', vertical='center', wrap_text=True); e.border = BOX
         f = ws.cell(r, 6, ref); f.font = font(8, i=True, color=REF); f.alignment = Alignment(horizontal='left', vertical='center', wrap_text=True); f.border = BOX
         vlen = 22.0 if (isinstance(value, str) and value.startswith('=') and kind == 'key' and '@' in fmt) else 0

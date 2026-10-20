@@ -1,7 +1,8 @@
 import ezdxf, json, sys, math
 import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-W='/tmp/claude-0/-home-user-CASA-ROCHA/faa149e0-9f48-5f0d-b5ee-28b4c7156d8c/scratchpad/'
+import os
+W = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/'
 d=ezdxf.readfile(W+'in/264d7eb7-001_PLANO_CROCHA_R3.0.dxf')
 msp=d.modelspace()
 m=json.load(open(W+'work/model.json'))
