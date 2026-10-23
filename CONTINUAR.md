@@ -26,18 +26,21 @@ Rama de trabajo: `claude/practical-cori-l2ai0b`.
 
 Ver `losas_nervadas/generador/README.md`. Las rutas ya son relativas a la carpeta del generador; se necesita `pip install shapely ezdxf`.
 
-## Estado al 23 de octubre (en pausa a pedido del usuario)
+## Estado al 23 de octubre: terminado
 
-**Casa Rocha, ~90 %.** La hoja de esta rama recalcula sin errores (11 328 fórmulas) con D1 a D12 y la revisión independiente: 30 de 30 tableros y 32 de 32 principales cumplen. Falta pasar al generador actual tres correcciones de la ronda final de verificación, que están en el commit `b3c4bf1` (hecho sobre la versión anterior de `gen_b.py` y `gen_d.py`; no se aplicó), y luego regenerar y volver a revisar:
+**Casa Rocha (`losas_nervadas/`).** La ronda final de verificación ya está en el generador actual y pasó una revisión independiente:
 
-1. Distribución de 3.4.3.1 sólo entre vecinos recíprocos (el vecino lista a este tablero) y siempre con su borde opuesto; hoy, si el vecino no lista a este tablero se distribuye igual con su borde opuesto, y si lo lista en otro borde se usa ese.
-2. Desequilibrio del volado sólo por su borde de empotramiento (`dirc` del volado = dirección del momento en ese borde).
-3. Hileras a macizar topadas en el número de casetones del claro (`ncs`).
+- 3.4.3.1 y 3.4.2.1 c) sólo entre vecinos recíprocos, con el borde opuesto del vecino, y en tableros irregulares sólo si las orillas se tocan de veras (> 5 cm).
+- Hileras a macizar topadas en la mitad de los casetones del claro corto desde cada apoyo (todos en un volado); si hiciera falta macizar todo, NO CUMPLE hasta rediseñarlo como maciza.
+- Croquis a escala: el acomodo del área de las gráficas va en `ch.layout` (openpyxl ignoraba `plot_area.layout`).
 
-La revisión Vul/VcRl de `b3c4bf1` no se pasa: el cortante de los respaldos ya lo revisan las columnas RESPALDO de TABLEROS.
+Recalcula sin errores (11 328 fórmulas): 30 de 30 tableros y 32 de 32 principales cumplen.
 
-**Hoja general, ~60 %.** Está en la rama `claude/respaldo-wip-losas` (commit `de115a3`), no en ésta. Tiene las 7 hojas más CROQUIS_DATOS (11 915 fórmulas, 0 errores) y los 7 ejemplos dan CUMPLE. Falta:
+**Hoja general (`hojas_generales/`).** Terminada y revisada (fórmulas contra la NTC y croquis). Ver su README. Lo principal:
 
-- Croquis: títulos encimados con el armado en corte y alzado; los dibujos vacíos del tipo no escogido muestran números sueltos (102.6, 57.5…); la planta de maciza lleva demasiados letreros.
-- Pasar los valores por omisión a D3 (capa de 6 cm, casetón 60×60×19, malla 6x6-4/4 al centro de la capa) y lo que aplique de la revisión de Casa Rocha (dala de borde, ganchos de 180°, respaldo de volados).
-- README, revisión independiente contra la NTC, comparar los ejemplos con Casa Rocha y traerla a esta rama.
+- Valores de D3, malla al centro de la capa, dala de borde (D9) en el anclaje (gancho de 180°) y en el acomodo de casetones.
+- Volados: L_b obligatorio, peso de los macizos, acero hasta el apoyo lejano con gancho y aviso de levantamiento, y revisión del respaldo con nervaduras anchas (D10).
+- Cargas vivas cotejadas contra la Tabla 6.1.2.2 (azoteas por pendiente) y W_g ≥ 25 kg/m².
+- Croquis a escala, con ganchos de 180°, bastón del volado, apoyo lejano y leyendas que dicen «—» cuando un trazo no aplica.
+
+Recalcula sin errores; los siete ejemplos cumplen y los de nervadas cuadran con Casa Rocha salvo lo que depende de los vecinos y del peso volumétrico.

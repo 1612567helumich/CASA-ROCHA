@@ -138,7 +138,7 @@ def write_table(ws, COL, cols, groups, notes, vals_by_row, inputs, examples, tit
         ex = examples[r - R0] if r - R0 < len(examples) else {}
         for k in inputs:
             v = ex.get(k)
-            fmt = '@' if k in ('key', 'tipo', 'dest', 'bI', 'bS', 'bL', 'bR', 'cforce', 'col') else ('0.000' if k in ('ax', 'ay', 'Lb') else ('0.000' if k in ('Mvc', 'Mvl') else '0.0' if k in ('pbor', 'afo', 'ho') else 'General'))
+            fmt = '@' if k in ('key', 'tipo', 'dest', 'bI', 'bS', 'bL', 'bR', 'cforce', 'col') else ('0.000' if k in ('ax', 'ay', 'Lb', 'Lb2') else ('0.000' if k in ('Mvc', 'Mvl') else '0.0' if k in ('pbor', 'afo', 'ho') else 'General'))
             c = cell(ws, r, CI(COL[k]), v, 'input', fmt, al='left' if k in ('key', 'dest') else 'center', sz=9)
         vals = vals_by_row
         for k in cols:
@@ -173,12 +173,12 @@ def _mkcols(spec):
 
 
 # =====================================================================
-INP_N = ['key', 'tipo', 'dest', 'ax', 'ay', 'bI', 'bS', 'bL', 'bR', 'cforce', 'col', 'scm', 'cvo', 'pbor', 'Lb', 'bwo', 'afo', 'Mvc', 'Mvl']
+INP_N = ['key', 'tipo', 'dest', 'ax', 'ay', 'bI', 'bS', 'bL', 'bR', 'cforce', 'col', 'scm', 'cvo', 'pbor', 'Lb', 'Lb2', 'bwo', 'afo', 'Mvc', 'Mvl']
 SPEC_N = [
     ('key', 'Tablero', 22, ''), ('tipo', 'Tipo', 11.5, ''), ('dest', 'Destino (lista de DATOS)', 19, ''), ('ax', 'a_x — claro en X a ejes', 7.5, 'm'), ('ay', 'a_y — claro en Y a ejes', 7.5, 'm'),
     ('bI', 'Borde inferior (‖ X)', 11, 'CONT./DISC.'), ('bS', 'Borde superior (‖ X)', 11, 'CONT./DISC.'), ('bL', 'Borde izquierdo (‖ Y)', 11, 'CONT./DISC.'), ('bR', 'Borde derecho (‖ Y)', 11, 'CONT./DISC.'),
     ('cforce', 'Forzar caso', 12, 'AUTO = sale solo'), ('col', 'Colado con los apoyos', 13, 'caso I / II'), ('scm', 'SCM — sobrecarga muerta', 7.5, 'kg/m²'), ('cvo', 'CV propia (opcional)', 7.5, 'kg/m²'),
-    ('pbor', 'Carga en la orilla del volado', 8, 'kg/m serv.'), ('Lb', 'L_b — claro de respaldo (volado)', 8, 'm'), ('bwo', 'b_w propio (opcional)', 7, 'cm'), ('afo', 'α_fm propio (opcional)', 7, '—'),
+    ('pbor', 'Carga en la orilla del volado', 8, 'kg/m serv.'), ('Lb', 'L_b — claro de respaldo (volado)', 8, 'm'), ('Lb2', 'Claro del respaldo ‖ al apoyo (opcional; vacío = a2 del volado)', 8, 'm'), ('bwo', 'b_w propio (opcional)', 7, 'cm'), ('afo', 'α_fm propio (opcional)', 7, '—'),
     ('Mvc', 'M⁻ del vecino ‖ corto (opcional)', 8.5, 't·m/nerv.'), ('Mvl', 'M⁻ del vecino ‖ largo (opcional)', 8.5, 't·m/nerv.'),
     ('ok', '¿Datos completos?', 7.5, ''), ('emp', 'Borde empotrado (volado)', 10, ''), ('dirc', 'Claro corto ‖', 5.5, ''), ('a1', 'a1 corto (volado: largo)', 7, 'm'), ('a2', 'a2 largo', 7, 'm'),
     ('m', 'm = a1/a2', 6.5, ''), ('ln1', 'L_n corto', 6.5, 'cm'), ('ln2', 'L_n largo', 6.5, 'cm'), ('bwr', 'b_w nerv. ‖ corto', 6, 'cm'), ('acr', 'Casetón entre nerv. ‖ corto = s − b_w', 7, 'cm'), ('bwc', 'b_w cálculo ‖ corto (M⁻ y V)', 7, 'cm'), ('bwcl', 'b_w cálculo ‖ largo (M⁻)', 7, 'cm'),
@@ -197,7 +197,7 @@ SPEC_N += [('Vu', 'V_u por nerv.', 7, 't'), ('VcR', 'V_cR', 7, 't'), ('nh', 'Hil
            ('yb', 'ȳ de la T', 6, 'cm'), ('IT', 'I_T de la T', 8, 'cm⁴'), ('heq', 'h_eq', 6.5, 'cm'), ('afm', 'α_fm', 6, ''), ('hmin', 'h mín. (Tabla 6.7.3.1.2 / volado L/8)', 8.5, 'cm'),
            ('peral', 'Estado peralte', 13, ''), ('tdia', 'Capa (diafragma)', 10, ''),
            ('Lbc', 'Bastón ‖ corto desde el paño', 8, 'cm'), ('Lbl', 'Bastón ‖ largo desde el paño', 8, 'cm'), ('bdc', 'Bastón también en borde disc. ‖ corto', 8, ''), ('bdl', 'Bastón también en borde disc. ‖ largo', 8, ''),
-           ('anc', 'Anclaje en bordes discontinuos', 16, ''), ('ncx', 'Casetones ‖ X', 6.5, 'pzas'), ('ncy', 'Casetones ‖ Y', 6.5, 'pzas'), ('mx', 'Macizo de orilla X', 7, 'cm'), ('my', 'Macizo de orilla Y', 7, 'cm'),
+           ('anc', 'Anclaje en bordes discontinuos', 16, ''), ('ncx', 'Casetones ‖ X', 6.5, 'pzas'), ('ncy', 'Casetones ‖ Y', 6.5, 'pzas'), ('mx0', 'Macizo de orilla izq.', 6.5, 'cm'), ('mx1', 'Macizo de orilla der.', 6.5, 'cm'), ('my0', 'Macizo de orilla inf.', 6.5, 'cm'), ('my1', 'Macizo de orilla sup.', 6.5, 'cm'),
            ('rn1', 'Varillas del volado que siguen en la nervadura de b_w de DATOS (la corrida)', 8, 'pzas'), ('rd', 'd de esa nervadura', 6.5, 'cm'), ('rM1', 'M_R de esa nervadura', 7, 't·m'), ('rV1', 'V_cR de esa nervadura', 7, 't'),
            ('rxM', 'Donde M baja a ese M_R', 7, 'm desde el paño'), ('rxV', 'Donde V baja a ese V_cR', 7, 'm desde el paño'), ('rVw', 'V_u del respaldo junto al apoyo (nerv. ancha)', 7.5, 't'),
            ('rxr', 'Nervadura ancha en el respaldo hasta', 7.5, 'cm desde el paño'), ('rnh', 'Hileras del respaldo con b_w del volado', 7, 'hileras'), ('rest', 'Respaldo del volado', 24, ''),
@@ -209,7 +209,7 @@ NC.update(NC_)
 GROUPS_N = [('key', 'Mvl', 'DATOS DEL TABLERO — CAPTURA (amarillo)'), ('ok', 'rtm', 'GEOMETRÍA'), ('azo', 'wu', 'CARGAS'), ('nd', 'caso', 'CASO DE LA TABLA'),
             ('idx', 'cPL', 'COEFICIENTES ×10⁻⁴ (Tabla 3.4.2.1)'), ('Mtip', 'c342', 'MOMENTOS POR NERVADURA'),
             ('dqPc', 'ePc', 'LECHO INFERIOR ‖ CLARO CORTO'), ('dqNc', 'eNc', 'LECHO SUPERIOR ‖ CLARO CORTO'), ('dqPl', 'ePl', 'LECHO INFERIOR ‖ CLARO LARGO'), ('dqNl', 'eNl', 'LECHO SUPERIOR ‖ CLARO LARGO'),
-            ('Vu', 'cort', 'CORTANTE'), ('yb', 'tdia', 'ESPESOR MÍNIMO Y CAPA'), ('Lbc', 'my', 'BASTONES, ANCLAJE Y CASETONES'), ('rn1', 'rest', 'RESPALDO DE UN VOLADO CON b_w PROPIO'), ('tPc', 'nota', 'RESULTADO')]
+            ('Vu', 'cort', 'CORTANTE'), ('yb', 'tdia', 'ESPESOR MÍNIMO Y CAPA'), ('Lbc', 'my1', 'BASTONES, ANCLAJE Y CASETONES'), ('rn1', 'rest', 'RESPALDO DE UN VOLADO CON b_w PROPIO'), ('tPc', 'nota', 'RESULTADO')]
 NOTES_N = {
     'key': 'CAPTURA. Claros A EJES (del lado seguro; la tabla admite claros libres en el caso I). Borde CONTINUO = sigue losa del otro lado; DISCONTINUO = orilla, hueco o losa que no sigue. '
            'VOLADO: marca CONTINUO sólo el borde empotrado. CV propia, b_w propio y α_fm propio: vacío = el de DATOS. M⁻ del vecino: por nervadura, en el borde común; la hoja arma con el mayor.',
@@ -234,7 +234,7 @@ NOTES_N = {
            'Anclaje en bordes discontinuos (dala de borde armada, D9 de Casa Rocha): 1.25·L_dh ≤ ancho − r_np y ≥ 15 cm (6.7.8.1.7, p. 188); L_dh del bastón (6.7.7.4.1.1 b), p. 179); gancho de 180° con alto 8·d_b ≤ peralte de la dala − 2·r_np (Tabla 14.3.1, p. 349). '
            'Respaldo de un volado con b_w propio: sus nervaduras anchas siguen en el respaldo hasta donde la nervadura de b_w de DATOS resiste el M⁻ (con 0.9·PP, sin CV) y el cortante del volado.',
     'rn1': 'Sólo volados con b_w propio mayor que el de DATOS (decisión D10 de Casa Rocha). Del otro lado del apoyo el M⁻ del volado lo toman las nervaduras del tablero de respaldo: sus primeras hileras siguen con el b_w del volado '
-           '(casetón s − b_w) hasta donde la nervadura normal (con r de viga, del lado seguro), con la varilla corrida del volado, resiste M(x) = M⁻(1 − x/L_b) − 0.9·PP·s·x(L_b − x)/2 (sin CV) y el cortante V(x) = M⁻/L_b + w_u·s·(L_b/2 − x). '
+           '(casetón s − b_w) hasta donde la nervadura normal (con r de viga, del lado seguro), con la varilla corrida del volado, resiste M(x) = M⁻(1 − x/L_b) − 0.9·PP·s·x(L_b − x)/2 (sin CV) y el cortante V(x) = M⁻/L_n + (0.95 − 0.5·m_b)·1.15·w_u·s·(L_n/2 − x), con L_n = L_b − b_p y m_b del respaldo. '
            'Las demás varillas del volado son bastones que terminan ahí, más máx(d, 12d_b) y no menos que L_d. La nervadura ancha se revisa a cortante junto al apoyo con el V_cR del volado (ec. 5.5.3.2.1, p. 95; 6.3.7.3.10.4, p. 129).',
     'tPc': 'Armado por NERVADURA. Superior: 1 corrida + bastones a cada lado de los bordes continuos (y de los discontinuos si la columna lo pide). ESTADO junta flexión, cupo, ε_t, cortante, peralte, capa y anclaje.',
 }
@@ -242,7 +242,7 @@ NOTES_N = {
 
 def vals_nervadas():
     v = {}
-    v['ok'] = ('=IF([key]="","",IF(AND(OR([tipo]="PERIMETRAL",[tipo]="VOLADO"),ISNUMBER([ax]),ISNUMBER([ay]),[ax]>0,[ay]>0,OR(ISNUMBER([cvo]),ISNUMBER(MATCH([dest],{CV_NAMES},0)))),"SÍ","NO"))', 'calc', '@')
+    v['ok'] = ('=IF([key]="","",IF(AND(OR([tipo]="PERIMETRAL",[tipo]="VOLADO"),ISNUMBER([ax]),ISNUMBER([ay]),[ax]>0,[ay]>0,OR(ISNUMBER([cvo]),ISNUMBER(MATCH([dest],{CV_NAMES},0))),OR([tipo]<>"VOLADO",N([Lb])>0)),"SÍ","NO"))', 'calc', '@')
     common_geo(v, 'N')
     v['bwr'] = (G('IF(ISNUMBER([bwo]),[bwo],{bw})'), 'calc', '0.0')
     v['acr'] = (G('MAX(0,{s}-[bwr])'), 'calc', '0.0')
@@ -256,11 +256,11 @@ def vals_nervadas():
     # la malla va al centro de la capa ((t − 2Ø)/2 por cara) y la varilla superior pasa debajo; si r es mayor, manda r
     v['rtm'] = (G('MAX([rt],({t}-2*{fim})/2)'), 'calc', '0.00')
     vf = '([acr]*{ac}/{s}^2)*{hc}/100'
-    v['pp'] = (G('({h}/100-%s)*{gc}*1000+%s*{gpol}*1000+{inc_losa}+{inc_mort}' % (vf, vf)), 'calc', '0')
+    v['pp'] = (G('IF(MIN([ncx],[ncy])=0,{h}/100*{gc}*1000,({h}/100-%s)*{gc}*1000+%s*{gpol}*1000)+{inc_losa}+{inc_mort}' % (vf, vf)), 'calc', '0')
     fac = '*[wu]*[a1]^2*1E-4*{s}/100/1000'
     v['MPc'] = (G('IF([tipo]="PERIMETRAL",[cPC]%s,0)' % fac), 'calc', '0.000')
     # volado: el concreto que llena los casetones en el macizo de la punta (macizo de orilla + b_p/2) y en el de la raíz no lo cuenta el PP promedio
-    otp = 'IF([dirc]="X",[mx],[my])'
+    otp = 'IF([dirc]="X",[mx0],[my0])'
     Ax = '(([acr]*{ac}/{s}^2)*{hc}/100)'
     v['Mtip'] = (G('IF([tipo]<>"VOLADO",0,{FCcm}*{gc}*{s}/100*(%s*(%s+{bp}/2)/100*([ln1]-(%s+{bp}/2)/2)/100+%s*%s/100*%s/200))' % (Ax, otp, otp, Ax, otp, otp)), 'calc', '0.000')
     v['Vtip'] = (G('IF([tipo]<>"VOLADO",0,{FCcm}*{gc}*{s}/100*%s*(%s+{bp}/2)/100)' % (Ax, otp)), 'calc', '0.000')
@@ -268,10 +268,10 @@ def vals_nervadas():
     v['MPl'] = (G('IF([tipo]="PERIMETRAL",[cPL]%s,0)' % fac), 'calc', '0.000')
     v['MNl'] = (G('IF([tipo]="PERIMETRAL",MAX(MAX([cNIL],[cNDL])%s,N([Mvl])),0)' % fac), 'calc', '0.000')
     v['c342'] = (c342_formula(fac), 'calc', '@')
-    dq = {'Pc': '([h0]-[rb]-%s/2)' % db('{var_inf}'),
-          'Pl': '([h0]-[rb]-%s-%s/2)' % (db('{var_inf}'), db('{var_inf}')),
-          'Nc': red391('([h0]-[rtm]-2*{fim}-%s/2)' % db('{var_sup}')),
-          'Nl': red391('([h0]-[rtm]-2*{fim}-%s-%s/2)' % (db('{var_sup}'), db('{var_sup}')))}
+    dq = {'Pc': '([h0]-[rb]-%s/2)' % db('MAX(4,{var_inf})'),
+          'Pl': '([h0]-[rb]-%s-%s/2)' % (db('MAX(4,{var_inf})'), db('MAX(4,{var_inf})')),
+          'Nc': red391('([h0]-[rtm]-2*{fim}-%s/2)' % db('MAX(4,{var_sup})')),
+          'Nl': red391('([h0]-[rtm]-2*{fim}-%s-%s/2)' % (db('MAX(4,{var_sup})'), db('MAX(4,{var_sup})')))}
     dact = {'Pc': '[h0]-[rb]-%s/2' % db('[vPc]'),
             'Pl': '[h0]-[rb]-%s-%s/2' % (db('[vPc]'), db('[vPl]')),
             'Nc': red391('([h0]-[rtm]-2*{fim}-%s/2)' % db('[vNc]')),
@@ -282,7 +282,7 @@ def vals_nervadas():
         # nervaduras ‖ corto con b_w del renglón (b_w propio); nervaduras ‖ largo con la b_w de DATOS (como D10 de Casa Rocha)
         bwb = '[bwr]' if blk[1] == 'c' else '{bw}'
         b = ('[bwc]' if blk[1] == 'c' else '[bwcl]') if neg else '[bf%s]' % blk[1]
-        pref = '{var_sup}' if neg else '{var_inf}'
+        pref = 'MAX(4,{var_sup})' if neg else 'MAX(4,{var_inf})'
         av = '(%s-2*%s)' % (bwb, '[rt]' if neg else '[rb]')
         bmin = 'IF([tipo]="VOLADO",MIN([bfc],2*[bwr]),[bwr])' if blk == 'Nc' else bwb
         dqr = '[dq%s]' % blk
@@ -307,19 +307,20 @@ def vals_nervadas():
     xper = 'IF([VcR]<=0,[ln1],[ln1]/2-[VcR]/MAX([Vu],1E-9)*([ln1]/2-[dNc]))'
     xvol = '([ln1]-(([VcR]-[Vtip])*1E5/{s}-{FCcm}*N([pbor]))*100/[wu])'
     # a lo largo del claro corto los casetones miden a_c y los separan nervaduras ‖ largo de b_w de DATOS
-    ncs = 'INT(([a1]*100-{bp}+{bw})/{s})'
-    oril = 'IF(%s>0,([a1]*100-{bp}-(%s*{ac}+(%s-1)*{bw}))/2,[a1]*100/2)' % (ncs, ncs, ncs)
+    # macizo de orilla del claro corto (el menor de los dos bordes; ya incluye la dala de borde de D9)
+    oril = 'IF([dirc]="X",MIN([mx0],[mx1]),MIN([my0],[my1]))'
     v['nh'] = (G('IF([Vu]<=[VcR],0,CEILING(MAX(0,IF([tipo]="VOLADO",%s,%s)-%s)/{s},1))' % (xvol, xper, oril)), 'calc', '0')
     v['cort'] = (G('IF([Vu]<=[VcR],"CUMPLE",IF([nh]<=0,"CUMPLE (basta el macizo de orilla)",IF([nh]*{s}*IF([tipo]="VOLADO",1,2)>=[a1]*100-{bp},"NO CUMPLE: no alcanza ni macizando todo","MACIZAR "&[nh]&" hilera(s)")))'), 'key', '@')
-    v['yb'] = (G('({s}*{t}^2/2+[bwr]*{hc}*({t}+{hc}/2))/({s}*{t}+[bwr]*{hc})'), 'calc', '0.00')
-    v['IT'] = (G('{s}*{t}^3/12+{s}*{t}*([yb]-{t}/2)^2+[bwr]*{hc}^3/12+[bwr]*{hc}*({t}+{hc}/2-[yb])^2'), 'calc', '#,##0')
+    bwq = 'MIN({bw},[bwr])'
+    v['yb'] = (G('({s}*{t}^2/2+%s*{hc}*({t}+{hc}/2))/({s}*{t}+%s*{hc})' % (bwq, bwq)), 'calc', '0.00')
+    v['IT'] = (G('{s}*{t}^3/12+{s}*{t}*([yb]-{t}/2)^2+%s*{hc}^3/12+%s*{hc}*({t}+{hc}/2-[yb])^2' % (bwq, bwq)), 'calc', '#,##0')
     v['heq'] = (G('(12*[IT]/{s})^(1/3)'), 'calc', '0.00')
     v['afm'] = (G('IF([tipo]="PERIMETRAL",IF(ISNUMBER([afo]),[afo],{afm_def}),0)'), 'calc', '0.00')
     beta = '([ln2]/MAX([ln1],1))'; k_ = '(0.8+{fy}/14000)'
     hd = 'MAX(9,[ln2]*%s/(36+9*%s))' % (k_, beta)
     hb = 'MAX(13,[ln2]*%s/(36+5*%s*([afm]-0.2)))' % (k_, beta)
     ha = 'MAX(13,[ln2]/IF([nd]>0,30,33))'
-    v['hmin'] = (G('IF([tipo]="PERIMETRAL",IF([afm]>2,%s,IF([afm]>0.2,%s,%s))*IF(AND([afm]>0.2,[nd]>0,{borde_viga}="NO"),1.1,1),[a1]*100/8)' % (hd, hb, ha)), 'calc', '0.0')
+    v['hmin'] = (G('IF([tipo]="PERIMETRAL",IF([afm]>2,%s,IF([afm]>0.2,%s,%s))*IF(AND([afm]>0.2,[nd]>0,{borde_viga}="NO"),1.1,1),MAX(25,[a1]*100/8*(0.4+{fy}/7000)))' % (hd, hb, ha)), 'calc', '0.0')
     v['peral'] = (G('IF(IF([tipo]="VOLADO",{h},[heq])>=[hmin],"CUMPLE",IF([tipo]="VOLADO","NO CUMPLE","CALCULAR FLECHA"))'), 'key', '@')
     v['tdia'] = (G('IF({t}>=IF(IF([tipo]="VOLADO",[a1],[a2])>=6,6,5),"CUMPLE","CAPA ≥ 6 cm")'), 'calc', '@')
     xc, dc_ = xpi('ln1', 'cPC', 'cNIC', 'cNDC', 'MNc', fac)
@@ -330,8 +331,8 @@ def vals_nervadas():
         return 'IF(OR(%s<%s,AND(%s>=2,(%s-2*%s-%s*%s)/MAX(%s-1,1)<2*%s)),%s,%s)' % (r_, d_, n, bw_, r_, n, d_, n, d_, ldo(var), ld(var))
     # el M⁻ del volado baja dentro del tablero de respaldo con su PP (sección normal de DATOS), no con el del volado
     x0, Lb = volado_x0('(0.9*{PP}*{s}/100/1000)')
-    # si con 0.9·PP el M⁻ no se anula dentro del respaldo, la corrida llega a su apoyo lejano (y ahí se ancla con gancho)
-    v['Lbc'] = (G('IF([tipo]="VOLADO",MIN(CEILING(%s*100,5),CEILING(MAX(%s+MAX([dNc],12*%s,%s*100/16),%s),5)),IF(%s<0,CEILING([ln1],5),CEILING(MAX(%s+MAX([dNc],12*%s,[ln1]/16),%s),5)))'
+    # si con 0.9·PP el M⁻ no se anula dentro del respaldo, la corrida llega a su apoyo lejano y ahí se ancla con gancho, con su recubrimiento
+    v['Lbc'] = (G('IF([tipo]="VOLADO",MIN(FLOOR(%s*100-{rec_np},5),CEILING(MAX(%s+MAX([dNc],12*%s,%s*100/16),%s),5)),IF(%s<0,CEILING([ln1],5),CEILING(MAX(%s+MAX([dNc],12*%s,[ln1]/16),%s),5)))'
                   % (Lb, x0, db('[vNc]'), Lb, ldsel('[vNc]', '[nNc]', '[rt]'), dc_, xc, db('[vNc]'), ldsel('[vNc]', '[nNc]', '[rt]'))), 'key', '0')
     v['Lbl'] = (G('IF([tipo]="VOLADO",0,IF(%s<0,CEILING([ln2],5),CEILING(MAX(%s+MAX([dNl],12*%s,[ln2]/16),%s),5)))'
                   % (dl_, xl, db('[vNl]'), ldsel('[vNl]', '[nNl]', '[rt]', '{bw}'))), 'key', '0')
@@ -348,32 +349,40 @@ def vals_nervadas():
                   % (wok, gok, wok, ldh(vi), ldh(vs), gok)), 'calc', '@')
     # casetón a_c (DATOS) a lo largo del claro corto y s − b_w (del renglón) a lo largo del largo: la retícula s no cambia
     acx = 'IF([dirc]="X",{ac},[acr])'; acy = 'IF([dirc]="Y",{ac},[acr])'
-    v['ncx'] = (G('MAX(0,INT(([ax]*100-{bp}+{s}-%s)/{s}))' % acx), 'calc', '0')
-    v['ncy'] = (G('MAX(0,INT(([ay]*100-{bp}+{s}-%s)/{s}))' % acy), 'calc', '0')
-    v['mx'] = (G('IF([ncx]>0,([ax]*100-{bp}-([ncx]*%s+([ncx]-1)*({s}-%s)))/2,[ax]*100/2)' % (acx, acx)), 'calc', '0.0')
-    v['my'] = (G('IF([ncy]>0,([ay]*100-{bp}-([ncy]*%s+([ncy]-1)*({s}-%s)))/2,[ay]*100/2)' % (acy, acy)), 'calc', '0.0')
+    # D9: en cada borde discontinuo de un perimetral la dala de borde ocupa b_borde desde la cara exterior del apoyo, b_borde − b_p más que en los demás
+    ded = lambda b_: 'IF(AND([tipo]="PERIMETRAL",[%s]="DISCONTINUO"),MAX(0,{b_borde}-{bp}),0)' % b_
+    for dX_, a_, s0_, s1_, ac_ in (('x', 'ax', 'bL', 'bR', acx), ('y', 'ay', 'bI', 'bS', acy)):
+        v['nc' + dX_] = (G('MAX(0,INT(([%s]*100-{bp}-%s-%s+{s}-%s)/{s}))' % (a_, ded(s0_), ded(s1_), ac_)), 'calc', '0')
+        left = '([%s]*100-{bp}-%s-%s-([nc%s]*%s+([nc%s]-1)*({s}-%s)))' % (a_, ded(s0_), ded(s1_), dX_, ac_, dX_, ac_)
+        v['m%s0' % dX_] = (G('IF([nc%s]>0,%s+%s/2,[%s]*100/2)' % (dX_, ded(s0_), left, a_)), 'calc', '0.0')
+        v['m%s1' % dX_] = (G('IF([nc%s]>0,%s+%s/2,[%s]*100/2)' % (dX_, ded(s1_), left, a_)), 'calc', '0.0')
     # respaldo de un volado con b_w propio (D10 de Casa Rocha): hasta dónde siguen sus nervaduras anchas dentro del tablero de respaldo
     wide = 'AND([tipo]="VOLADO",[bwr]>{bw})'
     dbv = db('[vNc]')
     # el respaldo puede no cumplir 6.7.8.1.4 (claro corto < 6·a_c): del lado seguro, su nervadura lleva r de viga
     v['rn1'] = (G('IF(NOT(%s),0,IF(%s<={bw}-2*{rec_np},1,0))' % (wide, dbv)), 'calc', '0')
-    v['rd'] = (G('IF(NOT(%s),0,%s)' % (wide, red391('({h}-MAX({rec_np},({t}-2*{fim})/2)-2*{fim}-%s/2)' % dbv))), 'calc', '0.00')
+    v['rd'] = (G('IF(NOT(%s),0,%s)' % (wide, red391('({h}-MAX({rec_np},({t}-2*{fim})/2)-2*{fim}-%s-%s/2)' % (db('MAX(4,{var_sup})'), dbv)))), 'calc', '0.00')
     As1 = '([rn1]*%s)' % ab('[vNc]'); c1 = '(%s*{fy}/({fpc}*[bwcl])/{beta1})' % As1
     v['rM1'] = (G('IF(OR(NOT(%s),[rn1]<1),0,IF(0.003*([rd]-%s)/%s<0.005,0,{FRf}*%s*{fy}*([rd]-%s*{fy}/({fpc}*[bwcl])/2)/1E5))' % (wide, c1, c1, As1, As1)), 'calc', '0.000')
     v['rV1'] = (G('IF(OR(NOT(%s),[rn1]<1),0,{FRv}*2*MIN(1,SQRT(2/(1+0.04*[rd])))*(%s/([bwcl]*[rd]))^(1/3)*SQRT({fc})*[bwcl]*[rd]/1000)' % (wide, As1)), 'calc', '0.000')
     Lbm = 'IF(ISNUMBER([Lb]),[Lb],[a1])'
-    wD = '(0.9*{PP}*{s}/100/1000)'; kV = '([wu]*{s}/100/1000)'
+    wD = '(0.9*{PP}*{s}/100/1000)'
+    Lb2v = 'IF(N([Lb2])>0,[Lb2],[a2])'
+    mb = '(MIN(%s,%s)/MAX(%s,%s))' % (Lbm, Lb2v, Lbm, Lb2v)
+    Lnb = '(%s*100-{bp})' % Lbm
+    kV = '((0.95-0.5*%s)*{Vinc}*[wu]*{s}/100/1000)' % mb
+    dVb = '([MNc]/(%s/100))' % Lnb
     A_ = '(%s/2)' % wD; B_ = '(%s*%s/2+[MNc]/%s)' % (wD, Lbm, Lbm); C_ = '([MNc]-[rM1])'
     v['rxM'] = (G('IF(NOT(%s),0,IF(%s<=0,0,IF([rM1]<=0,%s,IF(%s^2-4*%s*%s<0,%s,MIN(%s,(%s-SQRT(%s^2-4*%s*%s))/(2*%s))))))' % (wide, C_, Lbm, B_, A_, C_, Lbm, Lbm, B_, B_, A_, C_, A_)), 'calc', '0.000')
-    v['rxV'] = (G('IF(NOT(%s),0,MIN(%s,MAX(0,%s/2+[MNc]/%s/%s-[rV1]/%s)))' % (wide, Lbm, Lbm, Lbm, kV, kV)), 'calc', '0.000')
-    v['rVw'] = (G('IF(NOT(%s),0,[MNc]/%s+%s*MAX(0,%s/2-[dNc]/100))' % (wide, Lbm, kV, Lbm)), 'calc', '0.000')
+    v['rxV'] = (G('IF(NOT(%s),0,IF([rV1]<=%s,%s,MIN(%s,MAX(0,%s/200-([rV1]-%s)/%s))))' % (wide, dVb, Lbm, Lbm, Lnb, dVb, kV)), 'calc', '0.000')
+    v['rVw'] = (G('IF(NOT(%s),0,%s+%s*MAX(0,%s/200-[dNc]/100))' % (wide, dVb, kV, Lnb)), 'calc', '0.000')
     v['rxr'] = (G('IF(NOT(%s),0,CEILING(100*MIN(%s,MAX(IF([rxM]>0,[rxM]+IF([nNc]>=2,MAX([rd],12*%s)/100,0),0),[rxV],IF([nNc]>=2,%s/100,0))),5))' % (wide, Lbm, dbv, ld('[vNc]'))), 'calc', '0')
     v['rnh'] = (G('IF(NOT(%s),0,IF([rxr]<=0,0,CEILING([rxr]/{s},1)))' % wide), 'key', '0')
     v['rest'] = (G('IF([tipo]<>"VOLADO","—",IF([bwr]<={bw},"— (mismo b_w que el respaldo)",IF([rVw]>[VcR],"NO CUMPLE: cortante de la nervadura ancha junto al apoyo ("&TEXT([rVw],"0.00")&" > "&TEXT([VcR],"0.00")&" t)",'
                    'IF([rxr]>=100*%s,"CUMPLE — todas las nervaduras del respaldo ‖ al volado con b_w = "&[bwr]&" cm","CUMPLE — "&[rnh]&" hilera(s) del respaldo con nervaduras de b_w = "&[bwr]&" cm (casetón "&[acr]&" cm), hasta "&TEXT([rxr]/100,"0.00")&" m del paño"))))' % Lbm), 'key', '@')
     v['tPc'] = (G('IF([nPc]=0,"NO ALCANZA",[nPc]&" No. "&[vPc]&IF([nPc]>1," corridas"," corrida"))'), 'key', '@')
-    v['tNc'] = (G('IF([nNc]=0,"NO ALCANZA",IF(AND([tipo]="VOLADO",[bwr]>{bw},[nNc]>=2),"1 No. "&[vNc]&" corrida de la orilla al respaldo ("&IF([Lbc]>=100*IF(ISNUMBER([Lb]),[Lb],[a1]),"hasta su apoyo lejano, con gancho","entra "&TEXT([Lbc]/100,"0.00")&" m desde el paño")&") + "&([nNc]-1)&" bastón No. "&[vNc]&" hasta "&TEXT([rxr]/100,"0.00")&" m del paño (fin de la nervadura ancha)",'
-                  'IF([tipo]="VOLADO",[nNc]&" No. "&[vNc]&" de la orilla al respaldo ("&IF([Lbc]>=100*IF(ISNUMBER([Lb]),[Lb],[a1]),"hasta su apoyo lejano, con gancho","entran "&TEXT([Lbc]/100,"0.00")&" m desde el paño")&")",'
+    v['tNc'] = (G('IF([nNc]=0,"NO ALCANZA",IF(AND([tipo]="VOLADO",[bwr]>{bw},[nNc]>=2),"1 No. "&[vNc]&" corrida de la orilla al respaldo ("&IF([Lbc]>=FLOOR(100*IF(ISNUMBER([Lb]),[Lb],[a1])-{rec_np},5),"hasta su apoyo lejano, con gancho","entra "&TEXT([Lbc]/100,"0.00")&" m desde el paño")&") + "&([nNc]-1)&" bastón No. "&[vNc]&" hasta "&TEXT([rxr]/100,"0.00")&" m del paño (fin de la nervadura ancha)",'
+                  'IF([tipo]="VOLADO",[nNc]&" No. "&[vNc]&" de la orilla al respaldo ("&IF([Lbc]>=FLOOR(100*IF(ISNUMBER([Lb]),[Lb],[a1])-{rec_np},5),"hasta su apoyo lejano, con gancho","entran "&TEXT([Lbc]/100,"0.00")&" m desde el paño")&")",'
                   '"1 No. "&[vNc]&" corrida"&IF([nNc]>1," + "&([nNc]-1)&" bastón No. "&[vNc]&" L = "&TEXT([Lbc]/100,"0.00")&" m desde el paño",""))))'), 'key', '@')
     v['tPl'] = (G('IF([nPl]=0,"NO ALCANZA",[nPl]&" No. "&[vPl]&IF([nPl]>1," corridas"," corrida"))'), 'key', '@')
     v['tNl'] = (G('IF([nNl]=0,"NO ALCANZA",IF([tipo]="VOLADO","1 No. "&[vNl]&" corrida (repartición)","1 No. "&[vNl]&" corrida"&IF([nNl]>1," + "&([nNl]-1)&" bastón No. "&[vNl]&" L = "&TEXT([Lbl]/100,"0.00")&" m desde el paño","")))'), 'key', '@')
@@ -383,20 +392,26 @@ def vals_nervadas():
     sfx = ('IF(LEFT([c342],5)="FUERA"," · fuera de 3.4.2.1 c)","")&IF(LEFT([anc],2)="NO"," · REVISAR anclaje en borde discontinuo","")'
            '&IF([rnh]>0," · respaldo: "&[rnh]&" hilera(s) de b_w "&[bwr]&" cm","")')
     rsp = 'LEFT([rest],2)="NO"'
-    v['estado'] = ('=IF([key]="","",IF([ok]<>"SÍ","FALTAN DATOS: tipo, a_x, a_y y destino",IF([col]="NO MONOLÍTICO (caso II)","FUERA DE ALCANCE: caso II no transcrito",'
+    v['estado'] = ('=IF([key]="","",IF([ok]<>"SÍ","FALTAN DATOS: tipo, a_x, a_y, destino y, en volados, L_b",IF([col]="NO MONOLÍTICO (caso II)","FUERA DE ALCANCE: caso II no transcrito",'
                    'IF(AND([tipo]="VOLADO",[emp]="?"),"REVISAR: el volado lleva UN solo borde CONTINUO (el empotrado)",'
-                   'IF(AND(%s<=1,NOT(%s),NOT(%s),NOT(%s),[peral]="CUMPLE",[tdia]="CUMPLE",LEFT([cort],2)<>"NO"),IF(LEFT([cort],6)="CUMPLE","CUMPLE","CUMPLE — "&[cort])&%s,'
-                   'IF(AND(%s<=1,NOT(%s),NOT(%s),NOT(%s),[peral]="CALCULAR FLECHA",LEFT([cort],2)<>"NO"),"REVISAR: calcular flecha (h_eq < h mín.)"&%s,'
-                   '"NO CUMPLE: "&IF(%s>1,"flexión ","")&IF(%s,"no caben ","")&IF(%s,"ε_t < 0.005 ","")&IF(LEFT([cort],2)="NO","cortante ","")&IF([peral]="NO CUMPLE","peralte ","")&IF([tdia]<>"CUMPLE","capa < 6 cm ","")&IF(%s,"respaldo del volado","")))))))'
+                   'IF(MIN([ncx],[ncy])=0,"REVISAR: no cabe un casetón (tablero macizo): diséñalo en MACIZAS",'
+                   'IF(AND(%s<=1,NOT(%s),NOT(%s),NOT(%s),[peral]="CUMPLE",[tdia]="CUMPLE",LEFT([cort],2)<>"NO",LEFT({capa},6)="CUMPLE"),IF(LEFT([cort],6)="CUMPLE","CUMPLE","CUMPLE — "&[cort])&%s,'
+                   'IF(AND(%s<=1,NOT(%s),NOT(%s),NOT(%s),[peral]="CALCULAR FLECHA",LEFT([cort],2)<>"NO",LEFT({capa},6)="CUMPLE"),"REVISAR: calcular flecha (h_eq < h mín.)"&%s,'
+                   '"NO CUMPLE: "&IF(%s>1,"flexión ","")&IF(%s,"no caben ","")&IF(%s,"ε_t < 0.005 ","")&IF(LEFT([cort],2)="NO","cortante ","")&IF([peral]="NO CUMPLE","peralte ","")&IF([tdia]<>"CUMPLE","capa < 6 cm ","")&IF(LEFT({capa},6)<>"CUMPLE","capa o malla (DATOS sección 7) ","")&IF(%s,"respaldo del volado",""))))))))'
                    % (fus, nn, etl, rsp, sfx, fus, nn, etl, rsp, sfx, fus, nn, etl, rsp), 'key', '@')
+    # con 0.9·PP y sin CV, si el M⁻ del volado no se anula en el respaldo su apoyo lejano levanta
+    Rf = '(%s*%s/2-[MNc]/%s)' % (wD, Lbm, Lbm)
+    upl = ('&IF(AND([tipo]="VOLADO",%s<0),"Con 0.9·PP y sin carga viva el apoyo lejano del respaldo levanta (R = "&TEXT(-%s,"0.00")&" t por nervadura): '
+           'ancla ahí la corrida con gancho y revisa ese apoyo a tensión. ","")' % (Rf, Rf))
     v['nota'] = (G('IF(LEFT([key],7)="EJEMPLO","EJEMPLO de la hoja de Casa Rocha: bórralo o sobrescríbelo. ","")'
                    '&IF(AND([tipo]="PERIMETRAL",MIN([ncx],[ncy])=0),"No cabe un casetón en el claro corto: es un tablero macizo, diséñalo en MACIZAS. ","")'
                    '&IF(AND([g678]="NO",[tipo]="PERIMETRAL"),"No cumple 6.7.8.1.4 (a_c = "&MAX({ac},[acr])&" cm > claro corto/6 = "&TEXT([a1]*100/6,"0")&" cm): se diseña como losa apoyada en vigas (6.7.8.1.9): r de viga = "&{rec_np}&" cm y V_cR sin ×1.1. Para que cuente como encasetonada: casetón de "&TEXT(FLOOR(MIN(80,[a1]*100/6),1),"0")&" cm o menor. ","")'
-                   '&IF([tipo]="VOLADO","Volado de "&TEXT([a1],"0.00")&" m empotrado en el borde "&LOWER([emp])&IF(N([pbor])>0,", con "&TEXT([pbor],"0.0")&" kg/m en la orilla","")&". Lecho inferior con r_ext. Si la orilla carga pretil u otro elemento frágil, calcula la flecha (13.4). El acero superior entra al respaldo de "&TEXT(IF(ISNUMBER([Lb]),[Lb],[a1]),"0.00")&" m"&IF(ISNUMBER([Lb]),""," (L_b no capturado: se tomó igual al volado)")&" hasta pasar M = 0 con 0.9·PP sin carga viva; si ahí no se anula, llega al apoyo lejano y se ancla con gancho (NTC-Criterios 3.4.1 c y 5.1.2.2). "&IF([bwr]>{bw},"Respaldo: "&[rest]&". ",""),"")'
+                   '&IF([tipo]="VOLADO","Volado de "&TEXT([a1],"0.00")&" m empotrado en el borde "&LOWER([emp])&IF(N([pbor])>0,", con "&TEXT([pbor],"0.0")&" kg/m en la orilla","")&". Lecho inferior con r_ext. Si la orilla carga pretil u otro elemento frágil, calcula la flecha (13.4). El acero superior entra al respaldo de "&TEXT(IF(ISNUMBER([Lb]),[Lb],[a1]),"0.00")&" m"&" hasta pasar M = 0 con 0.9·PP sin carga viva; si ahí no se anula, llega al apoyo lejano y se ancla con gancho (NTC-Criterios 3.4.1 c y 5.1.2.2). "&IF([bwr]>{bw},"Respaldo: "&[rest]&". ",""),"")'
+                   + upl +
                    '&IF(LEFT([c342],5)="FUERA","El M⁻ del vecino difiere más de 50 % (3.4.2.1 c): distribuye el desequilibrio (3.4.3.1) o confirma con un modelo; se arma con el mayor. ","")'
                    '&IF(OR([bdc]="SÍ",[bdl]="SÍ"),"El M⁻ del borde discontinuo pide bastón también ahí (con gancho). ","")'
                    '&IF(LEFT([anc],2)="NO","Anclaje: "&[anc]&" (6.7.8.1.7). ","")'
-                   '&IF(OR([cNDC]>0,[cNDL]>0),"Esquinas exteriores sobre muro: refuerzo de esquina arriba y abajo en L_largo/5 (6.7.7.3.1). ","")'), 'calc', '@')
+                   '&IF(AND([tipo]="PERIMETRAL",[ndc]>=1,[nd]-[ndc]>=1),"Esquinas exteriores sobre muro: refuerzo de esquina arriba y abajo en L_largo/5 (6.7.7.3.1). ","")'), 'calc', '@')
     return v
 
 
@@ -478,7 +493,7 @@ NOTES_M = {
 
 def vals_macizas():
     v = {}
-    v['ok'] = ('=IF([key]="","",IF(AND(OR([tipo]="PERIMETRAL",[tipo]="VOLADO"),ISNUMBER([ax]),ISNUMBER([ay]),[ax]>0,[ay]>0,OR(ISNUMBER([cvo]),ISNUMBER(MATCH([dest],{CV_NAMES},0)))),"SÍ","NO"))', 'calc', '@')
+    v['ok'] = ('=IF([key]="","",IF(AND(OR([tipo]="PERIMETRAL",[tipo]="VOLADO"),ISNUMBER([ax]),ISNUMBER([ay]),[ax]>0,[ay]>0,OR(ISNUMBER([cvo]),ISNUMBER(MATCH([dest],{CV_NAMES},0))),OR([tipo]<>"VOLADO",N([Lb])>0)),"SÍ","NO"))', 'calc', '@')
     v['hr'] = (G('IF(ISNUMBER([ho]),[ho],{h_mac})'), 'calc', '0.0')
     common_geo(v, 'M')
     v['rb'] = (G('IF([tipo]="VOLADO",{rec_ext},{rec})'), 'calc', '0.0')
@@ -521,7 +536,7 @@ def vals_macizas():
     hd = 'MAX(9,[ln2]*%s/(36+9*%s))' % (k_, beta)
     hb = 'MAX(13,[ln2]*%s/(36+5*%s*([afm]-0.2)))' % (k_, beta)
     ha = 'MAX(13,[ln2]/IF([nd]>0,30,33))'
-    v['hmin'] = (G('IF([tipo]="PERIMETRAL",IF([afm]>2,%s,IF([afm]>0.2,%s,%s))*IF(AND([afm]>0.2,[nd]>0,{borde_viga}="NO"),1.1,1),[a1]*100/{kvol})' % (hd, hb, ha)), 'calc', '0.0')
+    v['hmin'] = (G('IF([tipo]="PERIMETRAL",IF([afm]>2,%s,IF([afm]>0.2,%s,%s))*IF(AND([afm]>0.2,[nd]>0,{borde_viga}="NO"),1.1,1),[a1]*100/{kvol}*(0.4+{fy}/7000))' % (hd, hb, ha)), 'calc', '0.0')
     v['peral'] = (G('IF([hr]>=[hmin]-0.001,"CUMPLE",IF([tipo]="VOLADO","NO CUMPLE","CALCULAR FLECHA"))'), 'key', '@')
     xc, dc_ = xpi('ln1', 'cPC', 'cNIC', 'cNDC', 'MNc', fac)
     xl, dl_ = xpi('ln2', 'cPL', 'cNIL', 'cNDL', 'MNl', fac)
@@ -531,7 +546,7 @@ def vals_macizas():
         return 'IF(OR([rt]<%s,[sp%s]-%s<2*%s),%s,%s)' % (d_, blk, d_, d_, ldo('[v%s]' % blk), ld('[v%s]' % blk))
     x0, Lb = volado_x0('(0.9*[hr]/100*{gc})')
     # si con 0.9·PP el M⁻ no se anula dentro del respaldo, el acero llega a su apoyo lejano (y ahí se ancla con gancho)
-    v['Lbc'] = (G('IF([tipo]="VOLADO",MIN(CEILING(%s*100,5),CEILING(MAX(%s+MAX([dNc],12*%s,%s*100/16),%s),5)),IF(%s<0,CEILING([ln1],5),CEILING(MAX(%s+MAX([dNc],12*%s,[ln1]/16),%s),5)))'
+    v['Lbc'] = (G('IF([tipo]="VOLADO",MIN(FLOOR(%s*100-{rec_np},5),CEILING(MAX(%s+MAX([dNc],12*%s,%s*100/16),%s),5)),IF(%s<0,CEILING([ln1],5),CEILING(MAX(%s+MAX([dNc],12*%s,[ln1]/16),%s),5)))'
                   % (Lb, x0, db('[vNc]'), Lb, ldsel('Nc'), dc_, xc, db('[vNc]'), ldsel('Nc'))), 'key', '0')
     v['Lbl'] = (G('IF([tipo]="VOLADO",0,IF(%s<0,CEILING([ln2],5),CEILING(MAX(%s+MAX([dNl],12*%s,[ln2]/16),%s),5)))' % (dl_, xl, db('[vNl]'), ldsel('Nl'))), 'key', '0')
     v['bdc'] = (G('IF(AND([tipo]="PERIMETRAL",[nd]-[ndc]>0,[cNDC]>0),"SÍ","NO")'), 'calc', '@')
@@ -546,25 +561,29 @@ def vals_macizas():
                   % (wok, gok, wok, ldh(vs), gok)), 'calc', '@')
     at = lambda b_: '"No. "&[v%s]&" @ "&[sp%s]&" cm"' % (b_, b_)
     v['tPc'] = (G('IF([sp%s]=0,"NO ALCANZA",%s&IF([tipo]="VOLADO"," (temperatura)",""))' % ('Pc', at('Pc'))), 'key', '@')
-    v['tNc'] = (G('IF([spNc]=0,"NO ALCANZA",IF([tipo]="VOLADO",%s&" de la orilla al respaldo ("&IF([Lbc]>=100*IF(ISNUMBER([Lb]),[Lb],[a1]),"hasta su apoyo lejano, con gancho","entran "&TEXT([Lbc]/100,"0.00")&" m desde el paño")&")","Bastones "&%s&", L = "&TEXT([Lbc]/100,"0.00")&" m desde el paño"))' % (at('Nc'), at('Nc'))), 'key', '@')
+    v['tNc'] = (G('IF([spNc]=0,"NO ALCANZA",IF([tipo]="VOLADO",%s&" de la orilla al respaldo ("&IF([Lbc]>=FLOOR(100*IF(ISNUMBER([Lb]),[Lb],[a1])-{rec_np},5),"hasta su apoyo lejano, con gancho","entran "&TEXT([Lbc]/100,"0.00")&" m desde el paño")&")","Bastones "&%s&", L = "&TEXT([Lbc]/100,"0.00")&" m desde el paño"))' % (at('Nc'), at('Nc'))), 'key', '@')
     v['tPl'] = (G('IF([spPl]=0,"NO ALCANZA",%s&IF([tipo]="VOLADO"," (repartición)",""))' % at('Pl')), 'key', '@')
     v['tNl'] = (G('IF([spNl]=0,"NO ALCANZA",IF([tipo]="VOLADO",%s&" (repartición)","Bastones "&%s&", L = "&TEXT([Lbl]/100,"0.00")&" m desde el paño"))' % (at('Nl'), at('Nl'))), 'key', '@')
     fus = 'MAX([FUPc],[FUNc],[FUPl],[FUNl])'
     sepf = 'OR(' + ','.join('[sp%s]<{smin}' % b_ for b_ in BLKS) + ')'
     etl = 'OR(' + ','.join('AND(ISNUMBER([e%s]),[e%s]<0.005)' % (b_, b_) for b_ in BLKS) + ')'
     sfx = 'IF(LEFT([c342],5)="FUERA"," · fuera de 3.4.2.1 c)","")&IF(LEFT([anc],2)="NO"," · REVISAR anclaje en borde discontinuo","")'
-    v['estado'] = ('=IF([key]="","",IF([ok]<>"SÍ","FALTAN DATOS: tipo, a_x, a_y y destino",IF([col]="NO MONOLÍTICO (caso II)","FUERA DE ALCANCE: caso II no transcrito",'
+    v['estado'] = ('=IF([key]="","",IF([ok]<>"SÍ","FALTAN DATOS: tipo, a_x, a_y, destino y, en volados, L_b",IF([col]="NO MONOLÍTICO (caso II)","FUERA DE ALCANCE: caso II no transcrito",'
                    'IF(AND([tipo]="VOLADO",[emp]="?"),"REVISAR: el volado lleva UN solo borde CONTINUO (el empotrado)",'
                    'IF(AND(%s<=1,NOT(%s),NOT(%s),[cort]="CUMPLE",[peral]="CUMPLE"),"CUMPLE"&%s,'
                    'IF(AND(%s<=1,NOT(%s),NOT(%s),[cort]="CUMPLE",[peral]="CALCULAR FLECHA"),"REVISAR: calcular flecha (h < h mín.)"&%s,'
                    '"NO CUMPLE: "&IF(%s>1,"flexión ","")&IF(%s,"separación < mínima ","")&IF(%s,"ε_t < 0.005 ","")&IF([cort]<>"CUMPLE","cortante ","")&IF([peral]="NO CUMPLE","peralte","")))))))'
                    % (fus, sepf, etl, sfx, fus, sepf, etl, sfx, fus, sepf, etl), 'key', '@')
+    Lbm = 'IF(ISNUMBER([Lb]),[Lb],[a1])'; Rf = '(0.9*[hr]/100*{gc}*%s/2-[MNc]/%s)' % (Lbm, Lbm)
+    upl = ('&IF(AND([tipo]="VOLADO",%s<0),"Con 0.9·PP y sin carga viva el apoyo lejano del respaldo levanta (R = "&TEXT(-%s,"0.00")&" t/m): '
+           'ancla ahí el acero con gancho y revisa ese apoyo a tensión. ","")' % (Rf, Rf))
     v['nota'] = (G('IF(LEFT([key],7)="EJEMPLO","EJEMPLO de tablero típico: bórralo o sobrescríbelo. ","")'
-                   '&IF([tipo]="VOLADO","Volado de "&TEXT([a1],"0.00")&" m empotrado en el borde "&LOWER([emp])&IF(N([pbor])>0,", con "&TEXT([pbor],"0.0")&" kg/m en la orilla","")&". Lecho inferior con r_ext. Si la orilla carga pretil u otro elemento frágil, calcula la flecha (13.4). El acero superior entra al respaldo de "&TEXT(IF(ISNUMBER([Lb]),[Lb],[a1]),"0.00")&" m"&IF(ISNUMBER([Lb]),""," (L_b no capturado: se tomó igual al volado)")&" hasta pasar M = 0 con 0.9·PP sin carga viva; si ahí no se anula, llega al apoyo lejano y se ancla con gancho. ","")'
+                   '&IF([tipo]="VOLADO","Volado de "&TEXT([a1],"0.00")&" m empotrado en el borde "&LOWER([emp])&IF(N([pbor])>0,", con "&TEXT([pbor],"0.0")&" kg/m en la orilla","")&". Lecho inferior con r_ext. Si la orilla carga pretil u otro elemento frágil, calcula la flecha (13.4). El acero superior entra al respaldo de "&TEXT(IF(ISNUMBER([Lb]),[Lb],[a1]),"0.00")&" m"&" hasta pasar M = 0 con 0.9·PP sin carga viva; si ahí no se anula, llega al apoyo lejano y se ancla con gancho. ","")'
+                   + upl +
                    '&IF(LEFT([c342],5)="FUERA","El M⁻ del vecino difiere más de 50 % (3.4.2.1 c): distribuye el desequilibrio (3.4.3.1) o confirma con un modelo; se arma con el mayor. ","")'
                    '&IF(OR([bdc]="SÍ",[bdl]="SÍ"),"Bastones también en los bordes discontinuos (M⁻ de tabla), con gancho. ","")'
                    '&IF(LEFT([anc],2)="NO","Anclaje: "&[anc]&" (6.7.7.4.1.1). ","")'
-                   '&IF(OR([cNDC]>0,[cNDL]>0),"Esquinas exteriores sobre muro: refuerzo de esquina arriba y abajo en L_largo/5 (6.7.7.3.1). ","")'), 'calc', '@')
+                   '&IF(AND([tipo]="PERIMETRAL",[ndc]>=1,[nd]-[ndc]>=1),"Esquinas exteriores sobre muro: refuerzo de esquina arriba y abajo en L_largo/5 (6.7.7.3.1). ","")'), 'calc', '@')
     return v
 
 

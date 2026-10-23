@@ -386,12 +386,12 @@ def build_croquis_datos(wb, wsK):
         else:
             ch.legend = None
         ch.display_blanks = 'gap'
-        # plot area con la misma escala en X y en Y (que los cuadrados salgan cuadrados)
+        # plot area con la misma escala en X y en Y (que los cuadrados salgan cuadrados); va en ch.layout: openpyxl pisa plot_area.layout con él
         if hfrac:
             wfrac = (xmax - xmin) / (ymax - ymin) * hfrac * h_cm / w_cm
             if wfrac > 0.94:
                 hfrac = hfrac * 0.94 / wfrac; wfrac = 0.94
-            ch.plot_area.layout = Layout(manualLayout=ManualLayout(layoutTarget='inner', xMode='edge', yMode='edge', x=(1 - wfrac) / 2, y=ytop, w=wfrac, h=hfrac))
+            ch.layout = Layout(manualLayout=ManualLayout(layoutTarget='inner', xMode='edge', yMode='edge', x=(1 - wfrac) / 2, y=ytop, w=wfrac, h=hfrac))
         return ch
 
     def add(ch, ref_cols, title_ref=None, title_txt=None, color='1F4E79', w=1.5, dash='solid', marker=None, msize=7, lbl_idx=None, sheet=ws, noleg=False):
@@ -449,7 +449,7 @@ def build_croquis_datos(wb, wsK):
         off = max(0.0, 17.3 - px * 2.54 / 96)
         return OneCellAnchor(_from=AnchorMarker(col=4, colOff=cm_to_EMU(off), row=row - 1, rowOff=0),
                              ext=XDRPositiveSize2D(cm_to_EMU(ch.width), cm_to_EMU(ch.height)))
-    ch = mk_chart('PLANTA DEL TABLERO — CASETONES Y NERVADURAS', 0, 100, 0, 100, 17, 23, hfrac=0.56, ytop=0.08)
+    ch = mk_chart('PLANTA DEL TABLERO — CASETONES Y NERVADURAS', 0, 100, 0, 100, 17, 23, hfrac=0.56, ytop=0.10)
     add(ch, series_cols['Tablero'], labels['Tablero'], color='1F3864', w=2.2)
     add(ch, series_cols['Paño de principales'], labels['Paño de principales'], color='C00000', w=1.0, dash='dash')
     add(ch, series_cols['Casetones (aristas ‖ Y)'], labels['Casetones (aristas ‖ Y)'], color='A6A6A6', w=0.75)
@@ -469,7 +469,7 @@ def build_croquis_datos(wb, wsK):
     add(ch, series_cols['Cota a_y'], labels['Cota a_y'], color='7030A0', w=0.75, lbl_idx=3)
     add(ch, series_cols['Cota s'], labels['Cota s'], color='7030A0', w=0.75, lbl_idx=3)
     wsK.add_chart(ch, 'B%d' % r2)
-    ch = mk_chart('CORTE DE LA NERVADURA SECUNDARIA (cm)', -42, 42, -10, 34, 15, 13.5, hfrac=0.42, ytop=0.12)
+    ch = mk_chart('CORTE DE LA NERVADURA SECUNDARIA (cm)', -42, 42, -10, 34, 15, 13.5, hfrac=0.42, ytop=0.18)
     add(ch, series_cols['Concreto'], labels['Concreto'], color='1F3864', w=2.2)
     add(ch, series_cols['Casetón izq.'], labels['Casetón izq.'], color='A6A6A6', w=1.0, dash='dash')
     add(ch, series_cols['Casetón der.'], labels['Casetón der.'], noleg=True, color='A6A6A6', w=1.0, dash='dash')
@@ -491,7 +491,7 @@ def build_croquis_datos(wb, wsK):
     add(ch, series_cols['Bastón der. (alzado)'], labels['Bastón der. (alzado)'], noleg=True, color='C00000', w=2.5)
     add(ch, series_cols['Cota a1'], labels['Cota a1'], color='7030A0', w=0.75, lbl_idx=3)
     wsK.add_chart(ch, beside_tab(ch, r2 + 30))
-    ch = mk_chart('CORTE DE LA NERVADURA PRINCIPAL ESCOGIDA (cm)', -42, 42, -10, 62, 15, 15, hfrac=0.5, ytop=0.1)
+    ch = mk_chart('CORTE DE LA NERVADURA PRINCIPAL ESCOGIDA (cm)', -42, 42, -10, 62, 15, 15, hfrac=0.5, ytop=0.15)
     add(ch, series_cols['Sección principal'], labels['Sección principal'], color='1F3864', w=2.2)
     add(ch, series_cols['Casetón izq. (principal)'], labels['Casetón izq. (principal)'], color='A6A6A6', w=1.0, dash='dash')
     add(ch, series_cols['Casetón der. (principal)'], labels['Casetón der. (principal)'], noleg=True, color='A6A6A6', w=1.0, dash='dash')

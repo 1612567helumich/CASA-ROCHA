@@ -37,6 +37,11 @@ son tableros de Casa Rocha; dan lo mismo que esa hoja salvo lo que depende de lo
 (distribución de 3.4.3.1), el peso volumétrico (2.40 aquí, 2.44 en el modelo de Casa Rocha) y la
 media nervadura de borde que en Casa Rocha queda fuera del eje del volado.
 
+En los volados el claro del tablero de respaldo L_b es obligatorio: de él depende hasta dónde entra
+el acero superior (si con 0.9·PP el M⁻ no se anula, llega al apoyo lejano, se ancla con gancho y la
+nota avisa que ese apoyo levanta). En los bordes discontinuos de los perimetrales el acomodo de
+casetones deja lugar a la dala de borde de DATOS.
+
 Un volado nervado con b_w propio mayor que el de DATOS revisa además su tablero de respaldo
 (D10 de Casa Rocha): cuántas hileras siguen con las nervaduras anchas hasta donde la nervadura normal,
 con la varilla corrida del volado, resiste el M⁻ y el cortante.

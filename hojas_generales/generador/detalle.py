@@ -89,7 +89,7 @@ def sheet_detalle(wb):
     S.section('4. CASO Y COEFICIENTES (TABLA 3.4.2.1, CASO I)')
     S.header()
     S.row('Bordes discontinuos (total / cortos)', '=' + VV('nd', '0') + '&" / "&' + VV('ndc', '0'), '—', '«Corto» = borde de largo a1.', '—', 'calc', '@')
-    S.row('Caso de la tabla', '=' + VV('caso'), '—', 'Automático por bordes discontinuos, o el forzado en el renglón. Sólo caso I (colado monolítico).', NTCC + ' Tabla 3.4.2.1, p. 65', 'key', '@')
+    S.row('Caso de la tabla', '=IF(' + VV('tipo') + '="VOLADO","— (volado: momento estático; la tabla y sus coeficientes no se usan)",' + VV('caso') + ')', '—', 'Automático por bordes discontinuos, o el forzado en el renglón. Sólo caso I (colado monolítico).', NTCC + ' Tabla 3.4.2.1, p. 65', 'key', '@')
     for mm, lbl in (('NIC', 'M⁻ en bordes continuos, claro corto'), ('NDC', 'M⁻ en bordes discontinuos, claro corto'), ('PC', 'M⁺, claro corto'),
                     ('NIL', 'M⁻ en bordes continuos, claro largo'), ('NDL', 'M⁻ en bordes discontinuos, claro largo'), ('PL', 'M⁺, claro largo')):
         S.row('Coeficiente ' + lbl, '=' + VV('c' + mm, '0'), '×10⁻⁴', 'Interpolado linealmente en m.', 'TABLAS sección A', 'calc', '0')
@@ -99,7 +99,7 @@ def sheet_detalle(wb):
     mu = U('t·m/nerv.', 't·m/m')
     how = 'M = coef·10⁻⁴·w_u·a1² por metro; en nervada × s (por nervadura).'
     S.row('M⁺ claro corto', '=' + VV('MPc', '0'), mu, how, NTCC + ' 3.4.2.1, p. 64', 'key', '0.000')
-    S.row('M⁻ claro corto', '=' + VV('MNc', '0'), mu, 'El mayor de borde continuo, discontinuo y el del vecino capturado. Volado: w_u·L_n²/2 + 1.3·P·L_n (× s en nervada).', NTCC + ' 3.4.2.1, p. 64 · ' + NTCCA + ' 3.4.1 a), p. 7', 'key', '0.000')
+    S.row('M⁻ claro corto', '=' + VV('MNc', '0'), mu, 'El mayor de borde continuo, discontinuo y el del vecino capturado. Volado: w_u·L_n²/2 + 1.3·P·L_n (× s en nervada, más el peso de los macizos de punta y raíz que el PP promedio no cuenta).', NTCC + ' 3.4.2.1, p. 64 · ' + NTCCA + ' 3.4.1 a), p. 7', 'key', '0.000')
     S.row('M⁺ claro largo', '=' + VV('MPl', '0'), mu, how, NTCC + ' 3.4.2.1, p. 64', 'key', '0.000')
     S.row('M⁻ claro largo', '=' + VV('MNl', '0'), mu, 'Igual que el corto.', NTCC + ' 3.4.2.1, p. 64', 'key', '0.000')
     S.row('3.4.2.1 c) — M⁻ del vecino', '=' + VV('c342'), '—', 'Si capturaste el M⁻ del vecino en el borde común: no debe diferir más de 50 % del menor; si difiere, distribuye (3.4.3.1) o confirma con un modelo.', NTCC + ' 3.4.2.1 c) y 3.4.3.1, p. 64', 'key', '@')
@@ -123,7 +123,7 @@ def sheet_detalle(wb):
     S.gap()
     S.section('%d. CORTANTE' % sec); sec += 1
     S.header()
-    S.row('V_u a d del paño', '=' + VV('Vu', '0'), U('t/nerv.', 't/m'), '(L_n/2 − d)(0.95 − 0.5m)·w_u, ×1.15 con bordes continuos y discontinuos (× s en nervada). Volado: w_u(L_n − d) + 1.3P.', NTCC + ' 3.4.1.1, p. 64 · 6.7.4.3.2, p. 172', 'key', '0.000')
+    S.row('V_u a d del paño', '=' + VV('Vu', '0'), U('t/nerv.', 't/m'), '(L_n/2 − d)(0.95 − 0.5m)·w_u, ×1.15 con bordes continuos y discontinuos (× s en nervada). Volado: w_u(L_n − d) + 1.3P (+ el peso del macizo de la punta en nervada).', NTCC + ' 3.4.1.1, p. 64 · 6.7.4.3.2, p. 172', 'key', '0.000')
     S.row('V_cR — cortante que toma el concreto', '=' + VV('VcR', '0'), U('t/nerv.', 't/m'), "F_R·2·λs·p^⅓·√f'c·b·d (b = b_w en nervada, × 1.1 si cumple 6.7.8; b = 100 en maciza).", NTCC + ' ec. 5.5.3.2.1, p. 95 · 6.7.8.1.5, p. 187 · 5.5.3.8.1, p. 97', 'key', '0.000')
     S.row('Estado (y hileras a macizar en nervada)', '=' + VV('cort'), '—', 'Nervada: lo que no alcanza se cubre quitando hileras de casetones junto al apoyo. Maciza: sube h.', NTCC + ' 5.5.3.8.1, p. 97', 'key', '@')
     S.gap()
@@ -213,14 +213,17 @@ def sheet_croquis(wb):
     kp('…', '=N(' + VV('rt', '0') + ')', 'k_rt', '0.0', 'cm')
     kp('b_w / a_c usados', '=IF({k_N}=1,' + VV('bwr', '0') + ',{bw})', 'k_bw', '0.0', 'cm')
     kp('…', '={s}-{k_bw}', 'k_ac', '0.0', 'cm')
+    kp('Casetón a lo largo del claro corto (a_c de DATOS; lo separan nervaduras ‖ largo de b_w de DATOS)', '={ac}', 'k_acu', '0.0', 'cm')
+    kp('Casetón ‖ X / ‖ Y', '=IF({k_dir}="X",{k_acu},{k_ac})', 'k_acx', '0.0', 'cm')
+    kp('…', '=IF({k_dir}="Y",{k_acu},{k_ac})', 'k_acy', '0.0', 'cm')
     kp('s, h_c, t, Ø malla, separación libre', '={s}', 'k_s', '0.0', 'cm')
     kp('…', '={hc}', 'k_hc', '0.0', 'cm')
     kp('…', '={t}', 'k_tc', '0.0', 'cm')
     kp('…', '={fim}', 'k_fim', '0.000', 'cm')
     kp('r superior hasta la malla (nervada: malla al centro de la capa)', '=IF({k_N}=1,MAX({k_rt},({t}-2*{fim})/2),{k_rt})', 'k_rtm', '0.00', 'cm')
     kp('…', '={slib}', 'k_slib', '0.00', 'cm')
-    for nm in ('ncx', 'ncy', 'mx', 'my', 'nh'):
-        kp(nm, '=IF({k_N}=1,N(' + VV(nm, '0') + '),0)', 'k_' + nm, '0.0')
+    for nm, src in (('ncx', 'ncx'), ('ncy', 'ncy'), ('mx', 'mx0'), ('my', 'my0'), ('nh', 'nh')):
+        kp(src, '=IF({k_N}=1,N(' + VV(src, '0') + '),0)', 'k_' + nm, '0.0')
     for blk in BLKS:
         kp('Varilla ' + blk, '=IF({k_ok}=1,' + VV('v' + blk, '4') + ',4)', 'k_v' + blk, 'General')
         kp('d_b ' + blk, '=' + db('{k_v%s}' % blk), 'k_db' + blk, '0.00', 'cm')
@@ -237,7 +240,8 @@ def sheet_croquis(wb):
     kp('Carga en la orilla', '=N(' + VV('pbor', '0') + ')', 'k_P', '0.0', 'kg/m')
     kp('Estado', '=' + VV('estado'), 'k_est', '@')
     # --- planta: marco y escala
-    kp('Respaldo que se dibuja', '=IF({k_vol}=1,MIN({k_Lb},{k_bp}/2+{k_Lbc}+40),0)', 'k_BK', '0.0', 'cm')
+    kp('¿El acero del volado llega al apoyo lejano del respaldo?', '=IF(AND({k_vol}=1,{k_Lbc}>=FLOOR({k_Lb}-{rec_np},5)-0.01),1,0)', 'k_far', '0')
+    kp('Respaldo que se dibuja', '=IF({k_vol}=1,IF({k_far}=1,{k_Lb}+{k_bp}/2,MIN({k_Lb},{k_bp}/2+{k_Lbc}+40)),0)', 'k_BK', '0.0', 'cm')
     kp('x mín / x máx / y mín / y máx', '=IF({k_es}=1,-{k_BK},0)', 'k_xmin', '0.0', 'cm')
     kp('…', '={k_ax}+IF({k_es}=2,{k_BK},0)', 'k_xmax', '0.0', 'cm')
     kp('…', '=IF({k_es}=3,-{k_BK},0)', 'k_ymin', '0.0', 'cm')
@@ -255,9 +259,9 @@ def sheet_croquis(wb):
     kp('…', '=IF({k_dir}="X",{k_nYe},{k_nXe})', 'k_nCe', '0')
     kp('…', '=IF({k_dir}="X",{k_ys},{k_xs})', 'k_vs', '0.0', 'cm')
     kp('Nervadura representativa ‖ corto (posición en v)', '=IF({k_nCe}>=2,{k_vs}+{k_ac}+{k_bw}/2+INT(({k_nCe}-2)/2)*{k_s},{k_C}/2)', 'k_vrib', '0.0', 'cm')
-    kp('Nervadura representativa ‖ largo (posición en u)', '=IF({k_nAe}>=2,{k_us}+{k_ac}+{k_bw}/2+INT(({k_nAe}-2)/2)*{k_s},{k_A}/2)', 'k_urib', '0.0', 'cm')
+    kp('Nervadura representativa ‖ largo (posición en u)', '=IF({k_nAe}>=2,{k_us}+{k_acu}+({k_s}-{k_acu})/2+INT(({k_nAe}-2)/2)*{k_s},{k_A}/2)', 'k_urib', '0.0', 'cm')
     # --- alzado
-    kp('Respaldo en el alzado', '=IF({k_vol}=1,MIN({k_Lb},{k_bp}/2+{k_Lbc}+40),0)', 'k_BKa', '0.0', 'cm')
+    kp('Respaldo en el alzado', '={k_BK}', 'k_BKa', '0.0', 'cm')
     kp('Alzado: x izq. / x der.', '=IF({k_vol}=1,-{k_BKa},-{k_bp}/2-30)', 'k_xL', '0.0', 'cm')
     kp('…', '=IF({k_vol}=1,{k_A}+12,{k_A}+{k_bp}/2+30)', 'k_xR', '0.0', 'cm')
     kp('Alzado: escala horizontal', '=92/MAX({k_xR}-{k_xL},1)', 'k_sa', '0.0000', 'u/cm')
@@ -297,7 +301,7 @@ def build_croquis_datos(wb, wsK):
         r = lab_r[0]; ws.cell(r, 1, formula.format(**N) if formula.startswith('=') else formula)
         labels[name] = '%s!$A$%d' % (CD, r); lab_r[0] += 1
 
-    def dyn(name, xf, yf, npt, lab=None, hide='1'):
+    def dyn(name, xf, yf, npt, lab=None, hide='1', lab_hide=None):
         cx, cy = CL(col[0]), CL(col[0] + 1); col[0] += 2
         ws['%s4' % cx] = name + ' x'; ws['%s4' % cy] = name + ' y'
         for i in range(npt):
@@ -307,8 +311,9 @@ def build_croquis_datos(wb, wsK):
         series[name] = (cx, cy, Y0, Y0 + npt - 1)
         if lab:
             # la leyenda de un trazo que no se dibuja dice «—» (no los datos de otro tablero o de otro tipo de losa)
-            if hide != '1' and lab.startswith('='):
-                lab = '=IF(AND(%s),%s,"—")' % (hide, lab[1:])
+            lh = lab_hide or hide
+            if lh != '1' and lab.startswith('='):
+                lab = '=IF(AND(%s),%s,"—")' % (lh, lab[1:])
             label(name, lab)
 
     ch_ = lambda k, n, vals: 'CHOOSE(MIN(MAX(%s,1),%d),%s)' % (k, n, ','.join(vals))
@@ -374,7 +379,12 @@ def build_croquis_datos(wb, wsK):
         bx0 = 'CHOOSE(MAX({k_es},1),-{k_BK},{k_ax},0,0)'; bx1 = 'CHOOSE(MAX({k_es},1),0,{k_ax}+{k_BK},{k_ax},{k_ax})'
         by0 = 'CHOOSE(MAX({k_es},1),0,0,-{k_BK},{k_ay})'; by1 = 'CHOOSE(MAX({k_es},1),{k_ay},{k_ay},0,{k_ay}+{k_BK})'
         fx, fy = rect(bx0, by0, bx1, by1)
-        dyn(g + 'respaldo', fx, fy, 5, '="Tablero de respaldo (L_b = "&TEXT({k_Lb}/100,"0.00")&" m; se dibuja una parte)"', H + ',{k_vol}=1')
+        dyn(g + 'respaldo', fx, fy, 5, '="Tablero de respaldo (L_b = "&TEXT({k_Lb}/100,"0.00")&" m"&IF({k_far}=1,")","; se dibuja una parte)")', H + ',{k_vol}=1')
+        Lf0 = '({k_Lb}-{k_bp}/2)'; Lf1 = '({k_Lb}+{k_bp}/2)'
+        fx0 = 'CHOOSE(MAX({k_es},1),-%s,{k_ax}+%s,0,0)' % (Lf1, Lf0); fx1 = 'CHOOSE(MAX({k_es},1),-%s,{k_ax}+%s,{k_ax},{k_ax})' % (Lf0, Lf1)
+        fy0 = 'CHOOSE(MAX({k_es},1),0,0,-%s,{k_ay}+%s)' % (Lf1, Lf0); fy1 = 'CHOOSE(MAX({k_es},1),{k_ay},{k_ay},-%s,{k_ay}+%s)' % (Lf0, Lf1)
+        fx, fy = rect(fx0, fy0, fx1, fy1)
+        dyn(g + 'far', fx, fy, 5, '="Apoyo lejano del respaldo: ahí llega el acero superior del volado y se ancla con gancho"', H + ',{k_far}=1')
         tipU = 'IF({k_sup0}=1,{k_A},0)'
         fpx = lambda k: uv(tipU, '%s*{k_C}' % ch_(k, 3, ['0', '0.5', '1']))[0]
         fpy = lambda k: uv(tipU, '%s*{k_C}' % ch_(k, 3, ['0', '0.5', '1']))[1]
@@ -391,27 +401,28 @@ def build_croquis_datos(wb, wsK):
     fx, fy = rect(zx0, zy0, zx1, zy1)
     dyn('Nresp', fx, fy, 5, '="Respaldo: "&{k_rnh}&" hilera(s) con nervaduras de "&{k_bw}&" cm (hasta "&TEXT({k_rxr}/100,"0.00")&" m del paño)"', HN + ',{k_vol}=1,{k_rxr}>0')
     # aristas de casetones ‖ Y (verticales, en x) y ‖ X (horizontales, en y)
-    for nm, nE, s0, nO, o0, isx in (('Ncas_v', '{k_nXe}', '{k_xs}', '{k_nYe}', '{k_ys}', True), ('Ncas_h', '{k_nYe}', '{k_ys}', '{k_nXe}', '{k_xs}', False)):
-        pos = lambda j, s0=s0: '(%s+INT(%s/2)*{k_s}+MOD(%s,2)*{k_ac})' % (s0, j, j)
-        a0 = o0; a1 = '(%s+%s*{k_s}-{k_bw})' % (o0, nO)
+    for nm, nE, s0, nO, o0, isx, acE, acO in (('Ncas_v', '{k_nXe}', '{k_xs}', '{k_nYe}', '{k_ys}', True, '{k_acx}', '{k_acy}'),
+                                              ('Ncas_h', '{k_nYe}', '{k_ys}', '{k_nXe}', '{k_xs}', False, '{k_acy}', '{k_acx}')):
+        pos = lambda j, s0=s0, acE=acE: '(%s+INT(%s/2)*{k_s}+MOD(%s,2)*%s)' % (s0, j, j, acE)
+        a0 = o0; a1 = '(%s+(%s-1)*{k_s}+%s)' % (o0, nO, acO)
         uf, vf = serp('2*%s' % nE, pos, a0, a1)
         if isx:
             dyn(nm, lambda k, uf=uf, vf=vf: PX(vf(k)), lambda k, uf=uf: PY(uf(k)), 100,
-                '="Casetones "&TEXT({k_ac},"0")&"×"&TEXT({k_ac},"0")&"×"&{hc}&" cm: "&{k_nXe}&" × "&{k_nYe}&" (nervaduras de "&{k_bw}&" cm entre ellos, a cada "&{s}&" cm)"', HN + ',%s>0,%s>0' % (nE, nO))
+                '="Casetones "&TEXT({k_acx},"0")&" × "&TEXT({k_acy},"0")&" × "&{hc}&" cm (‖ X × ‖ Y): "&{k_nXe}&" × "&{k_nYe}&IF({k_bw}<>{bw},", nervaduras ‖ corto de "&{k_bw}&" cm y ‖ largo de "&{bw}&" cm",", nervaduras de "&{bw}&" cm a cada "&{s}&" cm")', HN + ',%s>0,%s>0' % (nE, nO))
         else:
             dyn(nm, lambda k, uf=uf: PX(uf(k)), lambda k, uf=uf, vf=vf: PY(vf(k)), 100, None, HN + ',%s>0,%s>0' % (nE, nO))
     # ejes de nervaduras interiores
-    for nm, nE, s0, isx in (('Neje_v', '{k_nXe}', '{k_xs}', True), ('Neje_h', '{k_nYe}', '{k_ys}', False)):
-        pos = lambda j, s0=s0: '(%s+{k_ac}+{k_bw}/2+%s*{k_s})' % (s0, j)
+    for nm, nE, s0, isx, acE in (('Neje_v', '{k_nXe}', '{k_xs}', True, '{k_acx}'), ('Neje_h', '{k_nYe}', '{k_ys}', False, '{k_acy}')):
+        pos = lambda j, s0=s0, acE=acE: '(%s+%s+({k_s}-%s)/2+%s*{k_s})' % (s0, acE, acE, j)
         a0 = '{k_bp}/2'; a1 = ('({k_ay}-{k_bp}/2)' if isx else '({k_ax}-{k_bp}/2)')
         uf, vf = serp('%s-1' % nE, pos, a0, a1)
         if isx:
             dyn(nm, lambda k, uf=uf, vf=vf: PX(vf(k)), lambda k, uf=uf: PY(uf(k)), 60,
-                '="Ejes de nervaduras (‖ X y ‖ Y)"', HN + ',%s>=2' % nE)
+                '="Ejes de nervaduras (‖ X y ‖ Y)"', HN + ',%s>=2' % nE, lab_hide=HN + ',OR({k_nXe}>=2,{k_nYe}>=2)')
         else:
             dyn(nm, lambda k, uf=uf: PX(uf(k)), lambda k, uf=uf, vf=vf: PY(vf(k)), 60, None, HN + ',%s>=2' % nE)
     # zona maciza por cortante (junto a los apoyos del claro corto)
-    uL = '{k_us}'; uR = '({k_us}+{k_nAe}*{k_s}-{k_bw})'; v0 = '{k_bp}/2'; v1 = '({k_C}-{k_bp}/2)'; p0 = '{k_bp}/2'; p1 = '({k_A}-{k_bp}/2)'
+    uL = '{k_us}'; uR = '({k_us}+({k_nAe}-1)*{k_s}+{k_acu})'; v0 = '{k_bp}/2'; v1 = '({k_C}-{k_bp}/2)'; p0 = '{k_bp}/2'; p1 = '({k_A}-{k_bp}/2)'
     showL = 'IF({k_vol}=1,{k_sup0},1)'; showR = 'IF({k_vol}=1,1-{k_sup0},1)'
     ul = [p0, uL, uL, p0, p0]; vl = [v0, v0, v1, v1, v0]
     ur = [uR, uR, p1, p1, uR]; vr = [v0, v1, v1, v0, v0]
@@ -425,40 +436,51 @@ def build_croquis_datos(wb, wsK):
     supc0 = 'IF({k_vol}=1,IF({k_sup0}=1,-({k_bp}/2+{k_Lbc}),2),2)'; supc1 = 'IF({k_vol}=1,IF({k_sup0}=1,{k_A}-2,{k_A}+{k_bp}/2+{k_Lbc}),{k_A}-2)'
     for nm, a0, a1, o, lab, hide in (
             ('Nc_inf', '2', '{k_A}-2', off['inf'], '="‖ corto · inferior: "&{k_tPc}', HN),
-            ('Nc_sup', supc0, supc1, off['sup'], '=IF({k_vol}=1,"‖ corto · superior del volado: "&{k_qNc}&" No. "&{k_vNc}&" (corrida y bastones: ver ARMADO en NERVADAS)","‖ corto · superior: "&{k_tNc})', HN),
+            ('Nc_sup', supc0, supc1, off['sup'], '=IF({k_vol}=1,"‖ corto · superior del volado: "&{k_qNc}&" No. "&{k_vNc}&" (corrida y bastones: ver ARMADO en NERVADAS)","‖ corto · superior: "&{k_tNc})', HN + ',{k_qNc}>0'),
             ('Nc_b0', 'IF({k_c0}=1,-12,2)', '{k_bp}/2+{k_Lbc}', off['bas'], '="‖ corto · bastones (borde continuo"&IF({k_bdc}=1," y discontinuo","")&"), L = "&TEXT({k_Lbc}/100,"0.00")&" m desde el paño"', HN + ',{k_vol}=0,{k_qNc}>=2,OR({k_c0}=1,{k_bdc}=1)'),
             ('Nc_b1', '{k_A}-{k_bp}/2-{k_Lbc}', 'IF({k_c1}=1,{k_A}+12,{k_A}-2)', off['bas'], None, HN + ',{k_vol}=0,{k_qNc}>=2,OR({k_c1}=1,{k_bdc}=1)')):
-        dyn(nm, lambda k, a0=a0, a1=a1, o=o: uv(ch_(k, 2, [a0, a1]), '{k_vrib}', o)[0], lambda k, a0=a0, a1=a1, o=o: uv(ch_(k, 2, [a0, a1]), '{k_vrib}', o)[1], 2, lab, hide)
+        dyn(nm, lambda k, a0=a0, a1=a1, o=o: uv(ch_(k, 2, [a0, a1]), '{k_vrib}', o)[0], lambda k, a0=a0, a1=a1, o=o: uv(ch_(k, 2, [a0, a1]), '{k_vrib}', o)[1], 2, lab, hide,
+            lab_hide=(HN + ',{k_vol}=0,{k_qNc}>=2,OR({k_c0}=1,{k_c1}=1,{k_bdc}=1)') if nm == 'Nc_b0' else None)
+    # volado con nervaduras anchas (D10): la corrida sigue en el respaldo y el bastón termina donde termina la nervadura ancha
+    bv0 = 'IF({k_sup0}=1,{k_A}-2,2)'; bv1 = 'IF({k_sup0}=1,-({k_bp}/2+{k_rxr}),{k_A}+{k_bp}/2+{k_rxr})'
+    dyn('Nc_bv', lambda k: uv(ch_(k, 2, [bv0, bv1]), '{k_vrib}', off['bas'])[0], lambda k: uv(ch_(k, 2, [bv0, bv1]), '{k_vrib}', off['bas'])[1], 2,
+        '="‖ corto · bastón del volado: "&({k_qNc}-1)&" No. "&{k_vNc}&" hasta "&TEXT({k_rxr}/100,"0.00")&" m del paño (fin de la nervadura ancha)"', HN + ',{k_vol}=1,{k_rxr}>0,{k_qNc}>=2')
     for nm, a0, a1, o, lab, hide in (
             ('Nl_inf', '2', '{k_C}-2', off['inf'], '="‖ largo · inferior: "&{k_tPl}', HN),
             ('Nl_sup', '2', '{k_C}-2', off['sup'], '="‖ largo · superior: "&{k_tNl}', HN),
             ('Nl_b0', 'IF({k_v0c}=1,-12,2)', '{k_bp}/2+{k_Lbl}', off['bas'], '="‖ largo · bastones, L = "&TEXT({k_Lbl}/100,"0.00")&" m desde el paño"', HN + ',{k_vol}=0,{k_qNl}>=2,OR({k_v0c}=1,{k_bdl}=1)'),
             ('Nl_b1', '{k_C}-{k_bp}/2-{k_Lbl}', 'IF({k_v1c}=1,{k_C}+12,{k_C}-2)', off['bas'], None, HN + ',{k_vol}=0,{k_qNl}>=2,OR({k_v1c}=1,{k_bdl}=1)')):
-        dyn(nm, lambda k, a0=a0, a1=a1, o=o: uv_l('{k_urib}', ch_(k, 2, [a0, a1]), o)[0], lambda k, a0=a0, a1=a1, o=o: uv_l('{k_urib}', ch_(k, 2, [a0, a1]), o)[1], 2, lab, hide)
+        dyn(nm, lambda k, a0=a0, a1=a1, o=o: uv_l('{k_urib}', ch_(k, 2, [a0, a1]), o)[0], lambda k, a0=a0, a1=a1, o=o: uv_l('{k_urib}', ch_(k, 2, [a0, a1]), o)[1], 2, lab, hide,
+            lab_hide=(HN + ',{k_vol}=0,{k_qNl}>=2,OR({k_v0c}=1,{k_v1c}=1,{k_bdl}=1)') if nm == 'Nl_b0' else None)
     cota(PX('{k_xs}'), PX('{k_xs}+{k_s}'), True, '(%s+4)' % PY('{k_ymax}'), 'Ncota_s', '="s = "&{s}&" cm"', HN + ',{k_nXe}>=2')
     # ---- maciza: varillas a su separación real
     HM = '{k_M}=1'
-    nb = lambda L, sp: 'MIN(80,MAX(1,INT(((%s)-{k_bp})/MAX(%s,1))+1))' % (L, sp)
-    first = lambda L, sp: '({k_bp}/2+(((%s)-{k_bp})-(%s-1)*%s)/2)' % (L, nb(L, sp), sp)
+    kst = lambda L, sp: 'MAX(1,CEILING((INT(((%s)-{k_bp})/MAX(%s,1))+1)/80,1))' % (L, sp)
+    spd = lambda L, sp: '(%s*%s)' % (sp, kst(L, sp))
+    nb = lambda L, sp: 'MAX(1,INT(((%s)-{k_bp})/MAX(%s,1))+1)' % (L, spd(L, sp))
+    first = lambda L, sp: '({k_bp}/2+(((%s)-{k_bp})-(%s-1)*%s)/2)' % (L, nb(L, sp), spd(L, sp))
+    knote = lambda L, sp: '&IF(%s>1," (se dibuja 1 de cada "&%s&")","")' % (kst(L, sp), kst(L, sp))
     n1 = nb('{k_C}', '{k_qPc}'); f1 = first('{k_C}', '{k_qPc}')
-    uf, vf = serp5(n1, lambda j: '(%s+%s*{k_qPc})' % (f1, j), '2', '{k_A}-2', '0')
-    dyn('Mc_inf', lambda k, uf=uf, vf=vf: uv(uf(k), vf(k))[0], lambda k, uf=uf, vf=vf: uv(uf(k), vf(k))[1], 400, '="‖ corto · inferior: "&{k_tPc}', HM + ',{k_qPc}>0')
+    uf, vf = serp5(n1, lambda j: '(%s+%s*%s)' % (f1, j, spd('{k_C}', '{k_qPc}')), '2', '{k_A}-2', '0')
+    dyn('Mc_inf', lambda k, uf=uf, vf=vf: uv(uf(k), vf(k))[0], lambda k, uf=uf, vf=vf: uv(uf(k), vf(k))[1], 400, '="‖ corto · inferior: "&{k_tPc}' + knote('{k_C}', '{k_qPc}'), HM + ',{k_qPc}>0')
     n2 = nb('{k_A}', '{k_qPl}'); f2 = first('{k_A}', '{k_qPl}')
-    uf, vf = serp5(n2, lambda j: '(%s+%s*{k_qPl})' % (f2, j), '2', '{k_C}-2', '0')
-    dyn('Ml_inf', lambda k, uf=uf, vf=vf: uv(vf(k), uf(k))[0], lambda k, uf=uf, vf=vf: uv(vf(k), uf(k))[1], 400, '="‖ largo · inferior: "&{k_tPl}', HM + ',{k_qPl}>0')
+    uf, vf = serp5(n2, lambda j: '(%s+%s*%s)' % (f2, j, spd('{k_A}', '{k_qPl}')), '2', '{k_C}-2', '0')
+    dyn('Ml_inf', lambda k, uf=uf, vf=vf: uv(vf(k), uf(k))[0], lambda k, uf=uf, vf=vf: uv(vf(k), uf(k))[1], 400, '="‖ largo · inferior: "&{k_tPl}' + knote('{k_A}', '{k_qPl}'), HM + ',{k_qPl}>0')
     # bastones en los cuatro bordes (perimetral) y acero superior del volado
     nN = nb('{k_C}', '{k_qNc}'); fN = first('{k_C}', '{k_qNc}')
-    for nm, a0, a1, U0, cond, lab in (('Mc_b0', 'IF({k_c0}=1,-12,2)', '{k_bp}/2+{k_Lbc}', '0', 'OR({k_c0}=1,{k_bdc}=1)', '="‖ corto · bastones superiores: "&{k_tNc}'),
+    for nm, a0, a1, U0, cond, lab in (('Mc_b0', 'IF({k_c0}=1,-12,2)', '{k_bp}/2+{k_Lbc}', '0', 'OR({k_c0}=1,{k_bdc}=1)', '="‖ corto · bastones superiores: "&{k_tNc}' + knote('{k_C}', '{k_qNc}')),
                                       ('Mc_b1', '{k_A}-{k_bp}/2-{k_Lbc}', 'IF({k_c1}=1,{k_A}+12,{k_A}-2)', '{k_A}', 'OR({k_c1}=1,{k_bdc}=1)', None)):
-        uf, vf = serp5(nN, lambda j: '(%s+%s*{k_qNc})' % (fN, j), a0, a1, U0)
-        dyn(nm, lambda k, uf=uf, vf=vf: uv(uf(k), vf(k))[0], lambda k, uf=uf, vf=vf: uv(uf(k), vf(k))[1], 400, lab, HM + ',{k_vol}=0,{k_qNc}>0,' + cond)
+        uf, vf = serp5(nN, lambda j: '(%s+%s*%s)' % (fN, j, spd('{k_C}', '{k_qNc}')), a0, a1, U0)
+        dyn(nm, lambda k, uf=uf, vf=vf: uv(uf(k), vf(k), '0.8')[0], lambda k, uf=uf, vf=vf: uv(uf(k), vf(k), '0.8')[1], 400, lab, HM + ',{k_vol}=0,{k_qNc}>0,' + cond,
+            lab_hide=HM + ',{k_vol}=0,{k_qNc}>0,OR({k_c0}=1,{k_c1}=1,{k_bdc}=1)')
     nL = nb('{k_A}', '{k_qNl}'); fL = first('{k_A}', '{k_qNl}')
-    for nm, a0, a1, U0, cond, lab in (('Ml_b0', 'IF({k_v0c}=1,-12,2)', '{k_bp}/2+{k_Lbl}', '0', 'OR({k_v0c}=1,{k_bdl}=1)', '="‖ largo · bastones superiores: "&{k_tNl}'),
+    for nm, a0, a1, U0, cond, lab in (('Ml_b0', 'IF({k_v0c}=1,-12,2)', '{k_bp}/2+{k_Lbl}', '0', 'OR({k_v0c}=1,{k_bdl}=1)', '="‖ largo · bastones superiores: "&{k_tNl}' + knote('{k_A}', '{k_qNl}')),
                                       ('Ml_b1', '{k_C}-{k_bp}/2-{k_Lbl}', 'IF({k_v1c}=1,{k_C}+12,{k_C}-2)', '{k_C}', 'OR({k_v1c}=1,{k_bdl}=1)', None)):
-        uf, vf = serp5(nL, lambda j: '(%s+%s*{k_qNl})' % (fL, j), a0, a1, U0)
-        dyn(nm, lambda k, uf=uf, vf=vf: uv(vf(k), uf(k))[0], lambda k, uf=uf, vf=vf: uv(vf(k), uf(k))[1], 400, lab, HM + ',{k_vol}=0,{k_qNl}>0,' + cond)
-    uf, vf = serp5(nN, lambda j: '(%s+%s*{k_qNc})' % (fN, j), supc0, supc1, 'IF({k_sup0}=1,0,{k_A})')
-    dyn('Mvol_sup', lambda k, uf=uf, vf=vf: uv(uf(k), vf(k))[0], lambda k, uf=uf, vf=vf: uv(uf(k), vf(k))[1], 400, '="Superior del volado: "&{k_tNc}', HM + ',{k_vol}=1,{k_qNc}>0')
+        uf, vf = serp5(nL, lambda j: '(%s+%s*%s)' % (fL, j, spd('{k_A}', '{k_qNl}')), a0, a1, U0)
+        dyn(nm, lambda k, uf=uf, vf=vf: uv_l(vf(k), uf(k), '0.8')[0], lambda k, uf=uf, vf=vf: uv_l(vf(k), uf(k), '0.8')[1], 400, lab, HM + ',{k_vol}=0,{k_qNl}>0,' + cond,
+            lab_hide=HM + ',{k_vol}=0,{k_qNl}>0,OR({k_v0c}=1,{k_v1c}=1,{k_bdl}=1)')
+    uf, vf = serp5(nN, lambda j: '(%s+%s*%s)' % (fN, j, spd('{k_C}', '{k_qNc}')), supc0, supc1, 'IF({k_sup0}=1,0,{k_A})')
+    dyn('Mvol_sup', lambda k, uf=uf, vf=vf: uv(uf(k), vf(k), '0.8')[0], lambda k, uf=uf, vf=vf: uv(uf(k), vf(k), '0.8')[1], 400, '="Superior del volado: "&{k_tNc}' + knote('{k_C}', '{k_qNc}'), HM + ',{k_vol}=1,{k_qNc}>0')
 
     # ================================================= CORTE DE LA NERVADURA (cm reales, escala k_cs)
     CX = lambda x: '(50+(%s)*{k_cs})' % x
@@ -473,7 +495,7 @@ def build_croquis_datos(wb, wsK):
     fx, fy = rect('{k_bw}/2', '0', hs, '{k_hc}', CX, CY)
     dyn('Kcas2', fx, fy, 5, None, HN)
     ym = '({k_h}-{k_rtm}-{k_fim})'
-    dyn('Kmalla', lambda k: ch_(k, 2, [CX('-%s+1' % hs), CX('%s-1' % hs)]), lambda k: CY(ym), 2, '="Malla "&{malla_sel}&" al centro de la capa ("&TEXT({k_rtm},"0.0")&" cm a la cara superior)"', HN)
+    dyn('Kmalla', lambda k: ch_(k, 2, [CX('-%s+1' % hs), CX('%s-1' % hs)]), lambda k: CY(ym), 2, '="Malla "&{malla_sel}&IF({k_rtm}>({t}-2*{fim})/2+0.01," con "&TEXT({k_rtm},"0.0")&" cm a la cara superior (manda el recubrimiento)"," al centro de la capa ("&TEXT({k_rtm},"0.0")&" cm a la cara superior)")', HN)
     for top in (False, True):
         blk = 'Nc' if top else 'Pc'
         for i in (1, 2, 3):
@@ -501,7 +523,7 @@ def build_croquis_datos(wb, wsK):
                                   ('LNl', '{k_qNl}', '({k_h}-{k_rt}-{k_dbNc}-{k_dbNl}/2)', '="Superior ‖ largo: No. "&{k_vNl}&" @ "&{k_qNl}&" cm"', HM)):
         xi = lambda k, sp=sp: '(-(%s-1)*%s/2+(MIN(%s,%s)-1)*%s)' % (nmk(sp), sp, k, nmk(sp), sp)
         dyn(nm, lambda k, xi=xi: MX(xi(k)), lambda k, yy=yy: MY(yy), 12, lab, cond + ',%s>0' % sp)
-    dyn('LNc', lambda k: ch_(k, 2, [MX('-29'), MX('29')]), lambda k: MY(yNc), 2, '="Superior ‖ corto: No. "&{k_vNc}&" @ "&{k_qNc}&" cm (r = "&{k_rt}&" cm)"', HM)
+    dyn('LNc', lambda k: ch_(k, 2, [MX('-29'), MX('29')]), lambda k: MY(yNc), 2, '="Superior ‖ corto: No. "&{k_vNc}&" @ "&{k_qNc}&" cm (r = "&{k_rt}&" cm)"', HM + ',{k_qNc}>0')
     cota(MY('0'), MY('{k_h}'), False, MX('33'), 'Lc_h', '="h = "&{k_h}&" cm"', HM)
     cota(MY('0'), MY('{k_rb}'), False, MX('-33'), 'Lc_rb', '="r = "&{k_rb}&" cm"', HM, 0.8)
     cota(MY('{k_h}-{k_rt}'), MY('{k_h}'), False, MX('-33'), 'Lc_rt', '="r = "&{k_rt}&" cm"', HM, 0.8)
@@ -524,23 +546,31 @@ def build_croquis_datos(wb, wsK):
         SX = sL + ['IF({k_vol}=1,%s,%s)' % (sL[4], a) for a in sR]
         SY = sY + ['IF({k_vol}=1,30,%s)' % a for a in sY]
         dyn(g + 'Aapoyo', lambda k, SX=SX: ch_(k, 10, SX), lambda k, SY=SY: ch_(k, 10, SY), 10, '="Apoyos (b_p = "&{bp}&" cm)"', H)
+        dyn(g + 'Afar', lambda k: ch_(k, 5, [AX('-{k_Lb}-{k_bp}/2'), AX('-{k_Lb}+{k_bp}/2'), AX('-{k_Lb}+{k_bp}/2'), AX('-{k_Lb}-{k_bp}/2'), AX('-{k_Lb}-{k_bp}/2')]),
+            lambda k: ch_(k, 5, ['30', '30', '20', '20', '30']), 5, '="Apoyo lejano del respaldo"', H + ',{k_far}=1')
         # inferior corrida con gancho en bordes discontinuos
         dbP = '{k_dbPc}'; yb = '({k_rb}+%s/2)' % dbP
-        hk0 = 'IF(AND({k_vol}=0,{k_c0}=0),MIN(12*%s,{k_h}-{k_rb}-{k_rt}),0)' % dbP
-        hk1 = 'IF(AND({k_vol}=0,{k_c1}=0),MIN(12*%s,{k_h}-{k_rb}-{k_rt}),0)' % dbP
+        hkm = 'MIN(7*%s,{k_h}-{k_rb}-{k_rt}-{k_dbPc}-{k_dbNc})'
+        ext = lambda d_: 'MAX(4*%s,6.5)' % d_
+        hk0 = 'IF(AND({k_vol}=0,{k_c0}=0),%s,0)' % (hkm % dbP)
+        hk1 = 'IF(AND({k_vol}=0,{k_c1}=0),%s,0)' % (hkm % dbP)
+        e0 = 'IF(%s>0,%s,0)' % (hk0, ext(dbP)); e1 = 'IF(%s>0,%s,0)' % (hk1, ext(dbP))
         xi0 = '-{k_bp}/2+3'; xi1 = 'IF({k_vol}=1,{k_A}-3,{k_A}+{k_bp}/2-3)'
-        dyn(g + 'Ainf', lambda k: ch_(k, 4, [AX(xi0), AX(xi0), AX(xi1), AX(xi1)]), lambda k: ch_(k, 4, [AY('%s+%s' % (yb, hk0)), AY(yb), AY(yb), AY('%s+%s' % (yb, hk1))]), 4,
-            '="Inferior ‖ corto: "&{k_tPc}', H)
+        dyn(g + 'Ainf', lambda k: ch_(k, 6, [AX('%s+%s' % (xi0, e0)), AX(xi0), AX(xi0), AX(xi1), AX(xi1), AX('%s-%s' % (xi1, e1))]),
+            lambda k: ch_(k, 6, [AY('%s+%s' % (yb, hk0)), AY('%s+%s' % (yb, hk0)), AY(yb), AY(yb), AY('%s+%s' % (yb, hk1)), AY('%s+%s' % (yb, hk1))]), 6,
+            '="Inferior ‖ corto: "&{k_tPc}&IF(OR(%s>0,%s>0)," (gancho de 180° en el borde discontinuo)","")' % (hk0, hk1), H)
         dbN = '{k_dbNc}'
         yt = ('({k_h}-{k_rtm}-2*{k_fim}-%s/2)' if g == 'N' else '({k_h}-{k_rt}-%s/2)') % dbN
-        hkt = 'MIN(12*%s,{k_h}-{k_rb}-{k_rt})' % dbN
+        hkt = hkm % dbN
         # superior corrida (nervada) o principal del volado (nervada y maciza)
         xs0 = 'IF({k_vol}=1,-({k_bp}/2+{k_Lbc}),IF({k_c0}=1,-{k_bp}/2-30,-{k_bp}/2+3))'
         xs1 = 'IF({k_vol}=1,{k_A}-3,IF({k_c1}=1,{k_A}+{k_bp}/2+30,{k_A}+{k_bp}/2-3))'
-        hs0 = 'IF(AND({k_vol}=0,{k_c0}=0),%s,0)' % hkt
+        hs0 = 'IF(OR(AND({k_vol}=0,{k_c0}=0),{k_far}=1),%s,0)' % hkt
         hs1 = 'IF(OR({k_vol}=1,{k_c1}=0),%s,0)' % hkt
-        cond = H + (',1' if g == 'N' else ',{k_vol}=1')
-        dyn(g + 'Asup', lambda k: ch_(k, 4, [AX(xs0), AX(xs0), AX(xs1), AX(xs1)]), lambda k: ch_(k, 4, [AY('%s-%s' % (yt, hs0)), AY(yt), AY(yt), AY('%s-%s' % (yt, hs1))]), 4,
+        f0 = 'IF(%s>0,%s,0)' % (hs0, ext(dbN)); f1 = 'IF(%s>0,%s,0)' % (hs1, ext(dbN))
+        cond = H + (',{k_qNc}>0' if g == 'N' else ',{k_vol}=1,{k_qNc}>0')
+        dyn(g + 'Asup', lambda k: ch_(k, 6, [AX('%s+%s' % (xs0, f0)), AX(xs0), AX(xs0), AX(xs1), AX(xs1), AX('%s-%s' % (xs1, f1))]),
+            lambda k: ch_(k, 6, [AY('%s-%s' % (yt, hs0)), AY('%s-%s' % (yt, hs0)), AY(yt), AY(yt), AY('%s-%s' % (yt, hs1)), AY('%s-%s' % (yt, hs1))]), 6,
             ('=IF({k_vol}=1,"Superior del volado: "&{k_qNc}&" No. "&{k_vNc}&" (armado completo en la planta)","Superior corrido: 1 No. "&{k_vNc}&" (6.7.6.1.3)")' if g == 'N'
              else '="Superior del volado: No. "&{k_vNc}&" @ "&{k_qNc}&" cm"'), cond)
         # bastones
@@ -548,28 +578,33 @@ def build_croquis_datos(wb, wsK):
         need = '{k_qNc}>=2' if g == 'N' else '{k_qNc}>0'
         for side in (0, 1):
             cside = '{k_c%d}' % side
+            hb_ = 'IF(%s=1,0,%s)' % (cside, hkt); eb_ = 'IF(%s=1,0,%s)' % (cside, ext(dbN))
             if side == 0:
                 xA = 'IF(%s=1,-{k_bp}/2-30,-{k_bp}/2+3)' % cside; xB = '{k_bp}/2+{k_Lbc}'
-                pts_x = [AX(xA), AX(xA), AX(xB)]
-                pts_y = [AY('%s-IF(%s=1,0,%s)' % (ybs, cside, hkt)), AY(ybs), AY(ybs)]
+                pts_x = [AX('%s+%s' % (xA, eb_)), AX(xA), AX(xA), AX(xB)]
+                pts_y = [AY('%s-%s' % (ybs, hb_)), AY('%s-%s' % (ybs, hb_)), AY(ybs), AY(ybs)]
             else:
                 xA = '{k_A}-{k_bp}/2-{k_Lbc}'; xB = 'IF(%s=1,{k_A}+{k_bp}/2+30,{k_A}+{k_bp}/2-3)' % cside
-                pts_x = [AX(xA), AX(xB), AX(xB)]
-                pts_y = [AY(ybs), AY(ybs), AY('%s-IF(%s=1,0,%s)' % (ybs, cside, hkt))]
+                pts_x = [AX(xA), AX(xB), AX(xB), AX('%s-%s' % (xB, eb_))]
+                pts_y = [AY(ybs), AY(ybs), AY('%s-%s' % (ybs, hb_)), AY('%s-%s' % (ybs, hb_))]
             lab = (('="Bastones ‖ corto: "&({k_qNc}-1)&" No. "&{k_vNc}&", L = "&TEXT({k_Lbc}/100,"0.00")&" m desde el paño"' if g == 'N'
                     else '="Bastones ‖ corto: No. "&{k_vNc}&" @ "&{k_qNc}&" cm, L = "&TEXT({k_Lbc}/100,"0.00")&" m desde el paño"') if side == 0 else None)
-            dyn(g + 'Ab%d' % side, lambda k, px=pts_x: ch_(k, 3, px), lambda k, py=pts_y: ch_(k, 3, py), 3, lab,
-                H + ',{k_vol}=0,%s,OR(%s=1,{k_bdc}=1)' % (need, cside))
+            dyn(g + 'Ab%d' % side, lambda k, px=pts_x: ch_(k, 4, px), lambda k, py=pts_y: ch_(k, 4, py), 4, lab,
+                H + ',{k_vol}=0,%s,OR(%s=1,{k_bdc}=1)' % (need, cside), lab_hide=H + ',{k_vol}=0,%s,OR({k_c0}=1,{k_c1}=1,{k_bdc}=1)' % need)
+        if g == 'N':
+            # bastón del volado con nervaduras anchas (D10): de la punta hasta donde termina la nervadura ancha en el respaldo
+            dyn('NAbv', lambda k: ch_(k, 2, [AX('{k_A}-3'), AX('-({k_bp}/2+{k_rxr})')]), lambda k: ch_(k, 2, [AY(ybs), AY(ybs)]), 2,
+                '="Bastón del volado: "&({k_qNc}-1)&" No. "&{k_vNc}&" hasta "&TEXT({k_rxr}/100,"0.00")&" m del paño (fin de la nervadura ancha)"', H + ',{k_vol}=1,{k_rxr}>0,{k_qNc}>=2')
         if g == 'N':
             # casetones detrás de la nervadura y límite de la zona maciza
-            cu0 = '{k_us}'; cu1 = '({k_us}+{k_nAe}*{k_s}-{k_bw})'
+            cu0 = '{k_us}'; cu1 = '({k_us}+({k_nAe}-1)*{k_s}+{k_acu})'
             ca = mir(cu0); cb = mir(cu1)
             fx, fy = rect('MIN(%s,%s)' % (ca, cb), '0', 'MAX(%s,%s)' % (ca, cb), '{k_hc}', AX, AY)
             dyn('NAcas', fx, fy, 5, '="Casetones (detrás de la nervadura)"', H + ',{k_nAe}>0')
             dyn('NAmac', lambda k: ch_(k, 4, [AX('MIN(%s,%s)' % (ca, cb)), AX('MIN(%s,%s)' % (ca, cb)), AX('MAX(%s,%s)' % (ca, cb)), AX('MAX(%s,%s)' % (ca, cb))]),
                 lambda k: ch_(k, 4, [AY('0'), AY('{k_h}'), AY('{k_h}'), AY('0')]), 4,
                 '="Fin de la zona maciza (macizo de orilla"&IF({k_nh}>0," + "&{k_nh}&" hilera(s) por cortante","")&")"', H + ',{k_nAe}>0')
-        cota(AX('0'), AX('{k_A}'), True, '15', g + 'Ac_a', '=IF({k_vol}=1,"Volado: "&TEXT({k_A}/100,"0.00")&" m del eje del apoyo a la orilla","a1 = "&TEXT({k_A}/100,"0.00")&" m (a ejes)")', H)
+        cota(AX('0'), AX('{k_A}'), True, '15', g + 'Ac_a', '=IF({k_vol}=1,"Volado: "&TEXT({k_A}/100,"0.00")&" m","a1 = "&TEXT({k_A}/100,"0.00")&" m (a ejes)")', H)
         LBx0 = 'IF({k_vol}=1,-{k_bp}/2,{k_bp}/2)'; LBx1 = 'IF({k_vol}=1,-{k_bp}/2-{k_Lbc},{k_bp}/2+{k_Lbc})'
         cota(AX(LBx0), AX(LBx1), True, '(%s+5)' % AY('{k_h}'), g + 'Ac_L', '="L = "&TEXT({k_Lbc}/100,"0.00")&" m desde el paño"',
              H + ',OR({k_vol}=1,AND(%s,OR({k_c0}=1,{k_bdc}=1)))' % need)
@@ -599,7 +634,7 @@ def build_croquis_datos(wb, wsK):
         wfrac = (xmax - xmin) / (ymax - ymin) * hfrac * h_cm / w_cm
         if wfrac > 0.96:
             hfrac = hfrac * 0.96 / wfrac; wfrac = 0.96
-        ch.plot_area.layout = Layout(manualLayout=ManualLayout(layoutTarget='inner', xMode='edge', yMode='edge', x=(1 - wfrac) / 2, y=ytop, w=wfrac, h=hfrac))
+        ch.layout = Layout(manualLayout=ManualLayout(layoutTarget='inner', xMode='edge', yMode='edge', x=(1 - wfrac) / 2, y=ytop, w=wfrac, h=hfrac))
         return ch
 
     def add(ch, name, color='1F4E79', w=1.5, dash='solid', marker=None, msize=6, lbl_idx=None, noleg=False, pos='t', lsz=750, bold=False):
@@ -642,8 +677,9 @@ def build_croquis_datos(wb, wsK):
 
     T = lambda nm: 'CROQUIS!' + N[nm].split('!')[1]
     for g, rowg in (('N', N['k_row_N'] + 1), ('M', N['k_row_M'] + 1)):
-        ch = mk_chart('PLANTA DEL TABLERO — ' + ('CASETONES, NERVADURAS Y ARMADO POR NERVADURA' if g == 'N' else 'ARMADO POR METRO'), 0, 100, 0, 100, 15.2, 19.6, 0.66, 0.08)
+        ch = mk_chart('PLANTA DEL TABLERO — ' + ('CASETONES, NERVADURAS Y ARMADO POR NERVADURA' if g == 'N' else 'ARMADO POR METRO'), 0, 100, 0, 100, 15.2, 19.6, 0.60, 0.07)
         add(ch, g + 'respaldo', '7F7F7F', 1.0, 'dash')
+        add(ch, g + 'far', '7F7F7F', 1.5)
         if g == 'N':
             add(ch, 'Nresp', 'ED7D31', 1.5, 'dash')
         add(ch, g + 'contorno', '1F3864', 2.2)
@@ -655,9 +691,10 @@ def build_croquis_datos(wb, wsK):
             add(ch, 'Nmacizo', 'ED7D31', 1.25, 'dash')
             add(ch, 'Nc_inf', '0070C0', 2.5); add(ch, 'Nc_sup', '7F4F00', 1.75)
             add(ch, 'Nc_b0', 'C00000', 2.5); add(ch, 'Nc_b1', 'C00000', 2.5, noleg=True)
+            add(ch, 'Nc_bv', 'C00000', 2.5)
             add(ch, 'Nl_inf', '00B050', 2.0); add(ch, 'Nl_sup', '375623', 1.5)
             add(ch, 'Nl_b0', 'ED7D31', 2.0); add(ch, 'Nl_b1', 'ED7D31', 2.0, noleg=True)
-            add(ch, 'Ncota_s', '7030A0', 0.75, lbl_idx=3)
+            add(ch, 'Ncota_s', '7030A0', 0.75, lbl_idx=3, pos='t')
         else:
             add(ch, 'Mc_inf', '0070C0', 0.75); add(ch, 'Ml_inf', '00B050', 0.75)
             add(ch, 'Mc_b0', 'C00000', 1.25); add(ch, 'Mc_b1', 'C00000', 1.25, noleg=True)
@@ -665,8 +702,8 @@ def build_croquis_datos(wb, wsK):
             add(ch, 'Mvol_sup', 'C00000', 1.25)
         add(ch, g + 'contorno', '1F3864', 2.2, noleg=True)
         add(ch, g + 'carga', '7030A0', 3.5)
-        add(ch, g + 'cota_ax', '7030A0', 0.75, lbl_idx=3)
-        add(ch, g + 'cota_ay', '7030A0', 0.75, lbl_idx=3)
+        add(ch, g + 'cota_ax', '7030A0', 0.75, lbl_idx=3, pos='t')
+        add(ch, g + 'cota_ay', '7030A0', 0.75, lbl_idx=3, pos='l')
         place(ch, rowg)
         if g == 'N':
             ch = mk_chart('CORTE DE LA NERVADURA ‖ CORTO (cm)', 0, 100, 0, 48, 13.8, 9.6, 0.58, 0.12)
@@ -677,20 +714,21 @@ def build_croquis_datos(wb, wsK):
                 add(ch, 'KPc%d' % i, '0070C0', 1.5, noleg=i > 1)
             for i in (1, 2, 3):
                 add(ch, 'KNc%d' % i, 'C00000', 1.5, noleg=i > 1)
-            for nm in ('Kc_bw', 'Kc_s', 'Kc_h', 'Kc_d'):
-                add(ch, nm, '7F7F7F', 0.75, lbl_idx=3)
+            for nm, ps in (('Kc_bw', 'b'), ('Kc_s', 't'), ('Kc_h', 'r'), ('Kc_d', 'l')):
+                add(ch, nm, '7F7F7F', 0.75, lbl_idx=3, pos=ps)
             place(ch, rowg, right=True)
         else:
             ch = mk_chart('CORTE DE LA LOSA JUNTO AL APOYO (cm)', 0, 100, 0, 48, 13.8, 9.6, 0.58, 0.12)
             add(ch, 'Lconc', '1F3864', 2.2)
             add(ch, 'LPc', '0070C0', 2.0); add(ch, 'LNc', 'C00000', 2.0)
             add(ch, 'LPl', '00B050', marker='circle', msize=5); add(ch, 'LNl', 'ED7D31', marker='circle', msize=5)
-            for nm in ('Lc_h', 'Lc_rb', 'Lc_rt', 'Lc_s'):
-                add(ch, nm, '7F7F7F', 0.75, lbl_idx=3)
+            for nm, ps in (('Lc_h', 'r'), ('Lc_rb', 'l'), ('Lc_rt', 'l'), ('Lc_s', 'b')):
+                add(ch, nm, '7F7F7F', 0.75, lbl_idx=3, pos=ps)
             place(ch, rowg, right=True)
         ch = mk_chart('ALZADO ‖ CLARO CORTO' + (' DE LA NERVADURA' if g == 'N' else ' (FRANJA DE 1 m)'), 0, 100, 0, 64, 13.8, 9.8, 0.58, 0.12)
         add(ch, g + 'Alosa', '1F3864', 2.0)
         add(ch, g + 'Aapoyo', '7F7F7F', 2.0)
+        add(ch, g + 'Afar', '7F7F7F', 2.0)
         if g == 'N':
             add(ch, 'NAcas', 'A6A6A6', 0.75, 'dash'); add(ch, 'NAmac', 'ED7D31', 1.25, 'dash')
         add(ch, g + 'Ainf', '0070C0', 2.25)
@@ -699,8 +737,10 @@ def build_croquis_datos(wb, wsK):
         else:
             add(ch, g + 'Asup', 'C00000', 1.75)
         add(ch, g + 'Ab0', 'C00000', 2.25); add(ch, g + 'Ab1', 'C00000', 2.25, noleg=True)
-        add(ch, g + 'Ac_a', '7030A0', 0.75, lbl_idx=3)
-        add(ch, g + 'Ac_L', '7030A0', 0.75, lbl_idx=3)
+        if g == 'N':
+            add(ch, 'NAbv', 'C00000', 2.25)
+        add(ch, g + 'Ac_a', '7030A0', 0.75, lbl_idx=3, pos='t')
+        add(ch, g + 'Ac_L', '7030A0', 0.75, lbl_idx=3, pos='t')
         add(ch, g + 'AP', '7030A0', 2.0, lbl_idx=0)
         place(ch, rowg, right=True, dy_cm=9.8)
     ws.sheet_state = 'visible'

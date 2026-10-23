@@ -104,15 +104,18 @@ MOMDESC = {'NIC': 'negativo en bordes continuos, claro corto', 'NIL': 'negativo 
 
 # cargas vivas: (destino, W_m, ¿azotea?, "W_a / W", referencia)
 CVROWS = [
-    ('HABITACIÓN', 190, 'NO', '100 / 80', NTCCA + ' Tabla 6.1.2.2 a), p. 11 (cotejado por la hoja de Casa Rocha)'),
-    ('OFICINAS Y DESPACHOS', 250, 'NO', '180 / 100', NTCCA + ' Tabla 6.1.2.2 b), p. 11 — cotejar contra la tabla oficial'),
-    ('AULAS', 250, 'NO', '180 / 100', NTCCA + ' Tabla 6.1.2.2 c), p. 11 — cotejar contra la tabla oficial'),
-    ('PASILLOS, ESCALERAS Y VESTÍBULOS', 350, 'NO', '150 / 40', NTCCA + ' Tabla 6.1.2.2 d), p. 11 — cotejar contra la tabla oficial'),
-    ('LUGARES DE REUNIÓN (con asientos)', 350, 'NO', '250 / 40', NTCCA + ' Tabla 6.1.2.2 f), p. 11 — cotejar contra la tabla oficial'),
-    ('AZOTEA (pendiente ≤ 5 %)', 100, 'SÍ', '70 / 15', NTCCA + ' Tabla 6.1.2.2 h), p. 11 (cotejado por la hoja de Casa Rocha)'),
-    ('AZOTEA (pendiente > 5 %) Y CUBIERTAS', 40, 'SÍ', '20 / 5', NTCCA + ' Tabla 6.1.2.2 i), p. 11 — cotejar contra la tabla oficial'),
-    ('VOLADOS EN VÍA PÚBLICA (balcones)', 300, 'NO', '70 / 15', NTCCA + ' Tabla 6.1.2.2 j), p. 11 — cotejar contra la tabla oficial'),
-    ('ESTACIONAMIENTO (sólo autos)', 250, 'NO', '100 / 40', NTCCA + ' Tabla 6.1.2.2 k), p. 11 — cotejar contra la tabla oficial'),
+    ('HABITACIÓN', 190, 'NO', '100 / 80', NTCCA + ' Tabla 6.1.2.2 a), p. 11'),
+    ('OFICINAS Y DESPACHOS', 250, 'NO', '180 / 100', NTCCA + ' Tabla 6.1.2.2 b), p. 11'),
+    ('AULAS', 250, 'NO', '180 / 100', NTCCA + ' Tabla 6.1.2.2 c), p. 11'),
+    ('PASILLOS, ESCALERAS Y VESTÍBULOS', 350, 'NO', '150 / 40', NTCCA + ' Tabla 6.1.2.2 d), p. 11'),
+    ('LUGARES DE REUNIÓN SIN ASIENTOS INDIVIDUALES', 450, 'NO', '350 / 40', NTCCA + ' Tabla 6.1.2.2 e), p. 11'),
+    ('OTROS LUGARES DE REUNIÓN (bibliotecas, templos, restaurantes…)', 350, 'NO', '250 / 40', NTCCA + ' Tabla 6.1.2.2 f), p. 11'),
+    ('AZOTEA (pendiente ≤ 5 %)', 100, 'SÍ', '70 / 15', NTCCA + ' Tabla 6.1.2.2 h), p. 11'),
+    ('AZOTEA (pendiente de 6 a 10 %)', 60, 'SÍ', '30 / 10', NTCCA + ' Tabla 6.1.2.2 h), p. 11'),
+    ('AZOTEA (pendiente de 11 a 20 %)', 40, 'SÍ', '20 / 5', NTCCA + ' Tabla 6.1.2.2 h), p. 11'),
+    ('AZOTEA (pendiente > 20 %)', 30, 'SÍ', '20 / 5', NTCCA + ' Tabla 6.1.2.2 h), p. 11'),
+    ('VOLADOS EN VÍA PÚBLICA (balcones)', 300, 'NO', '70 / 15', NTCCA + ' Tabla 6.1.2.2 j), p. 11'),
+    ('ESTACIONAMIENTO (sólo autos)', 250, 'NO', '100 / 40', NTCCA + ' Tabla 6.1.2.2 k), p. 11'),
     ('OTRO (captura del usuario)', 190, 'NO', '— / —', 'CAPTURA del usuario: cambia el nombre y los valores'),
 ]
 
@@ -176,12 +179,12 @@ def sheet_datos(wb):
           'CAPTURA. Si tu sobrecarga ya trae estos 20 kg/m², pon 0 para no contarlos dos veces. No se aplica donde la carga muerta es favorable.', NTCCA + ' 5.1.2.1 y 5.1.2.2, p. 9', 'input', '0', 'inc_mort')
     S.row('H_s — altura de granizo', 0.125, 'm', 'CAPTURA. Azotea con pendiente < 5°, Grupo B.', NTCCA + ' Tabla 7.3.2.2, p. 18', 'input', '0.000', 'Hs')
     S.row('C_s — coeficiente de forma', 1.0, '—', 'CAPTURA.', NTCCA + ' Tabla 7.3.2.3, p. 18', 'input', '0.00', 'Cs')
-    S.row('W_g — granizo en azotea = 900·H_s·C_s', '=900*{Hs}*{Cs}', 'kg/m²', 'CALCULADA. Va con FC = 1.1 y sin carga viva; la hoja toma el mayor de esa combinación y la gravitacional en los destinos marcados como azotea.',
+    S.row('W_g — granizo en azotea = 900·H_s·C_s ≥ 25', '=MAX(25,900*{Hs}*{Cs})', 'kg/m²', 'CALCULADA, no menos que 25 kg/m² (7.3.2.1). Va con FC = 1.1 y sin carga viva; la hoja toma el mayor de esa combinación y la gravitacional en los destinos marcados como azotea.',
           NTCCA + ' ec. 7.3.2.1, p. 17 · 3.4.1 b), p. 7', 'calc', '0.0', 'Wg')
     S.gap()
     S.section('4. CARGAS VIVAS UNITARIAS (lista de destinos)')
     S.secnote('Los tableros escogen su destino de esta lista. W_m (máxima) es la de diseño por gravedad; W_a y W son informativas. «¿Azotea?» = SÍ activa la combinación con granizo. '
-              'Los incisos a) y h) los cotejó la hoja de Casa Rocha; los demás son los de la misma tabla y hay que cotejarlos contra el texto oficial antes de usarlos. Puedes cambiar nombres y valores.', 42)
+              'Los valores están cotejados contra la Tabla 6.1.2.2 de la NTC-Criterios 2023 (p. 11). Puedes cambiar nombres y valores.', 42)
     S.header(('Destino', 'W_m', '¿Azotea? (granizo)', 'W_a / W (informativos)', 'Referencia'))
     c0 = S.r
     for (nm, wm, az, wa, ref) in CVROWS:
@@ -223,9 +226,9 @@ def sheet_datos(wb):
     S.row('Tamaño máximo del agregado grueso (TMA)', 1.27, 'cm', 'CAPTURA. No más de 2/3 del recubrimiento ni de la separación libre entre barras.', NTCC + ' 2.2.5.2.1, p. 32', 'input', '0.00', 'tmag')
     S.row('¿El agregado cabe? (≤ 2/3 de r y de la separación libre)', '=IF({tmag}<=2/3*MIN({rec},MAX(2.5,1.5*{tmag})),"CUMPLE","NO CUMPLE — usa agregado más chico")', '—', 'CALCULADA.', NTCC + ' 2.2.5.2.1, p. 32', 'calc', '@')
     S.row('Separación libre mínima entre varillas', '=MAX(2.5,1.5*{tmag})', 'cm', 'CALCULADA = el mayor de 25 mm, d_b y 1.5·TMA (d_b se revisa barra por barra).', NTCC + ' 14.2.1, p. 347', 'calc', '0.00', 'slib')
-    S.row('No. de varilla preferida — lecho INFERIOR de nervaduras', 4, '—', 'CAPTURA. Mínimo No. 4: toda nervadura lleva al menos 1 No. 4 abajo y 1 No. 4 arriba, corridas. Si no alcanza, la hoja sube sola de número.',
+    S.row('No. de varilla preferida — lecho INFERIOR de nervaduras', 4, '—', 'CAPTURA. Mínimo No. 4: toda nervadura lleva al menos 1 No. 4 abajo y 1 No. 4 arriba, corridas (si capturas menos, NERVADAS usa No. 4). Si no alcanza, la hoja sube sola de número.',
           NTCC + ' 6.7.6.1.3, p. 175', 'input', 'General', 'var_inf')
-    S.row('No. de varilla preferida — lecho SUPERIOR de nervaduras', 4, '—', 'CAPTURA. Una varilla superior es corrida y las demás son bastones.', NTCC + ' 6.7.6.1.3, p. 175', 'input', 'General', 'var_sup')
+    S.row('No. de varilla preferida — lecho SUPERIOR de nervaduras', 4, '—', 'CAPTURA. Mínimo No. 4 (si capturas menos, NERVADAS usa No. 4). Una varilla superior es corrida y las demás son bastones.', NTCC + ' 6.7.6.1.3, p. 175', 'input', 'General', 'var_sup')
     S.row('Máximo de varillas por lecho en una nervadura', 2, 'pzas', 'CAPTURA. Además se revisa que quepan con la separación libre mínima.', NTCC + ' 14.2.1, p. 347', 'input', '0', 'nmax_sec')
     S.row('Mínimo de varillas por lecho y por nervadura', 1, 'pzas', 'CAPTURA. 1 corrida. Si As colocada < 4/3 de la requerida, la hoja pide 2 (As mín de viga).', NTCC + ' 6.7.6.1.3, p. 175 · 6.3.5.1.1 y 6.3.5.1.3, p. 122', 'input', '0', 'nmin_sec')
     S.row('Ancho del apoyo en bordes DISCONTINUOS (para anclar)', 40, 'cm',
