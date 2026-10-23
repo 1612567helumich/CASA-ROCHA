@@ -394,7 +394,7 @@ def build_croquis_datos(wb, wsK):
             ch.layout = Layout(manualLayout=ManualLayout(layoutTarget='inner', xMode='edge', yMode='edge', x=(1 - wfrac) / 2, y=ytop, w=wfrac, h=hfrac))
         return ch
 
-    def add(ch, ref_cols, title_ref=None, title_txt=None, color='1F4E79', w=1.5, dash='solid', marker=None, msize=7, lbl_idx=None, sheet=ws, noleg=False):
+    def add(ch, ref_cols, title_ref=None, title_txt=None, color='1F4E79', w=1.5, dash='solid', marker=None, msize=7, lbl_idx=None, sheet=ws, noleg=False, pos='t'):
         cx, cy, r0, r1 = ref_cols
         xr = Reference(sheet, min_col=CI(cx), min_row=r0, max_row=r1)
         yr = Reference(sheet, min_col=CI(cy), min_row=r0, max_row=r1)
@@ -415,7 +415,7 @@ def build_croquis_datos(wb, wsK):
         else:
             s.marker = Marker(symbol='none')
         if lbl_idx is not None:
-            s.dLbls = DataLabelList(dLbl=[DataLabel(idx=lbl_idx, showSerName=True, showVal=False, showCatName=False, showLegendKey=False, showPercent=False, dLblPos='t')])
+            s.dLbls = DataLabelList(dLbl=[DataLabel(idx=lbl_idx, showSerName=True, showVal=False, showCatName=False, showLegendKey=False, showPercent=False, dLblPos=pos)])
             s.dLbls.showVal = False; s.dLbls.showSerName = False; s.dLbls.showLegendKey = False; s.dLbls.showCatName = False
         if noleg and ch.legend is not None:
             ch.legend.legendEntry.append(LegendEntry(idx=len(ch.series), delete=True))
@@ -466,7 +466,7 @@ def build_croquis_datos(wb, wsK):
     add(ch, series_cols['nlargo_bI'], labels['nlargo_bI'], color='ED7D31', w=2.0)
     add(ch, series_cols['nlargo_bD'], labels['nlargo_bD'], noleg=True, color='ED7D31', w=2.0)
     add(ch, series_cols['Cota a_x'], labels['Cota a_x'], color='7030A0', w=0.75, lbl_idx=3)
-    add(ch, series_cols['Cota a_y'], labels['Cota a_y'], color='7030A0', w=0.75, lbl_idx=3)
+    add(ch, series_cols['Cota a_y'], labels['Cota a_y'], color='7030A0', w=0.75, lbl_idx=3, pos='l')
     add(ch, series_cols['Cota s'], labels['Cota s'], color='7030A0', w=0.75, lbl_idx=3)
     wsK.add_chart(ch, 'B%d' % r2)
     ch = mk_chart('CORTE DE LA NERVADURA SECUNDARIA (cm)', -42, 42, -10, 34, 15, 13.5, hfrac=0.42, ytop=0.18)
@@ -477,9 +477,9 @@ def build_croquis_datos(wb, wsK):
     add(ch, series_cols['Estribo / grapa'], labels['Estribo / grapa'], color='7030A0', w=1.0)
     add(ch, series_cols['Varillas inferiores'], labels['Varillas inferiores'], color='0070C0', marker='circle', msize=8)
     add(ch, series_cols['Bastones'], labels['Bastones'], color='C00000', marker='circle', msize=8)
-    add(ch, series_cols['Cota b_w'], labels['Cota b_w'], color='7F7F7F', w=0.75, lbl_idx=3)
+    add(ch, series_cols['Cota b_w'], labels['Cota b_w'], color='7F7F7F', w=0.75, lbl_idx=3, pos='b')
     add(ch, series_cols['Cota s (corte)'], labels['Cota s (corte)'], color='7F7F7F', w=0.75, lbl_idx=3)
-    add(ch, series_cols['Cota h'], labels['Cota h'], color='7F7F7F', w=0.75, lbl_idx=3)
+    add(ch, series_cols['Cota h'], labels['Cota h'], color='7F7F7F', w=0.75, lbl_idx=3, pos='r')
     wsK.add_chart(ch, beside_tab(ch, r2))
     ch = mk_chart('ALZADO DE LA NERVADURA DEL CLARO CORTO', -8, 108, -20, 20, 15, 11, hfrac=0.36, ytop=0.13)
     add(ch, series_cols['Nervadura (alzado)'], labels['Nervadura (alzado)'], color='1F3864', w=2.0)
@@ -498,8 +498,8 @@ def build_croquis_datos(wb, wsK):
     add(ch, series_cols['Estribo principal'], labels['Estribo principal'], color='7030A0', w=1.25)
     add(ch, series_cols['Inferiores principal'], labels['Inferiores principal'], color='0070C0', marker='circle', msize=8)
     add(ch, series_cols['Superiores principal'], labels['Superiores principal'], color='C00000', marker='circle', msize=8)
-    add(ch, series_cols['Cota b principal'], labels['Cota b principal'], color='7F7F7F', w=0.75, lbl_idx=3)
-    add(ch, series_cols['Cota h principal'], labels['Cota h principal'], color='7F7F7F', w=0.75, lbl_idx=3)
+    add(ch, series_cols['Cota b principal'], labels['Cota b principal'], color='7F7F7F', w=0.75, lbl_idx=3, pos='b')
+    add(ch, series_cols['Cota h principal'], labels['Cota h principal'], color='7F7F7F', w=0.75, lbl_idx=3, pos='r')
     wsK.add_chart(ch, 'B%d' % (r2 + 50))
     return ws
 

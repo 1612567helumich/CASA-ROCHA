@@ -92,7 +92,7 @@ def sheet_detalle(wb):
     S.row('Caso de la tabla', '=IF(' + VV('tipo') + '="VOLADO","— (volado: momento estático; la tabla y sus coeficientes no se usan)",' + VV('caso') + ')', '—', 'Automático por bordes discontinuos, o el forzado en el renglón. Sólo caso I (colado monolítico).', NTCC + ' Tabla 3.4.2.1, p. 65', 'key', '@')
     for mm, lbl in (('NIC', 'M⁻ en bordes continuos, claro corto'), ('NDC', 'M⁻ en bordes discontinuos, claro corto'), ('PC', 'M⁺, claro corto'),
                     ('NIL', 'M⁻ en bordes continuos, claro largo'), ('NDL', 'M⁻ en bordes discontinuos, claro largo'), ('PL', 'M⁺, claro largo')):
-        S.row('Coeficiente ' + lbl, '=' + VV('c' + mm, '0'), '×10⁻⁴', 'Interpolado linealmente en m.', 'TABLAS sección A', 'calc', '0')
+        S.row('Coeficiente ' + lbl, '=IF(' + VV('tipo') + '="VOLADO","—",' + VV('c' + mm, '0') + ')', '×10⁻⁴', 'Interpolado linealmente en m (no se usa en volados).', 'TABLAS sección A', 'calc', '0')
     S.gap()
     S.section('5. MOMENTOS ÚLTIMOS')
     S.header()
@@ -240,7 +240,7 @@ def sheet_croquis(wb):
     kp('Carga en la orilla', '=N(' + VV('pbor', '0') + ')', 'k_P', '0.0', 'kg/m')
     kp('Estado', '=' + VV('estado'), 'k_est', '@')
     # --- planta: marco y escala
-    kp('¿El acero del volado llega al apoyo lejano del respaldo?', '=IF(AND({k_vol}=1,{k_Lbc}>=FLOOR({k_Lb}-{rec_np},5)-0.01),1,0)', 'k_far', '0')
+    kp('¿El acero del volado llega al apoyo lejano del respaldo?', '=IF(AND({k_vol}=1,{k_qNc}>0,{k_Lbc}>=FLOOR({k_Lb}-{rec_np},5)-0.01),1,0)', 'k_far', '0')
     kp('Respaldo que se dibuja', '=IF({k_vol}=1,IF({k_far}=1,{k_Lb}+{k_bp}/2,MIN({k_Lb},{k_bp}/2+{k_Lbc}+40)),0)', 'k_BK', '0.0', 'cm')
     kp('x mín / x máx / y mín / y máx', '=IF({k_es}=1,-{k_BK},0)', 'k_xmin', '0.0', 'cm')
     kp('…', '={k_ax}+IF({k_es}=2,{k_BK},0)', 'k_xmax', '0.0', 'cm')
@@ -370,6 +370,12 @@ def build_croquis_datos(wb, wsK):
         y0 = 'IF({k_vol}=1,CHOOSE({k_es},0,0,-{k_bp}/2,{k_ay}-{k_bp}/2),{k_bp}/2)'
         y1 = 'IF({k_vol}=1,CHOOSE({k_es},{k_ay},{k_ay},{k_bp}/2,{k_ay}+{k_bp}/2),{k_ay}-{k_bp}/2)'
         fx, fy = rect(x0, y0, x1, y1)
+        dl_ = '(-{k_bp}/2+{b_borde})'
+        for i_, (cx_, xa_, ya_, xb_, yb_) in enumerate((('{k_cL}', dl_, '0', dl_, '{k_ay}'), ('{k_cR}', '({k_ax}-%s)' % dl_, '0', '({k_ax}-%s)' % dl_, '{k_ay}'),
+                                                       ('{k_cI}', '0', dl_, '{k_ax}', dl_), ('{k_cS}', '0', '({k_ay}-%s)' % dl_, '{k_ax}', '({k_ay}-%s)' % dl_))):
+            dyn(g + 'dala%d' % i_, lambda k, xa_=xa_, xb_=xb_: ch_(k, 2, [PX(xa_), PX(xb_)]), lambda k, ya_=ya_, yb_=yb_: ch_(k, 2, [PY(ya_), PY(yb_)]), 2,
+                '="Dala de borde armada de "&{b_borde}&" cm en los bordes discontinuos (D9): su paño interior"' if i_ == 0 else None,
+                H + ',{k_vol}=0,%s=0' % cx_, lab_hide=H + ',{k_vol}=0,OR({k_cL}=0,{k_cR}=0,{k_cI}=0,{k_cS}=0)')
         dyn(g + 'apoyo', fx, fy, 5, '=IF({k_vol}=1,"Apoyo del volado (muro, dala o trabe de b_p = "&{bp}&" cm)","Paño de los apoyos (b_p = "&{bp}&" cm)")', H)
         # achurado del empotramiento
         ax_ = 'IF({k_sup0}=1,0,{k_A})'
@@ -436,7 +442,7 @@ def build_croquis_datos(wb, wsK):
     supc0 = 'IF({k_vol}=1,IF({k_sup0}=1,-({k_bp}/2+{k_Lbc}),2),2)'; supc1 = 'IF({k_vol}=1,IF({k_sup0}=1,{k_A}-2,{k_A}+{k_bp}/2+{k_Lbc}),{k_A}-2)'
     for nm, a0, a1, o, lab, hide in (
             ('Nc_inf', '2', '{k_A}-2', off['inf'], '="‖ corto · inferior: "&{k_tPc}', HN),
-            ('Nc_sup', supc0, supc1, off['sup'], '=IF({k_vol}=1,"‖ corto · superior del volado: "&{k_qNc}&" No. "&{k_vNc}&" (corrida y bastones: ver ARMADO en NERVADAS)","‖ corto · superior: "&{k_tNc})', HN + ',{k_qNc}>0'),
+            ('Nc_sup', supc0, supc1, off['sup'], '=IF({k_vol}=1,IF(AND({k_rxr}>0,{k_qNc}>=2),"‖ corto · superior del volado: 1 No. "&{k_vNc}&IF({k_far}=1," corrida hasta el apoyo lejano del respaldo"," corrida, L = "&TEXT({k_Lbc}/100,"0.00")&" m desde el paño")&" (el bastón va aparte)","‖ corto · superior del volado: "&{k_qNc}&" No. "&{k_vNc}&" (ver ARMADO en NERVADAS)"),"‖ corto · superior: "&{k_tNc})', HN + ',{k_qNc}>0'),
             ('Nc_b0', 'IF({k_c0}=1,-12,2)', '{k_bp}/2+{k_Lbc}', off['bas'], '="‖ corto · bastones (borde continuo"&IF({k_bdc}=1," y discontinuo","")&"), L = "&TEXT({k_Lbc}/100,"0.00")&" m desde el paño"', HN + ',{k_vol}=0,{k_qNc}>=2,OR({k_c0}=1,{k_bdc}=1)'),
             ('Nc_b1', '{k_A}-{k_bp}/2-{k_Lbc}', 'IF({k_c1}=1,{k_A}+12,{k_A}-2)', off['bas'], None, HN + ',{k_vol}=0,{k_qNc}>=2,OR({k_c1}=1,{k_bdc}=1)')):
         dyn(nm, lambda k, a0=a0, a1=a1, o=o: uv(ch_(k, 2, [a0, a1]), '{k_vrib}', o)[0], lambda k, a0=a0, a1=a1, o=o: uv(ch_(k, 2, [a0, a1]), '{k_vrib}', o)[1], 2, lab, hide,
@@ -486,14 +492,19 @@ def build_croquis_datos(wb, wsK):
     CX = lambda x: '(50+(%s)*{k_cs})' % x
     CY = lambda y: '(12+(%s)*{k_cs})' % y
     hs = '{k_s}/2'
-    poly = ['-' + hs, hs, hs, '{k_bw}/2', '{k_bw}/2', '-{k_bw}/2', '-{k_bw}/2', '-' + hs, '-' + hs]
-    polyy = ['{k_h}', '{k_h}', '{k_hc}', '{k_hc}', '0', '0', '{k_hc}', '{k_hc}', '{k_h}']
+    nocas = 'MIN({k_ncx},{k_ncy})=0'
+    polyT = ['-' + hs, hs, hs, '{k_bw}/2', '{k_bw}/2', '-{k_bw}/2', '-{k_bw}/2', '-' + hs, '-' + hs]
+    polyM = ['-' + hs, hs, hs, hs, hs, '-' + hs, '-' + hs, '-' + hs, '-' + hs]
+    polyyT = ['{k_h}', '{k_h}', '{k_hc}', '{k_hc}', '0', '0', '{k_hc}', '{k_hc}', '{k_h}']
+    polyyM = ['{k_h}', '{k_h}', '0', '0', '0', '0', '0', '0', '{k_h}']
+    poly = ['IF(%s,%s,%s)' % (nocas, a, b) for a, b in zip(polyM, polyT)]
+    polyy = ['IF(%s,%s,%s)' % (nocas, a, b) for a, b in zip(polyyM, polyyT)]
     dyn('Kconc', lambda k: ch_(k, 9, [CX(p) for p in poly]), lambda k: ch_(k, 9, [CY(p) for p in polyy]), 9,
-        '="Nervadura b_w = "&{k_bw}&" cm + capa t = "&{t}&" cm (h = "&{h}&" cm)"', HN)
+        '=IF(%s,"Tablero macizo (no cabe un casetón): diséñalo en MACIZAS","Nervadura b_w = "&{k_bw}&" cm + capa t = "&{t}&" cm (h = "&{h}&" cm)")' % nocas, HN)
     fx, fy = rect('-' + hs, '0', '-{k_bw}/2', '{k_hc}', CX, CY)
-    dyn('Kcas1', fx, fy, 5, '="Casetón "&TEXT({k_ac},"0")&" × "&{hc}&" cm"', HN)
+    dyn('Kcas1', fx, fy, 5, '="Casetón "&TEXT({k_ac},"0")&" × "&{hc}&" cm"', HN + ',NOT(%s)' % nocas)
     fx, fy = rect('{k_bw}/2', '0', hs, '{k_hc}', CX, CY)
-    dyn('Kcas2', fx, fy, 5, None, HN)
+    dyn('Kcas2', fx, fy, 5, None, HN + ',NOT(%s)' % nocas)
     ym = '({k_h}-{k_rtm}-{k_fim})'
     dyn('Kmalla', lambda k: ch_(k, 2, [CX('-%s+1' % hs), CX('%s-1' % hs)]), lambda k: CY(ym), 2, '="Malla "&{malla_sel}&IF({k_rtm}>({t}-2*{fim})/2+0.01," con "&TEXT({k_rtm},"0.0")&" cm a la cara superior (manda el recubrimiento)"," al centro de la capa ("&TEXT({k_rtm},"0.0")&" cm a la cara superior)")', HN)
     for top in (False, True):
@@ -571,7 +582,7 @@ def build_croquis_datos(wb, wsK):
         cond = H + (',{k_qNc}>0' if g == 'N' else ',{k_vol}=1,{k_qNc}>0')
         dyn(g + 'Asup', lambda k: ch_(k, 6, [AX('%s+%s' % (xs0, f0)), AX(xs0), AX(xs0), AX(xs1), AX(xs1), AX('%s-%s' % (xs1, f1))]),
             lambda k: ch_(k, 6, [AY('%s-%s' % (yt, hs0)), AY('%s-%s' % (yt, hs0)), AY(yt), AY(yt), AY('%s-%s' % (yt, hs1)), AY('%s-%s' % (yt, hs1))]), 6,
-            ('=IF({k_vol}=1,"Superior del volado: "&{k_qNc}&" No. "&{k_vNc}&" (armado completo en la planta)","Superior corrido: 1 No. "&{k_vNc}&" (6.7.6.1.3)")' if g == 'N'
+            ('=IF({k_vol}=1,IF(AND({k_rxr}>0,{k_qNc}>=2),"Superior del volado: 1 No. "&{k_vNc}&IF({k_far}=1," corrida hasta el apoyo lejano del respaldo"," corrida, L = "&TEXT({k_Lbc}/100,"0.00")&" m desde el paño")&" (el bastón va aparte)","Superior del volado: "&{k_qNc}&" No. "&{k_vNc}&" (armado completo en la planta)"),"Superior corrido: 1 No. "&{k_vNc}&" (6.7.6.1.3)")' if g == 'N'
              else '="Superior del volado: No. "&{k_vNc}&" @ "&{k_qNc}&" cm"'), cond)
         # bastones
         ybs = ('(%s-1.3*%s-0.4)' % (yt, dbN)) if g == 'N' else yt
@@ -607,7 +618,7 @@ def build_croquis_datos(wb, wsK):
         cota(AX('0'), AX('{k_A}'), True, '15', g + 'Ac_a', '=IF({k_vol}=1,"Volado: "&TEXT({k_A}/100,"0.00")&" m","a1 = "&TEXT({k_A}/100,"0.00")&" m (a ejes)")', H)
         LBx0 = 'IF({k_vol}=1,-{k_bp}/2,{k_bp}/2)'; LBx1 = 'IF({k_vol}=1,-{k_bp}/2-{k_Lbc},{k_bp}/2+{k_Lbc})'
         cota(AX(LBx0), AX(LBx1), True, '(%s+5)' % AY('{k_h}'), g + 'Ac_L', '="L = "&TEXT({k_Lbc}/100,"0.00")&" m desde el paño"',
-             H + ',OR({k_vol}=1,AND(%s,OR({k_c0}=1,{k_bdc}=1)))' % need)
+             H + ',{k_qNc}>0,OR({k_vol}=1,AND(%s,OR({k_c0}=1,{k_bdc}=1)))' % need)
         tip = AX('{k_A}'); ty = AY('{k_h}')
         dyn(g + 'AP', lambda k: ch_(k, 5, [tip, tip, '%s-1.2' % tip, tip, '%s+1.2' % tip]), lambda k: ch_(k, 5, ['%s+13' % ty, '%s+1' % ty, '%s+4' % ty, '%s+1' % ty, '%s+4' % ty]), 5,
             '="P = "&TEXT({k_P},"0.0")&" kg/m"', H + ',{k_vol}=1,{k_P}>0')
@@ -684,6 +695,8 @@ def build_croquis_datos(wb, wsK):
             add(ch, 'Nresp', 'ED7D31', 1.5, 'dash')
         add(ch, g + 'contorno', '1F3864', 2.2)
         add(ch, g + 'apoyo', 'C00000', 1.0, 'dash')
+        for i_ in range(4):
+            add(ch, g + 'dala%d' % i_, 'BF8F00', 1.0, 'lgDash', noleg=i_ > 0)
         add(ch, g + 'achurado', '595959', 0.75, noleg=True)
         if g == 'N':
             add(ch, 'Ncas_v', 'A6A6A6', 0.75); add(ch, 'Ncas_h', 'A6A6A6', 0.75, noleg=True)
