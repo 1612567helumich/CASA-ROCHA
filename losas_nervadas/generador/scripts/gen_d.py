@@ -115,7 +115,7 @@ def sheet_resumen(wb):
             ' (s = 70 cm). Con 10 cm el M⁻ pedía una No. 8 que no cabía. ', vtxt(k12), ' · ', vtxt(k19), '. Su M⁻ y su ΔV siguen dentro de los tableros de respaldo (los que están detrás del muro raíz; F80020 y F80021 quedan a los costados de F80019 y no los reciben): '
             'junto al muro raíz las nervaduras siguen de 20 cm hasta donde la de 10 cm resiste con 1 varilla del volado — ', (rsp,), ' Los costados de F80012, que corren en la dirección del volado y llevan barandal, son vigas de orilla en volado (PRINCIPALES): ', (lat,), '. '
             'El área de la orilla libre de F80019 que el DXF daba a NP-16 y el par del volado (M/L_b) bajan al muro raíz (MUROS).')
-    sup_ = lambda k, b, L, ln: '"@ "&TEXT(%s,"0.0")&" cm"&IF(2*%s>=%s," corridas","")' % (T_('s' + b, k), T_(L, k), T_(ln, k))
+    sup_ = lambda k, b, L, ln: '"@ "&TEXT(%s,"0.0")&" cm"&IF(2*%s>=%s," corridas"," (L = "&TEXT(%s/100,"0.00")&" m desde el paño)")' % (T_('s' + b, k), T_(L, k), T_(ln, k), T_(L, k))
     mtxt = lambda k: ('"%s: inf. corto No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&" cm, sup. corto No. "&TEXT(%s,"0.#")&" "&%s&", inf. largo No. "&TEXT(%s,"0.#")&" @ "&TEXT(%s,"0.0")&" cm, sup. largo No. "&TEXT(%s,"0.#")&" "&%s&"; "&%s' %
                       (k.split()[0], T_('vPc', k), T_('sPc', k), T_('vNc', k), sup_(k, 'Nc', 'Lbc', 'ln1'), T_('vPl', k), T_('sPl', k), T_('vNl', k), sup_(k, 'Nl', 'Lbl', 'ln2'), T_('estado', k)),)
     lbullet('D11) AZOTEA F80032 Y F80010 (N+6.00): se respeta el modelo («Slab1»): LOSA MACIZA de ', ('TEXT({h_mac},"0")',), ' cm perimetralmente apoyada, con los mismos coeficientes de la Tabla 3.4.2.1 (son de losa maciza), por franja de 1 m, r = 2 cm, As mín = 0.0018·b·h y f\'c = 250 Clase 1A. '

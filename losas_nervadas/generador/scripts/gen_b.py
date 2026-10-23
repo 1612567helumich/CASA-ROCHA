@@ -246,16 +246,17 @@ def sheet_tableros(wb):
                     else:
                         lats.append(('{modo}%d="VOLADO"' % rb_, n_))
                     continue
-                # borde recíproco: el del vecino que lista a este tablero (de preferencia el opuesto)
-                sbs = [q for q in [OPPS[s_]] + SIDES if t['name'] in [x.strip() for x in (tb['bordes'][q].get('vecinos') or '').split(',')]]
-                sb = sbs[0] if sbs else OPPS[s_]
+                # sólo vecinos recíprocos (el vecino también lista a este tablero; si no, el contacto es de esquina en un tablero irregular)
+                # y siempre con su borde opuesto, que lleva el momento en la misma dirección que el de este borde
+                sbs = [q for q in SIDES if t['name'] in [x.strip() for x in (tb['bordes'][q].get('vecinos') or '').split(',')]]
+                if not sbs:
+                    continue
+                sb = OPPS[s_]
                 MB = '{%s}%d' % (MEC[sb], rb_)
-                if sbs:
-                    gB_ = 'APOYOS!$G$%d' % EDGE[(kb, sb)]
+                gB_ = 'APOYOS!$G$%d' % EDGE[(kb, sb)]
+                if sb in sbs:
                     asym.append(('AND({modo}%d="PERIMETRAL",%s<>%s)' % (rb_, gA_, gB_), n_))
-                    cont = 'OR(%s="CONTINUO",%s="CONTINUO")' % (gA_, gB_)
-                else:
-                    cont = '%s="CONTINUO"' % gA_
+                cont = 'OR(%s="CONTINUO",%s="CONTINUO")' % (gA_, gB_)
                 cond = '%s,%s>0,%s>0' % (cont, MA, MB)
                 kA = '{k%s}{r}/MAX({k%s}{r}+{k%s}%d,1E-9)' % (dE, dE, dE, rb_)
                 gA = 'IF(AND(%s,%s>%s),%s+2/3*(%s-%s)*%s,0)' % (cond, MB, MA, MA, MB, MA, kA)
@@ -341,8 +342,13 @@ def sheet_tableros(wb):
         xvol = '({ln1}{r}-(({VcR}{r}-{Vtip}{r})*1E5/{sb}{r}-{FCcm}*{pbor}{r})*100/{wu}{r})'
         # macizo de orilla del claro corto: el menor de los dos bordes (del lado seguro); ya incluye la dala de borde de D9 en los bordes discontinuos
         oril = 'IF({dirc}{r}="X",MIN({ox0}{r},{ox1}{r}),MIN({oy0}{r},{oy1}{r}))'
-        hil = 'MAX(0,CEILING((IF({modo}{r}="VOLADO",%s,%s)-%s)/{s},1))' % (xvol, xper, oril)
-        vals['cort'] = ('=IF({modo}{r}="HUECO","—",IF({Vu}{r}<={VcR}{r},"CUMPLE",IF(%s,"NO CUMPLE: V_u > V_cR (losa maciza)",IF(%s<=0,"CUMPLE (basta el macizo de orilla)","MACIZAR "&%s&" hilera(s)"))))' % (mac, hil, hil), 'calc', '@')
+        hraw = 'MAX(0,CEILING((IF({modo}{r}="VOLADO",%s,%s)-%s)/{s},1))' % (xvol, xper, oril)
+        # tope: los casetones que hay a lo largo del claro corto (en un perimetral se maciza desde los dos apoyos: la mitad de ellos)
+        ncd = 'IF({dirc}{r}="X",{ncx}{r},{ncy}{r})'
+        hcap = 'IF({modo}{r}="VOLADO",%s,CEILING(%s/2,1))' % (ncd, ncd)
+        hil = 'IF(%s=0,%s,MIN(%s,%s))' % (ncd, hraw, hcap, hraw)
+        vals['cort'] = ('=IF({modo}{r}="HUECO","—",IF({Vu}{r}<={VcR}{r},"CUMPLE",IF(%s,"NO CUMPLE: V_u > V_cR (losa maciza)",IF(%s<=0,"CUMPLE (basta el macizo de orilla)","MACIZAR "&%s&" hilera(s)"&IF(AND(%s>0,%s>=%s)," (todo el claro: tablero macizo)","")))))'
+                        % (mac, hil, hil, ncd, hraw, hcap), 'calc', '@')
         afs = [edge_af(t, s_, k) for s_ in SIDES]
         vals['afm'] = ('=IF({modo}{r}="PERIMETRAL",(%s)/4,0)' % '+'.join(afs), 'calc', '0.00')
         disc_nobeam = 'OR(' + ','.join('AND(%s,%s<0.8)' % (D_[s_], a_) for s_, a_ in zip(SIDES, afs)) + ')'
@@ -563,7 +569,7 @@ def sheet_nervadura(wb):
     S.row('Coef. M⁺ claro largo', '=' + tv('cPL'), '×10⁻⁴', 'Interpolado en m.', 'TABLAS sección A', 'calc', '0', 'n_cPL')
     S.row('Carga en la orilla del volado (servicio)', '=' + tv('pbor'), 'kg/m', 'Sólo para volados: barandal del E2K.', E2K + ' · FRAME OBJECT LOADS', 'calc', '0.0', 'n_pb')
     S.row('3.4.2.1 c): M⁻ del borde común con cada vecino', '=' + tv('c342'), '—', 'FUERA = con ese vecino (perimetral) los M⁻ difieren más de 50 % del menor: los coeficientes quedan fuera de su campo; se distribuye el desequilibrio (renglones de abajo) y conviene confirmar con el modelo (método reconocido, 3.4.1.1). Se avisa también si APOYOS marca distinto el borde común en los dos tableros y si el vecino es un volado.', NTCC + ' 3.4.2.1 c), p. 64', 'key', '@', 'n_c342')
-    S.row('M⁻ que deja el vecino al distribuir (corto / largo)', '=TEXT(' + tv('MNcd') + ',"0.000")&" / "&TEXT(' + tv('MNld') + ',"0.000")', 't·m', 'En cada borde común que alguno de los dos tableros marque CONTINUO (APOYOS; cada uno entra con el M⁻ de su propia clasificación) con vecino de M⁻ mayor: M + 2/3·(M_vecino − M)·k/(k + k_vecino), con k = d³/a1 y d el peralte del lecho superior de cada tablero en esa dirección. Por nervadura. Los volados no entran: su momento es estático; en el tablero de respaldo su M⁻ y su desequilibrio (ΔV) se revisan en las nervaduras de esa dirección (sección 10, «Respaldo de un volado»).', NTCC + ' 3.4.3.1, p. 64', 'calc', '@')
+    S.row('M⁻ que deja el vecino al distribuir (corto / largo)', '=TEXT(' + tv('MNcd') + ',"0.000")&" / "&TEXT(' + tv('MNld') + ',"0.000")', 't·m', 'En cada borde común que alguno de los dos tableros marque CONTINUO (APOYOS; cada uno entra con el M⁻ de su propia clasificación) con vecino de M⁻ mayor: M + 2/3·(M_vecino − M)·k/(k + k_vecino), con k = d³/a1 y d el peralte del lecho superior de cada tablero en esa dirección. Por nervadura. Sólo cuentan los vecinos que también listan a este tablero (en APOYOS), y de ellos el M⁻ de su borde opuesto, que va en la misma dirección; un contacto de esquina en un tablero irregular no reparte. Los volados no entran: su momento es estático; en el tablero de respaldo su M⁻ y su desequilibrio (ΔV) se revisan en las nervaduras de esa dirección (sección 10, «Respaldo de un volado»).', NTCC + ' 3.4.3.1, p. 64', 'calc', '@')
     S.row('ΔM⁺ por la distribución (corto / largo)', '=TEXT(' + tv('MPcd') + ',"0.000")&" / "&TEXT(' + tv('MPld') + ',"0.000")', 't·m', 'Donde el tablero cede negativo al vecino, el M⁺ sube la mitad de lo que baja el M⁻ en cada extremo.', NTCC + ' 3.4.3.1, p. 64', 'calc', '@')
     S.gap()
     S.section('3. MOMENTOS POR NERVADURA')
@@ -610,7 +616,8 @@ def sheet_nervadura(wb):
     S.row('¿Cumple 6.7.8 (losa encasetonada)?', '=' + tv('g678'), '—', 'Claro corto ≥ 6·a_c, a_c ≤ 80, b_w ≥ 10, h ≤ 3.5b_w, t ≥ máx(a_c/13, 5). Si NO, se diseña como losa apoyada en vigas: nervaduras con recubrimiento de viga (r_np) y sin el ×1.1.', NTCC + ' 6.7.8.1.2 a 6.7.8.1.4, p. 187 · 6.7.8.1.9, p. 188', 'key', '@', 'n_678')
     S.row('V_cR — cortante que toma el concreto', "={FRv}*2*{n_ls}*{n_p}^(1/3)*SQRT({fc})*{n_bNc}*{n_dNc}*IF({n_678}=\"SÍ\",{VcRinc},1)/1000", 't',
           "F_R·2·λs·p^(1/3)·√f'c·b_w·d (× 1.1 si cumple 6.7.8). Sin estribos: elemento en que no es práctico colocarlos. Maciza: misma expresión con b = 100 cm.", NTCC + ' 5.5.3.8.1, p. 97 · ec. 5.5.3.2.1.a, p. 95 · 6.7.8.1.5, p. 187 · Tabla 3.8.2.1, p. 70', 'key', '0.000', 'n_VcR')
-    S.row('Estado', '=' + tv('cort'), '—', 'Si V_u > V_cR se mide desde el paño hasta donde V baja a V_cR y se compara con el macizo de orilla; lo que falte se cubre quitando hileras de casetones (macizo). '
+    S.row('Estado', '=' + tv('cort'), '—', 'Si V_u > V_cR se mide desde el paño hasta donde V baja a V_cR y se compara con el macizo de orilla; lo que falte se cubre quitando hileras de casetones (macizo), '
+          'como mucho la mitad de los casetones del claro corto desde cada apoyo (todos en un volado): ahí el tablero queda macizo. '
           'Sin estribos por 5.5.3.8.1 (elemento en que no es práctico colocarlos, criterio del Proyectista); si el tablero no cumple 6.7.8 tampoco aplica la exención de la Tabla 6.3.5.4.1 c).', NTCC + ' 5.5.3.8.1, p. 97 · 5.5.3.1.1, p. 94 · Tabla 6.3.5.4.1 c), p. 123', 'key', '@')
     S.gap()
     S.section('%d. ESPESOR MÍNIMO (SE PUEDE OMITIR EL CÁLCULO DE FLECHAS)' % sec); sec += 1
