@@ -145,7 +145,7 @@ def sheet_detalle(wb):
     S.row('Respaldo de un volado con b_w propio: varillas del volado que caben en la nervadura normal / su M_R / su V_cR', '=IF(' + VV('tipo') + '<>"VOLADO","—",' + VV('rn1', '0') + '&" pzas · "&TEXT(' + VV('rM1', '0') + ',"0.000")&" t·m · "&TEXT(' + VV('rV1', '0') + ',"0.000")&" t")', '—',
           'Nervadura de b_w de DATOS con las varillas del volado que le caben y la malla al centro de la capa (F_R·As·fy·(d − a/2) con ε_t ≥ 0.005; ec. 5.5.3.2.1 sin ×1.1).', NTCC + ' ec. 5.2.2.1.1.1.b, p. 89 · ec. 5.5.3.2.1, p. 95', 'calc', '@')
     S.row('… dónde M y V del volado bajan a esos valores dentro del respaldo', '=IF(' + VV('tipo') + '<>"VOLADO","—","M: "&TEXT(' + VV('rxM', '0') + ',"0.00")&" m · V: "&TEXT(' + VV('rxV', '0') + ',"0.00")&" m desde el paño")', '—',
-          'M(x) = M⁻(1 − x/L_b) − 0.9·PP·s·x(L_b − x)/2 (sin CV); V(x) = M⁻/L_b + w_u·s·(L_b/2 − x).', NTCCA + ' 3.4.1 c), p. 7 · 5.1.2.2, p. 9', 'calc', '@')
+          'M(x) = M⁻(1 − x/L_b) − 0.9·PP·s·x(L_b − x)/2 (sin CV); V(x) = M⁻/L_n + (0.95 − 0.5·m_b)·1.15·w_u·s·(L_n/2 − x), con L_n = L_b − b_p (m_b = 0 si no se captura el otro claro del respaldo).', NTCCA + ' 3.4.1 c), p. 7 · 5.1.2.2, p. 9', 'calc', '@')
     S.row('Respaldo del volado', '=' + VV('rest'), '—', 'Las primeras hileras del tablero de respaldo siguen con las nervaduras anchas del volado (casetón s − b_w) hasta ese punto, más máx(d, 12d_b), y hasta donde terminan los bastones del volado si no le caben todas sus varillas. '
           'Junto al apoyo la nervadura ancha resiste M⁻/L_b + w_u·s·L_b/2 con el V_cR del volado. Pon estas hileras también en el renglón del tablero de respaldo.', 'Decisión D10 de Casa Rocha · ' + NTCC + ' 6.3.7.3.10.4, p. 129', 'key', '@')
     S.gap()
