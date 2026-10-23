@@ -1,6 +1,25 @@
 """Parte B: TABLEROS, NERVADURA, PRINCIPALES, TRIB, TRANSFER, MUROS."""
 from gen_a import *
 from openpyxl.utils import column_index_from_string as CI
+from shapely.geometry import Polygon, Point
+
+
+def contacto(t, tb, side):
+    """Largo (m) de la orilla común de los polígonos de t y tb en el borde `side` de t (con t del lado de adentro de ese borde)."""
+    a = Polygon(t['pts']); b = Polygon(tb['pts'])
+    off = {'inferior': (0, 0.01), 'superior': (0, -0.01), 'izquierdo': (0.01, 0), 'derecho': (-0.01, 0)}[side]
+    inter = a.boundary.intersection(b.boundary)
+    L = 0.0
+    for g in getattr(inter, 'geoms', [inter]):
+        if g.geom_type != 'LineString':
+            continue
+        c = list(g.coords)
+        for (x1, y1), (x2, y2) in zip(c, c[1:]):
+            if (abs(y2 - y1) < 1e-6) != (side in ('inferior', 'superior')):
+                continue
+            if a.contains(Point((x1 + x2) / 2 + off[0], (y1 + y2) / 2 + off[1])):
+                L += ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
+    return L
 
 # el claro de respaldo de cada volado (t['volado']['Lb'], el más largo de sus tableros de respaldo) y los tableros de respaldo (BACK) salen de gen_a
 
@@ -252,10 +271,13 @@ def sheet_tableros(wb):
                 if not sbs:
                     continue
                 sb = OPPS[s_]
+                # si el vecino lo lista en otro borde (tableros irregulares), sólo cuenta si las orillas se tocan de veras en este borde, no en un punto
+                if sb not in sbs and contacto(t, tb, s_) < 0.05:
+                    continue
                 MB = '{%s}%d' % (MEC[sb], rb_)
                 gB_ = 'APOYOS!$G$%d' % EDGE[(kb, sb)]
-                if sb in sbs:
-                    asym.append(('AND({modo}%d="PERIMETRAL",%s<>%s)' % (rb_, gA_, gB_), n_))
+                # el aviso de continuidad asimétrica compara con el borde donde el vecino lista a este tablero
+                asym.append(('AND({modo}%d="PERIMETRAL",%s<>APOYOS!$G$%d)' % (rb_, gA_, EDGE[(kb, sb if sb in sbs else sbs[0])]), n_))
                 cont = 'OR(%s="CONTINUO",%s="CONTINUO")' % (gA_, gB_)
                 cond = '%s,%s>0,%s>0' % (cont, MA, MB)
                 kA = '{k%s}{r}/MAX({k%s}{r}+{k%s}%d,1E-9)' % (dE, dE, dE, rb_)
@@ -347,8 +369,8 @@ def sheet_tableros(wb):
         ncd = 'IF({dirc}{r}="X",{ncx}{r},{ncy}{r})'
         hcap = 'IF({modo}{r}="VOLADO",%s,CEILING(%s/2,1))' % (ncd, ncd)
         hil = 'IF(%s=0,%s,MIN(%s,%s))' % (ncd, hraw, hcap, hraw)
-        vals['cort'] = ('=IF({modo}{r}="HUECO","—",IF({Vu}{r}<={VcR}{r},"CUMPLE",IF(%s,"NO CUMPLE: V_u > V_cR (losa maciza)",IF(%s<=0,"CUMPLE (basta el macizo de orilla)","MACIZAR "&%s&" hilera(s)"&IF(AND(%s>0,%s>=%s)," (todo el claro: tablero macizo)","")))))'
-                        % (mac, hil, hil, ncd, hraw, hcap), 'calc', '@')
+        vals['cort'] = ('=IF({modo}{r}="HUECO","—",IF({Vu}{r}<={VcR}{r},"CUMPLE",IF(%s,"NO CUMPLE: V_u > V_cR (losa maciza)",IF(%s<=0,"CUMPLE (basta el macizo de orilla)",IF(AND(%s>0,%s>=%s),"NO CUMPLE: habría que macizar todo el claro ("&%s&" hilera(s)): rediseñarlo como losa maciza, con su peso","MACIZAR "&%s&" hilera(s)")))))'
+                        % (mac, hil, ncd, hraw, hcap, hil, hil), 'calc', '@')
         afs = [edge_af(t, s_, k) for s_ in SIDES]
         vals['afm'] = ('=IF({modo}{r}="PERIMETRAL",(%s)/4,0)' % '+'.join(afs), 'calc', '0.00')
         disc_nobeam = 'OR(' + ','.join('AND(%s,%s<0.8)' % (D_[s_], a_) for s_, a_ in zip(SIDES, afs)) + ')'
@@ -466,7 +488,7 @@ def sheet_tableros(wb):
         # nervada: piezas que no caben en b_w − 2r; maciza: separación menor que la mínima práctica
         nn = 'OR(' + ','.join('IF(%s,{s%s}{r}<{smin_mac},{n%s}{r}>MIN({nmax_sec},%s))' % (mac, k_b, k_b, nfit('{v%s}{r}' % k_b, avs[k_b])) for k_b in BLKS) + ')'
         etl = 'OR(' + ','.join('AND(ISNUMBER({e%s}{r}),{e%s}{r}<0.005)' % (k_b, k_b) for k_b in BLKS) + ')'
-        cfl = 'AND(%s,LEFT({cort}{r},6)<>"CUMPLE")' % mac
+        cfl = 'OR(AND(%s,LEFT({cort}{r},6)<>"CUMPLE"),LEFT({cort}{r},9)="NO CUMPLE")' % mac
         rsp = 'LEFT({vest}{r},2)="NO"'
         vals['estado'] = ('=IF({modo}{r}="HUECO","HUECO — marco de nervaduras principales",IF(AND(%s<=1,NOT(%s),NOT(%s),NOT(%s),NOT(%s),{peral}{r}="CUMPLE",{tdia}{r}="CUMPLE"),'
                           'IF({apoy}{r}="OK",IF(LEFT({cort}{r},6)="CUMPLE","CUMPLE","CUMPLE — "&{cort}{r})&IF({vnh}{r}>0," · "&{vnh}{r}&" hilera(s) de 20 cm junto al volado","")&IF(LEFT({c342}{r},5)="FUERA"," · fuera de 3.4.2.1 c)",""),IF({apoy}{r}="VER PRINCIPALES","VER PRINCIPALES","REVISAR APOYOS")),'
@@ -617,7 +639,7 @@ def sheet_nervadura(wb):
     S.row('V_cR — cortante que toma el concreto', "={FRv}*2*{n_ls}*{n_p}^(1/3)*SQRT({fc})*{n_bNc}*{n_dNc}*IF({n_678}=\"SÍ\",{VcRinc},1)/1000", 't',
           "F_R·2·λs·p^(1/3)·√f'c·b_w·d (× 1.1 si cumple 6.7.8). Sin estribos: elemento en que no es práctico colocarlos. Maciza: misma expresión con b = 100 cm.", NTCC + ' 5.5.3.8.1, p. 97 · ec. 5.5.3.2.1.a, p. 95 · 6.7.8.1.5, p. 187 · Tabla 3.8.2.1, p. 70', 'key', '0.000', 'n_VcR')
     S.row('Estado', '=' + tv('cort'), '—', 'Si V_u > V_cR se mide desde el paño hasta donde V baja a V_cR y se compara con el macizo de orilla; lo que falte se cubre quitando hileras de casetones (macizo), '
-          'como mucho la mitad de los casetones del claro corto desde cada apoyo (todos en un volado): ahí el tablero queda macizo. '
+          'como mucho la mitad de los casetones del claro corto desde cada apoyo (todos en un volado): si hiciera falta más, el tablero queda macizo y NO CUMPLE hasta rediseñarlo como losa maciza, con su peso. '
           'Sin estribos por 5.5.3.8.1 (elemento en que no es práctico colocarlos, criterio del Proyectista); si el tablero no cumple 6.7.8 tampoco aplica la exención de la Tabla 6.3.5.4.1 c).', NTCC + ' 5.5.3.8.1, p. 97 · 5.5.3.1.1, p. 94 · Tabla 6.3.5.4.1 c), p. 123', 'key', '@')
     S.gap()
     S.section('%d. ESPESOR MÍNIMO (SE PUEDE OMITIR EL CÁLCULO DE FLECHAS)' % sec); sec += 1
