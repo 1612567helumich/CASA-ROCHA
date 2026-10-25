@@ -44,3 +44,11 @@ Recalcula sin errores (11 328 fórmulas): 30 de 30 tableros y 32 de 32 principal
 - Croquis a escala, con ganchos de 180°, bastón del volado, apoyo lejano y leyendas que dicen «—» cuando un trazo no aplica.
 
 Recalcula sin errores; los siete ejemplos cumplen y los de nervadas cuadran con Casa Rocha salvo lo que depende de los vecinos y del peso volumétrico.
+
+## Hoja de muros (25 de octubre): terminada
+
+`hojas_generales/Muros_Mamposteria_NTC2023.xlsx` (generador en `hojas_generales/generador_muros/`, ver su README):
+revisión de muros de mampostería confinada por la NTC-M 2023, con croquis del muro escogido. Trae los 37 muros de Casa
+Rocha con las fuerzas de la hoja de revisión del usuario y v'm provisional de 2 kg/cm² (Casa Rocha es Tipo I: faltan
+los ensayes de muretes). Recalcula sin errores y los 37 muros coinciden con un cálculo independiente en Python; el modo
+ETABS (tabla Pier Forces) se probó aparte.

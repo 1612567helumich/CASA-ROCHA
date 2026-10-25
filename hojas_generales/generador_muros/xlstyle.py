@@ -111,7 +111,7 @@ class Narr:
         f = ws.cell(r, 6, ref); f.font = font(8, i=True, color=REF); f.alignment = Alignment(horizontal='left', vertical='center', wrap_text=True); f.border = BOX
         vlen = 22.0 if (isinstance(value, str) and value.startswith('=') and kind == 'key' and '@' in fmt) else 0
         n = max(len(how) / 58.0, len(ref) / 52.0, len(concept) / 46.0, 1, vlen / 14.0)
-        ws.row_dimensions[r].height = h or max(19.5, 13.5 * (int(n) + (1 if n > int(n) else 0)) + 3)
+        ws.row_dimensions[r].height = h or max(30 if kind == 'text' else 19.5, 13.5 * (int(n) + (1 if n > int(n) else 0)) + 3)
         if name:
             self.N[name] = "%s!$C$%d" % (q(ws.title), r)
         self.r += 1

@@ -92,7 +92,7 @@ def vals_muros():
     v['MRa'] = (G(MRf('[Pmn]')), 'calc', '0.00')
     v['MRb'] = (G(MRf('[Pmx]')), 'calc', '0.00')
     v['MR'] = (G('MAX(0,MIN([MRa],[MRb]))'), 'key', '0.00')
-    v['rM'] = (G('IF([MR]>0,[Mu]/[MR],IF([Mu]>0,99,0))'), 'key', '0.00')
+    v['rM'] = (G('IF([MR]>0,[Mu]/[MR],IF([Mu]>0,99,0))'), 'key', '[>=99]"M_R = 0";0.00')
     # cortante de la mampostería por tramo
     for i in range(1, NT + 1):
         v['f%d' % i] = (G('IF([T{0}]>0,MAX(1,MIN(1.5,1.5-0.625*([H]/[T{0}]-0.2))),0)'.format(i)), 'calc', '0.00')
@@ -115,12 +115,12 @@ def vals_muros():
     dbh = db(rhv)
     v['rhok'] = (G('IF(OR([rht]="",[rht]="NINGUNO"),IF({vm}>=10,"FALTA refuerzo horizontal: v\'m ≥ 10 kg/cm² (6.5.2.2)",IF(AND([P]<0,[Vu]>0),"FALTA: P en tensión, el refuerzo debe tomar todo el cortante (6.5.1.3)","—")),'
                    'IF([rht]="ESCALERILLA","NO CUENTA: la escalerilla no se permite para cortante por sismo (6.5.3.1.2)",'
-                   'IF([rht]="MALLA",IF(AND([phf]>=2.5,[phf]<=MAX(0.15*{fm}*{fan},2.5),{fyh}<=5000),"CUMPLE","NO CUMPLE: "&IF([phf]<2.5,"p_h·f_yh < 2.5 ","")&IF([phf]>MAX(0.15*{fm}*{fan},2.5),"p_h·f_yh > 0.15·f\'m·f_an ","")&IF({fyh}>5000,"f_yh > 5000 (6.5.4.1.3)","")),'
-                   'IF(AND([sh]<=MIN(6*{hh},45),[phf]>=3,[phf]<=MIN(MAX(0.15*{fm}*{fan},3),0.05*{hj}/10*MIN({fyh},6000)/[sh]),%s>=0.35,%s<=0.75*{hj}/10,{fyh}<=6000),"CUMPLE",'
+                   'IF([rht]="MALLA",IF(AND([phf]>=2.5,[phf]<=MAX(0.15*{fm}*{fan},2.5)),"CUMPLE","NO CUMPLE: "&IF([phf]<2.5,"p_h·f_yh < 2.5 (6.5.4.2.4)","p_h·f_yh > 0.15·f\'m·f_an (6.5.4.2.4)")),'
+                   'IF(AND([sh]<=MIN(6*{hh},45),[phf]>=3,[phf]<=MIN(MAX(0.15*{fm}*{fan},3),0.05*{hj}/10*MIN({fyh},6000)/[sh]),%s>=0.35,%s<=0.75*{hj}/10),"CUMPLE",'
                    '"NO CUMPLE: "&IF([sh]>MIN(6*{hh},45),"s_h > 6 hiladas o 45 cm (6.5.3.2.1) ","")&IF([phf]<3,"p_h·f_yh < 3 (6.5.3.3.1) ","")&IF([phf]>MIN(MAX(0.15*{fm}*{fan},3),0.05*{hj}/10*MIN({fyh},6000)/[sh]),"p_h·f_yh > máximo (6.5.3.3.2) ","")'
-                   '&IF(OR(%s<0.35,%s>0.75*{hj}/10),"diámetro fuera de 3.5 mm a 0.75·h_j (4.2.2.2.1) ","")&IF({fyh}>6000,"f_yh > 6000 (6.5.3.1.3)","")))))' % (dbh, dbh, dbh, dbh)), 'calc', '@')
+                   '&IF(OR(%s<0.35,%s>0.75*{hj}/10),"diámetro fuera de 3.5 mm a 0.75·h_j (4.2.2.2.1)","")))))' % (dbh, dbh, dbh, dbh)), 'calc', '@')
     v['VR'] = (G('[VmR]+[VsR]'), 'key', '0.00')
-    v['rV'] = (G('IF([VR]>0,[Vu]/[VR],IF([Vu]>0,99,0))'), 'key', '0.00')
+    v['rV'] = (G('IF([VR]>0,[Vu]/[VR],IF([Vu]>0,99,0))'), 'key', '[>=99]"V_R = 0";0.00')
     # refuerzo horizontal que hace falta: V_mR·k₀ + x·(F_R·η_s·A_T − α·Σk₀·V_mR) ≥ V_u (P ≥ 0), o F_R·η_s·x(1 − αx)·A_T ≥ V_u (P en tensión)
     SK = 'SUMPRODUCT([k01]:[k0%d],[V1]:[V%d])' % (NT, NT)
     es = 'IF([rht]="MALLA",0.5,IF({fm}<=60,0.55,IF({fm}>=90,0.75,0.55+0.2*({fm}-60)/30)))'

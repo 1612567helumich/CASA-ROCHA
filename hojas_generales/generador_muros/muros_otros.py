@@ -142,7 +142,7 @@ def sheet_resumen(wb):
     for t_, k in (('Peor V_u/V_R', 'rV'), ('Peor M_u/M_R', 'rM'), ('Peor P_u/P_R', 'rPR')):
         r = S.r
         cell(ws, r, 2, t_, 'calc', '@', al='left', bold=True); ws.merge_cells('B%d:D%d' % (r, r))
-        cell(ws, r, 5, '=MAX(%s)' % mr(k), 'key', '0.00')
+        cell(ws, r, 5, '=MAX(%s)' % mr(k), 'key', '[>=99]"∞";0.00')
         ws.merge_cells('F%d:H%d' % (r, r))
         cell(ws, r, 6, '=IFERROR(INDEX(%s,MATCH(E%d,%s,0)),"")' % (mr('key'), r, mr(k)), 'calc', '@', al='left')
         S.r += 1
@@ -154,7 +154,7 @@ def sheet_resumen(wb):
         hdr_cell(ws, r, 2 + k, h)
     ws.row_dimensions[r].height = 30
     ks = ['key', 'st', 'dir', 'L', 'Vu', 'VR', 'rV', 'rM', 'rPR', 'm418', 'est', 'rhsug']
-    fm_ = ['@', '@', '@', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '@', '@', '@']
+    fm_ = ['@', '@', '@', '0.00', '0.00', '0.00', '[>=99]"V_R = 0";0.00', '[>=99]"M_R = 0";0.00', '0.00', '@', '@', '@']
     for i in range(NW):
         rr = r + 1 + i; mrow = R0 + i
         for k, (key, f_) in enumerate(zip(ks, fm_)):

@@ -10,7 +10,7 @@ def V(k):
 
 
 def sheet_detalle(wb):
-    ws = wb.create_sheet('DETALLE'); S = Narr(ws, N)
+    ws = wb.create_sheet('DETALLE'); S = Narr(ws, N, {'A': 1.78, 'B': 36, 'C': 46, 'D': 7, 'E': 36, 'F': 28})
     S.title('DETALLE — MEMORIA DE CÁLCULO PASO A PASO DEL MURO ESCOGIDO')
     S.subtitle('Escoge el muro en la celda amarilla. CROQUIS dibuja este mismo muro.', 16)
     S.gap()
@@ -64,8 +64,8 @@ def sheet_detalle(wb):
     ws.cell(S.r - 1, 5).value = ws.cell(S.r - 1, 5).value.format(**N)
     for i in range(1, NT + 1):
         T = V('T%d' % i)
-        txt = ('=IF(%s<=0,"—",IF(%s<{Lmin}-0.0001,"L = "&TEXT(%s,"0.00")&" m: machón, no cuenta","L = "&TEXT(%s,"0.00")&" m · H/L = "&TEXT({d_H}/%s,"0.00")&" · f = "&TEXT(%s,"0.00")&" · P = "&TEXT({d_P}*%s/MAX(%s,0.001),"0.00")&" t · V_mR = "&TEXT(%s,"0.00")&" t · k₀ = "&TEXT(%s,"0.00")&" · V_sR = "&TEXT(%s,"0.00")&" t"))'
-               % (T, T, T, T, T, V('f%d' % i), T, V('Lc'), V('V%d' % i), V('k0%d' % i), V('S%d' % i)))
+        txt = ('=IF(%s<=0,"—",IF(%s<{Lmin}-0.0001,TEXT(%s,"0.00")&" m: machón, no cuenta",TEXT(%s,"0.00")&" m · f = "&TEXT(%s,"0.00")&" · V_mR = "&TEXT(%s,"0.00")&" t"&IF(%s>0," · V_sR = "&TEXT(%s,"0.00")&" t","")))'
+               % (T, T, T, T, V('f%d' % i), V('V%d' % i), V('S%d' % i), V('S%d' % i)))
         S.row('Tramo %d' % i, txt, '—', 'F_R(0.5·v\'m·A_T + 0.3·P)·f' if i == 1 else '', 'NTC-M 6.5.2.1 y 6.5.2.4, p. 67–68' if i == 1 else '', 'text', '@')
     S.gap()
     sec('5. REQUISITOS GENERALES (6.1 y 6.2)')

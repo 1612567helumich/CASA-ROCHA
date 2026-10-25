@@ -157,7 +157,7 @@ def sheet_tablas(wb):
 
 # =====================================================================
 def sheet_datos(wb):
-    ws = wb.create_sheet('DATOS'); S = Narr(ws, N)
+    ws = wb.create_sheet('DATOS'); S = Narr(ws, N, {'A': 1.78, 'B': 44, 'C': 26, 'D': 8, 'E': 40, 'F': 34})
     S.title('DATOS GENERALES — MUROS DE MAMPOSTERÍA CONFINADA, NTC 2023 (CDMX)')
     S.subtitle('Sólo se tocan las celdas amarillas. Valen para todos los muros; lo de cada muro va en MUROS.', 16)
     S.gap()
@@ -222,7 +222,7 @@ def sheet_datos(wb):
     S.row("f'c — concreto de castillos y dalas", 200, 'kg/cm²', '≥ 200', 'NTC-M 6.2.1.3.1, p. 61', 'input', '0', 'fc')
     S.row('f_y — varillas longitudinales', 4200, 'kg/cm²', '', 'NMX-C-407-ONNCCE', 'input', '0', 'fy')
     S.row('f_y — estribos de castillos y dalas', 2530, 'kg/cm²', 'Alambrón No. 2: 2 530', 'NTC-M 6.2.2.3, p. 62', 'input', '0', 'fye')
-    S.row('f_yh — refuerzo horizontal (juntas o malla)', 6000, 'kg/cm²', 'Tope 6 000 (juntas) y 5 000 (malla)', 'NTC-M 6.5.3.1.3 y 6.5.4.1.3, p. 69 y 71', 'input', '0', 'fyh')
+    S.row('f_yh — refuerzo horizontal (juntas o malla)', 6000, 'kg/cm²', 'La hoja usa 6 000 como tope en juntas y 5 000 en malla', 'NTC-M 6.5.3.1.3 y 6.5.4.1.3, p. 69 y 71', 'input', '0', 'fyh')
     S.row("f'c — vigas sobre las que desplantan muros", 250, 'kg/cm²', '', 'NTC-M 4.1.18.2.2, p. 44', 'input', '0', 'fcv')
     S.row('Clase del concreto de esas vigas', 1, '—', '', 'NTC-Concreto 2.1.3', 'input', '0', 'clv')
     dv_list(ws, cel(N['clv']), '=LST_CLASE')
@@ -327,8 +327,7 @@ def sheet_datos(wb):
 # =====================================================================
 def sheet_instrucciones(wb):
     ws = wb.active; ws.title = 'INSTRUCCIONES'
-    S = Narr(ws, N, {'A': 1.78, 'B': 150})
-    S.last = 'B'
+    S = Narr(ws, N)
     S.title('REVISIÓN DE MUROS DE MAMPOSTERÍA CONFINADA — NTC 2023 (CDMX)')
     S.gap()
     S.section('CÓMO SE USA')
@@ -349,7 +348,7 @@ def sheet_instrucciones(wb):
     S.section('EJEMPLO: CASA ROCHA')
     S.bullet('37 muros del modelo R3.2 con los vanos del plano arquitectónico y las fuerzas de tu hoja de revisión. Alturas de vanos típicas: confírmalas.')
     ws.sheet_view.zoomScale = 100
-    print_setup(ws, 'B1:B%d' % S.r, landscape=False)
+    print_setup(ws, 'B1:F%d' % S.r, landscape=False)
     return ws
 
 

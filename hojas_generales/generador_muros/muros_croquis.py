@@ -83,8 +83,9 @@ def croquis_params():
     kp('…', '=IF({k_sv}=1,N(' + V('Lv') + ')*100,0)', 'k_Lv'); kp('…', '=IF({k_sv}=1,N(' + V('cv') + ')*100,0)', 'k_cv')
     kp('Viga: inicio / fin (centrada en L/2 + c)', '={k_L}/2+{k_cv}-{k_Lv}/2', 'k_sb0'); kp('…', '={k_sb0}+{k_Lv}', 'k_sb1')
     kp('Elemento de abajo: peralte', '=IF({k_sv}=1,MAX({k_hv},10),{k_hd})', 'k_hb')
-    kp('Varillas del elemento de abajo (inferior / superior)', '=-{k_hb}+{k_rc}+{k_dbe}+{k_dbd}/2', 'k_zb1')
+    kp('Varillas de la dala de desplante (inferior / superior)', '=-{k_hd}+{k_rc}+{k_dbe}+{k_dbd}/2', 'k_zb1')
     kp('…', '=-{k_rc}-{k_dbe}-{k_dbd}/2', 'k_zb2')
+    kp('Varilla inferior de la viga de apoyo', '=-{k_hb}+{k_rc}+{k_dbe}+{k_dbd}/2', 'k_zv1')
     kp('¿Refuerzo horizontal?', '=IF(AND({k_ok}=1,OR(' + V('rht') + '="VARILLA EN JUNTAS",' + V('rht') + '="MALLA",' + V('rht') + '="ESCALERILLA")),1,0)', 'k_rh', '0', '—')
     kp('Separación de las líneas de refuerzo horizontal que se dibujan', '=IF(' + V('rht') + '="MALLA",15.24,MAX(N(' + V('sh') + '),5))', 'k_shd')
     kp('Líneas por tramo', '=MIN(%d,MAX(0,INT(({k_H}-1)/{k_shd})))' % NL, 'k_nl', '0', 'pzas')
@@ -169,8 +170,9 @@ def build_croquis_datos(wb, wsK):
     for i in range(NPT):
         ws['A%d' % (Y0 + i)] = i + 1
     ws['A4'] = 'k'
+    ws.print_area = 'A1:H6'
     # ---------------- tabla auxiliar de castillos (B:G) y alturas de estribos (H)
-    for c, h in zip('BCDEFGH', ('castillo q', 'tramo', 'm en el tramo', 'centro s (cm)', 'ancho (cm)', '¿se dibuja?', 'z del estribo k (cm)')):
+    for c, h in zip('BCDEFGHI', ('castillo q', 'tramo', 'm en el tramo', 'centro s (cm)', 'ancho (cm)', '¿se dibuja?', 'z del estribo k (cm)', 'z de anclaje (cm)')):
         ws['%s4' % c] = h; ws['%s4' % c].font = font(8, True)
     for q in range(1, NK + 1):
         r = Y0 + q - 1
@@ -183,6 +185,7 @@ def build_croquis_datos(wb, wsK):
         ws['E%d' % r] = ('=IF(G{r}=0,0,%s+IF(%s=1,%s/2,{k_hc}/2+(D{r}-1)*(%s-{k_hc})/MAX(%s-1,1)))'.replace('{r}', str(r)) % (sq, nq, tq, tq, nq)).format(**N)
         ws['F%d' % r] = ('=IF(G{r}=0,0,IF(%s=1,MIN({k_hc},%s),{k_hc}))'.replace('{r}', str(r)) % (nq, tq)).format(**N)
         ws['G%d' % r] = ('=IF(AND({k_ok}=1,B{r}<={k_K}),1,0)'.replace('{r}', str(r))).format(**N)
+        ws['I%d' % r] = ('=IF(AND({k_sv}=1,E{r}>={k_sb0}-1,E{r}<={k_sb1}+1),{k_zv1},{k_zb1})'.replace('{r}', str(r))).format(**N)
     for k in range(1, NZ + 1):
         r = Y0 + k - 1
         ws['H%d' % r] = ('=IF({k}<={k_nb},{k}*{k_se0},IF({k}<={k_nb}+{k_nm},{k_nb}*{k_se0}+({k}-{k_nb})*({k_H}-2*{k_nb}*{k_se0})/({k_nm}+1),{k_H}-(2*{k_nb}+{k_nm}+1-{k})*{k_se0}))'
@@ -274,7 +277,8 @@ def build_croquis_datos(wb, wsK):
         ext = 'OR(%s=1,%s={k_K})' % (q, q)
         xl = '(%s+MIN(%s,%s/2-0.5))' % (cL(q), ins(q, ext), CQ('F', q))
         xr = '(%s-MIN(%s,%s/2-0.5))' % (cR(q), ins(q, ext), CQ('F', q))
-        return ch_(j, 4, [xl, xl, xr, xr]), ch_(j, 4, ['{k_zd2}', '{k_zb1}', '{k_zb1}', '{k_zd2}'])
+        zq = CQ('I', q)
+        return ch_(j, 4, [xl, xl, xr, xr]), ch_(j, 4, ['{k_zd2}', zq, zq, '{k_zd2}'])
     dyn('Acvar', lambda k: AXa(cast_bars(k)[0]), lambda k: AZa(cast_bars(k)[1]), 4 * NK,
         '="Varillas: "&{nc}&" No. "&{vc}&IF(OR(' + V('nce') + '<>"",' + V('vce') + '<>"")," (extremos "&IF(ISNUMBER(' + V('nce') + '),' + V('nce') + ',{nc})&" No. "&IF(' + V('vce') + '<>"",' + V('vce') + ',{vc})&")","")')
 
@@ -324,10 +328,12 @@ def build_croquis_datos(wb, wsK):
     fx, fy = rect('0', H_, L_, '%s+{k_hd}' % H_, AXa, AZa)
     dyn('Adala', fx, fy, 5)
     # elemento de abajo: dala de desplante o viga
-    b0 = 'IF({k_sv}=1,{k_sb0},0)'; b1 = 'IF({k_sv}=1,{k_sb1},%s)' % L_
-    dyn('Abvar', lambda k: AXa(ch_(k, 4, ['(%s+{k_rc})' % b0, '(%s-{k_rc})' % b1, '(%s-{k_rc})' % b1, '(%s+{k_rc})' % b0])), lambda k: AZa(ch_(k, 4, ['{k_zb1}', '{k_zb1}', '{k_zb2}', '{k_zb2}'])), 4)
-    fx, fy = rect(b0, '-{k_hb}', b1, '0', AXa, AZa)
-    dyn('Abase', fx, fy, 5, '=IF({k_sv}=1,"Viga de apoyo "&' + V('vnom') + '&" "&{k_bv}&"×"&{k_hv},"Dala o losa de desplante")')
+    dyn('Abvar', lambda k: AXa(ch_(k, 4, ['{k_rc}', '(%s-{k_rc})' % L_, '(%s-{k_rc})' % L_, '{k_rc}'])), lambda k: AZa(ch_(k, 4, ['{k_zb1}', '{k_zb1}', '{k_zb2}', '{k_zb2}'])), 4)
+    dyn('Avvar', lambda k: AXa(ch_(k, 2, ['({k_sb0}+{k_rc})', '({k_sb1}-{k_rc})'])), lambda k: AZa(ch_(k, 2, ['{k_zv1}', '{k_zv1}'])), 2, None, '{k_sv}=1')
+    fx, fy = rect('0', '-{k_hd}', L_, '0', AXa, AZa)
+    dyn('Abase', fx, fy, 5, '="Dala o losa de desplante"')
+    fx, fy = rect('{k_sb0}', '-{k_hb}', '{k_sb1}', '0', AXa, AZa)
+    dyn('Aviga', fx, fy, 5, '="Viga de apoyo "&' + V('vnom') + '&" "&{k_bv}&"×"&{k_hv}', '{k_sv}=1', lab_else='"Sin viga de apoyo"')
     for side in (0, 1):
         sx = '{k_sb0}' if side == 0 else '{k_sb1}'
         dyn('Aapo%d' % side, lambda k, sx=sx: AXa(ch_(k, 4, [sx, '%s-10' % sx, '%s+10' % sx, sx])), lambda k: AZa(ch_(k, 4, ['-{k_hb}', '-{k_hb}-14', '-{k_hb}-14', '-{k_hb}'])), 4, None, '{k_sv}=1')
@@ -350,8 +356,10 @@ def build_croquis_datos(wb, wsK):
     dyn('Bmuro', fx, fy, 5, '="Mampostería"')
     fx, fy = rect('0', H_, L_, '%s+{k_hd}' % H_, AXb, AZb)
     dyn('Bdala', fx, fy, 5, '="Dala"')
-    fx, fy = rect(b0, '-{k_hb}', b1, '0', AXb, AZb)
-    dyn('Bbase', fx, fy, 5, '=IF({k_sv}=1,"Viga de apoyo","Dala o losa de desplante")')
+    fx, fy = rect('0', '-{k_hd}', L_, '0', AXb, AZb)
+    dyn('Bbase', fx, fy, 5, '="Dala o losa de desplante"')
+    fx, fy = rect('{k_sb0}', '-{k_hb}', '{k_sb1}', '0', AXb, AZb)
+    dyn('Bviga', fx, fy, 5, '="Viga de apoyo"', '{k_sv}=1', lab_else='"Sin viga de apoyo"')
     for i in range(1, NT + 1):
         hatch('Bh%d' % i, '{k_s%d}' % i, '0', '({k_s%d}+{k_T%d})' % (i, i), H_, '{k_T%d}>0' % i)
     for j in range(1, NV + 1):
@@ -361,7 +369,7 @@ def build_croquis_datos(wb, wsK):
         fx, fy = rect(x0, z0, x1, z1, AXb, AZb)
         dyn('Bv%d' % j, fx, fy, 5, None, '{k_nv}>=%d' % j)
         point('Bvl%d' % j, AXb('(%s+%s)/2' % (x0, x1)), AZb('(%s+%s)/2' % (z0, z1)),
-              '=IF({k_nv}>=%d,{k_v%dt}&" "&TEXT({k_v%dw}/100,"0.00")&" × "&TEXT({k_v%dh}/100,"0.00")&IF({k_v%da}>0," (antepecho "&TEXT({k_v%da}/100,"0.00")&")",""),"")' % (j, j, j, j, j, j),
+              '=IF({k_nv}>=%d,LEFT({k_v%dt},1)&" "&TEXT({k_v%dw}/100,"0.00")&"×"&TEXT({k_v%dh}/100,"0.00"),"")' % (j, j, j, j),
               '{k_nv}>=%d' % j)
     # cadena de cotas: tramos y vanos alternados, y la total
     zc1 = '(%s-3.5)' % AZb('-{k_hb}'); zc2 = '(%s-7.5)' % AZb('-{k_hb}')
@@ -476,7 +484,7 @@ def build_croquis_datos(wb, wsK):
         ch.layout = Layout(manualLayout=ManualLayout(layoutTarget='inner', xMode='edge', yMode='edge', x=(1 - wfrac) / 2, y=ytop, w=wfrac, h=hfrac))
         return ch
 
-    def add(ch, name, color='1F4E79', w=1.5, dash='solid', marker=None, msize=6, lbl_idx=None, noleg=False, pos='t', lsz=750, bold=False):
+    def add(ch, name, color='1F4E79', w=1.5, dash='solid', marker=None, msize=6, lbl_idx=None, noleg=False, pos='t', lsz=750, bold=False, rot=None):
         cx, cy, r0, r1 = series[name]
         xr = Reference(ws, min_col=CI(cx), min_row=r0, max_row=r1)
         yr = Reference(ws, min_col=CI(cy), min_row=r0, max_row=r1)
@@ -495,7 +503,7 @@ def build_croquis_datos(wb, wsK):
         else:
             s.marker = Marker(symbol='none')
         if lbl_idx is not None:
-            tp = RichText(bodyPr=RichTextProperties(wrap='none'), p=[Paragraph(pPr=ParagraphProperties(defRPr=CharacterProperties(sz=lsz, b=bold, solidFill=(color if bold else None))), endParaRPr=CharacterProperties(sz=lsz, b=bold))])
+            tp = RichText(bodyPr=RichTextProperties(wrap='none', rot=rot), p=[Paragraph(pPr=ParagraphProperties(defRPr=CharacterProperties(sz=lsz, b=bold, solidFill=(color if bold else None))), endParaRPr=CharacterProperties(sz=lsz, b=bold))])
             s.dLbls = DataLabelList(dLbl=[DataLabel(idx=lbl_idx, showSerName=True, showVal=False, showCatName=False, showLegendKey=False, showPercent=False, dLblPos=pos, txPr=tp)])
             s.dLbls.showVal = False; s.dLbls.showSerName = False; s.dLbls.showLegendKey = False; s.dLbls.showCatName = False
         if (noleg or name not in labels or lbl_idx is not None) and ch.legend is not None:
@@ -509,13 +517,14 @@ def build_croquis_datos(wb, wsK):
 
     RED, GRN, BLU, GRY, PUR, ORG = 'C00000', '00B050', '1F3864', '7F7F7F', '7030A0', 'ED7D31'
     # --- A: alzado armado
-    ch = mk_chart('ALZADO — ARMADO', 0, 100, 0, 45, 32.5, 15.5, 0.66)
+    ch = mk_chart('ALZADO — ARMADO', 0, 100, 0, 45, 32.5, 15.5, 0.72)
     add(ch, 'Acest', GRN, 0.75)
     add(ch, 'Arh', ORG, 1.0, 'dash')
     add(ch, 'Acvar', RED, 1.25)
     add(ch, 'Adest', GRN, 0.5, noleg=True)
     add(ch, 'Advar', RED, 1.25)
     add(ch, 'Abvar', RED, 1.25, noleg=True)
+    add(ch, 'Avvar', RED, 1.25, noleg=True)
     add(ch, 'Acast', BLU, 1.25)
     for j in range(1, NV + 1):
         add(ch, 'Avx%d' % j, 'BFBFBF', 0.5, 'dash', noleg=True)
@@ -523,26 +532,28 @@ def build_croquis_datos(wb, wsK):
         add(ch, 'Acer%d' % j, PUR, 1.0, noleg=True)
         add(ch, 'Arep%d' % j, PUR, 1.0, noleg=True)
     add(ch, 'Adala', BLU, 1.5, noleg=True)
-    add(ch, 'Abase', GRY, 1.75)
+    add(ch, 'Abase', GRY, 1.25)
+    add(ch, 'Aviga', GRY, 1.75)
     add(ch, 'Aapo0', GRY, 1.25, noleg=True); add(ch, 'Aapo1', GRY, 1.25, noleg=True)
     add(ch, 'Amuro', BLU, 2.25)
     place(ch, ROW['a1'])
     # --- B: alzado acotado
-    ch = mk_chart('ALZADO — SILUETA ACOTADA', 0, 100, 0, 45, 32.5, 15.5, 0.66)
+    ch = mk_chart('ALZADO — SILUETA ACOTADA', 0, 100, 0, 45, 32.5, 15.5, 0.72)
     for i in range(1, NT + 1):
         add(ch, 'Bh%d' % i, 'BFBFBF', 0.5, noleg=True)
     for j in range(1, NV + 1):
         add(ch, 'Bha%d' % j, 'BFBFBF', 0.5, noleg=True); add(ch, 'Bhd%d' % j, 'BFBFBF', 0.5, noleg=True)
     add(ch, 'Bdala', '8EA9DB', 1.25)
-    add(ch, 'Bbase', GRY, 1.25)
+    add(ch, 'Bbase', GRY, 1.0)
+    add(ch, 'Bviga', GRY, 1.25)
     for j in range(1, NV + 1):
         add(ch, 'Bv%d' % j, GRY, 1.25, noleg=True)
-        add(ch, 'Bvl%d' % j, GRY, 0.5, lbl_idx=0, pos='ctr', lsz=700)
+        add(ch, 'Bvl%d' % j, GRY, 0.5, lbl_idx=0, pos='ctr', lsz=700, rot=-5400000)
     add(ch, 'Bmuro', BLU, 2.0)
     add(ch, 'Bcrit', ORG, 1.25, 'dashDot')
     add(ch, 'Bkpos', BLU, marker='triangle', msize=5)
     for n_ in range(len(edges)):
-        add(ch, 'Bc%d' % n_, PUR, 0.75, lbl_idx=3, pos='t', lsz=700)
+        add(ch, 'Bc%d' % n_, PUR, 0.75, lbl_idx=3, pos='t' if n_ % 2 == 0 else 'b', lsz=700)
     add(ch, 'BcL', RED, 0.75, lbl_idx=3, pos='b')
     add(ch, 'BcH', RED, 0.75, lbl_idx=3, pos='l')
     add(ch, 'Bchd', GRY, 0.75, lbl_idx=3, pos='r', lsz=650)
@@ -558,7 +569,7 @@ def build_croquis_datos(wb, wsK):
     add(ch, 'Pcast', GRY, 1.0)
     add(ch, 'Pvar', RED, marker='circle', msize=3)
     for n_ in range(len(edges)):
-        add(ch, 'Pc%d' % n_, PUR, 0.75, lbl_idx=3, pos='t', lsz=650)
+        add(ch, 'Pc%d' % n_, PUR, 0.75, lbl_idx=3, pos='t' if n_ % 2 == 0 else 'b', lsz=650)
     add(ch, 'PcL', RED, 0.75, lbl_idx=3, pos='b', lsz=650)
     add(ch, 'Pct', GRY, 0.75, lbl_idx=3, pos='l', lsz=600)
     place(ch, ROW['pl'])
