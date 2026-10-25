@@ -142,7 +142,8 @@ def vals_muros():
         lbl = '"%d alambre%s de %s por junta cada "&%s&" hilada(s) (p_h·f_yh = "&TEXT(%s,"0.00")&")"' % (n_, 's' if n_ > 1 else '', b_.replace(' in', '""'), k_, ph_)
         txt = 'IF(%s,%s,%s)' % (ok_, lbl, txt)
     v['rhsug'] = (G('IF([phreq]=0,"NO REQUIERE: V_mR ≥ V_u",IF([phreq]<0,"NO ALCANZA con refuerzo horizontal (haría falta más de 0.1·f\'m·f_an efectivo): sube v\'m con ensayes, el espesor o la longitud del muro",'
-                    '"p_h·f_yh ≥ "&TEXT([phreq],"0.0")&" kg/cm² → "&%s))' % txt), 'calc', '@')
+                    'IF(AND(OR([rht]="VARILLA EN JUNTAS",[rht]="MALLA"),LEFT([rhok],6)="CUMPLE",[rV]<=1),"YA LO TIENE (pide p_h·f_yh ≥ "&TEXT([phreq],"0.0")&" kg/cm²)",'
+                    '"p_h·f_yh ≥ "&TEXT([phreq],"0.0")&" kg/cm² → "&%s)))' % txt), 'calc', '@')
     # muro sobre viga
     a_ = '[av]'
     poly = '(%s^4-4*%s^3+8*%s)' % (a_, a_, a_)
@@ -225,7 +226,7 @@ def sheet_muros(wb, examples):
         unit_cell(ws, 8, CI(COL[k]), u)
     ws.row_dimensions[7].height = 66
     ws.merge_cells('B9:%s9' % last)
-    ws['B9'].value = 'Ejemplo: Casa Rocha. Para otro proyecto escribe encima de las columnas amarillas.'
+    ws['B9'].value = DEF['ej_fila']
     ws['B9'].font = font(8, i=True, color=GRAY)
     ws.row_dimensions[10].height = 4
     hdr_cell(ws, 7, 1, '#'); unit_cell(ws, 8, 1, '')

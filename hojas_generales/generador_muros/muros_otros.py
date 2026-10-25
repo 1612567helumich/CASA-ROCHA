@@ -52,7 +52,8 @@ def sheet_entrepiso(wb, stories):
             cell(ws, rr, 9, ('=IF(G%d="","",{FRv}*(0.5*{vm}+0.3*G%d)*D%d*10000/1000+H%d)' % (rr, rr, rr, rr)).format(**N), 'key', '0.0')
             cell(ws, rr, 10, '=IF(%s="","",N($%s$%d))' % (stc, 'E' if dd == 'X' else 'F', rows0 + i), 'calc', '0.0')
             cell(ws, rr, 11, '=IF(OR(I%d="",N(I%d)=0),"",0.8*J%d/I%d)' % (rr, rr, rr, rr), 'key', '0.00')
-            est = ('=IF(K%d="","",IF(K%d<=1,IF(LEFT({vm_st},9)="PENDIENTE","CUMPLE — PENDIENTE: v\'m provisional","CUMPLE"),"NO CUMPLE: V_R < 0.8·V_u (4.1.10.1)"))' % (rr, rr)).format(**N)
+            est = ('=IF(%s="","",IF(N(E%d)=0,"PENDIENTE: ningún muro de MUROS es de este story",IF(K%d="",IF(N(J%d)>0,"NO CUMPLE: no hay muros en esta dirección",""),'
+                   'IF(K%d<=1,IF(LEFT({vm_st},9)="PENDIENTE","CUMPLE — PENDIENTE: v\'m provisional","CUMPLE"),"NO CUMPLE: V_R < 0.8·V_u (4.1.10.1)"))))' % (stc, rr, rr, rr, rr)).format(**N)
             cell(ws, rr, 12, est, 'calc', '@', al='left')
     N['e_r0'] = r + 1; N['e_r1'] = r + 2 * NST
     add_cf(ws, 'L%d:L%d' % (r + 1, r + 2 * NST))
@@ -81,7 +82,7 @@ def sheet_distorsiones(wb, drifts):
             cell(ws, rr, 5, ('=' + lim).format(**N), 'calc', '0.0000')
             cell(ws, rr, 6, '=IF(E%d>0,D%d/E%d,0)' % (rr, rr, rr), 'key', '0.000')
             cnt = 'COUNTIFS($M$%d:$M$%d,"%s",$F$%d:$F$%d,"%s")' % (DR0, DR1, cls, DR0, DR1, dd)
-            cell(ws, rr, 7, ('=IF(%s=0,IF(AND("%s"="OI",{grupo}<>"A"),"— (sólo Grupo A)","PENDIENTE: no hay renglones de este caso"),IF(F%d<=1,"CUMPLE","NO CUMPLE"))' % (cnt, cls, rr)).format(**N), 'calc', '@', al='left')
+            cell(ws, rr, 7, ('=IF(%s=0,IF(AND("%s"="OI",{grupo}<>"A"),"— (sólo Grupo A)","PENDIENTE: no hay renglones de este caso"),IF(AND("%s"<>"LD",N({Rp})<=0),"PENDIENTE: falta R\' en DATOS",IF(F%d<=1,"CUMPLE","NO CUMPLE")))' % (cnt, cls, cls, rr)).format(**N), 'calc', '@', al='left')
     add_cf(ws, 'G%d:G%d' % (r + 1, r + 6))
     N['dist_r0'] = r + 1
     rh = DR0 - 2
@@ -103,7 +104,7 @@ def sheet_distorsiones(wb, drifts):
         ws.cell(rr, 15, '=IF($M%d="",0,N($G%d)*$N%d)' % (rr, rr, rr)).font = font(8)
         ws.cell(rr, 16, ('=IF($M{r}="SV",{gSV},IF($M{r}="LD",{gLD},IF($M{r}="OI",{gOI},"")))').replace('{r}', str(rr)).format(**N)).font = font(8)
         ws.cell(rr, 17, '=IF(OR($M%d="",N($P%d)=0),"",$O%d/$P%d)' % (rr, rr, rr, rr)).font = font(8)
-        ws.cell(rr, 18, '=IF($Q%d="","",IF($Q%d<=1,"CUMPLE","NO CUMPLE"))' % (rr, rr)).font = font(8)
+        ws.cell(rr, 18, ('=IF($M{r}="","",IF(AND($M{r}<>"LD",N({Rp})<=0),"PENDIENTE: falta R\'",IF($Q{r}<=1,"CUMPLE","NO CUMPLE")))').replace('{r}', str(rr)).format(**N)).font = font(8)
         for c in (15, 17):
             ws.cell(rr, c).number_format = '0.00000;-0.00000;' if c == 15 else '0.000'
     add_cf(ws, 'R%d:R%d' % (DR0, DR1))

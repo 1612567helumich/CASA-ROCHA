@@ -27,8 +27,8 @@ def add_cf(ws, rng):
     red = ('OR(ISNUMBER(FIND("NO CUMPLE",{c})),ISNUMBER(FIND("REVISAR",{c})),ISNUMBER(FIND("FALTA",{c})),ISNUMBER(FIND("NO ALCANZA",{c})),'
            'ISNUMBER(FIND("FUERA",{c})),ISNUMBER(FIND("NO CUENTA",{c})),ISNUMBER(FIND("NO ESTÁ",{c})),ISNUMBER(FIND("NO VÁLIDO",{c})))')
     amb = ('OR(ISNUMBER(FIND("PENDIENTE",{c})),ISNUMBER(FIND("PROVISIONAL",{c})),ISNUMBER(FIND("ESTIMADO",{c})),ISNUMBER(FIND("VER ",{c})),'
-           'ISNUMBER(FIND("REQUIERE",{c})),ISNUMBER(FIND("AVISO",{c})))')
-    grn = 'OR(ISNUMBER(FIND("CUMPLE",{c})),ISNUMBER(FIND("VÁLIDO",{c})),ISNUMBER(FIND("NO REQUIERE",{c})))'
+           'AND(ISNUMBER(FIND("REQUIERE",{c})),NOT(ISNUMBER(FIND("NO REQUIERE",{c})))),ISNUMBER(FIND("AVISO",{c})))')
+    grn = 'OR(ISNUMBER(FIND("CUMPLE",{c})),ISNUMBER(FIND("VÁLIDO",{c})),ISNUMBER(FIND("NO REQUIERE",{c})),ISNUMBER(FIND("YA LO TIENE",{c})))'
     first = rng.split(':')[0]
     ws.conditional_formatting.add(rng, FormulaRule(formula=[red.format(c=first)], stopIfTrue=True,
                                   font=Font(color='FFFFFF', bold=True), fill=PatternFill(bgColor='C00000', fill_type='solid')))

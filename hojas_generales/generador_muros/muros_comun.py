@@ -7,6 +7,11 @@ from muros_spec import *         # noqa: F401,F403
 
 N = {}                           # nombre -> referencia absoluta (DATOS!$C$12 ...)
 TB = {}                          # rangos de TABLAS
+# valores que trae la hoja general (gen_muros.py los cambia para el libro de Casa Rocha)
+DEF = dict(proj='(nombre del proyecto)', sup=None, niv=None, mviga='NO', mdiaf='NO', uso='HABITACIÓN UNIFAMILIAR', nviv=None, Hdef=2.50, Rp=None,
+           Rp_txt='Del espectro de tu proyecto (NTC-Sismo 3.3)', cmb_s=[], cmb_g=[],
+           ej_tit='EJEMPLOS', ej_txt='Trae tres muros de ejemplo (M-1 sin vanos, M-2 con puerta y ventana, M-3 sobre una viga) y un entrepiso: escribe encima o bórralos.',
+           ej_fila='Ejemplos M-1, M-2 y M-3: escribe encima de las columnas amarillas o bórralos.')
 
 BARS = [  # designación, d_b (cm), área (cm²), kg/m, uso
     (2, 0.635, 0.32, 0.249, 'Alambrón No. 2 (1/4"): estribos de castillos y dalas; también sirve en juntas (6.4 mm ≤ 0.75·h_j sólo con juntas ≥ 9 mm)'),
@@ -163,22 +168,22 @@ def sheet_datos(wb):
     S.gap()
     S.section('1. PROYECTO Y CLASIFICACIÓN (NTC-Mampostería 1.6)')
     S.header()
-    S.row('Proyecto', 'Casa Rocha', '—', '', '—', 'input', '@', 'proj')
+    S.row('Proyecto', DEF['proj'], '—', '', '—', 'input', '@', 'proj')
     S.row('Grupo de la construcción (Reglamento, art. 139)', 'B', '—', 'A o B', 'NTC-Criterios 3.4.1 a), p. 7', 'input', '@', 'grupo')
     dv_list(ws, cel(N['grupo']), '=LST_GRUPO')
-    S.row('Superficie construida total', 380, 'm²', 'Tipo II: hasta 250 m²', 'NTC-M 1.6.1 a), p. 15', 'input', '0', 'sup')
-    S.row('Niveles (incluye estacionamiento)', 2, '—', 'Tipo II: hasta 2', 'NTC-M 1.6.1 b), p. 15', 'input', '0', 'niv')
-    S.row('¿Hay muros estructurales desplantados sobre vigas o sobre la losa?', 'SÍ', '—', 'Si hay, es Tipo I', 'NTC-M 1.6.1 c), p. 15', 'input', '@', 'mviga')
+    S.row('Superficie construida total', DEF['sup'], 'm²', 'Tipo II: hasta 250 m²', 'NTC-M 1.6.1 a), p. 15', 'input', '0', 'sup')
+    S.row('Niveles (incluye estacionamiento)', DEF['niv'], '—', 'Tipo II: hasta 2', 'NTC-M 1.6.1 b), p. 15', 'input', '0', 'niv')
+    S.row('¿Hay muros estructurales desplantados sobre vigas o sobre la losa?', DEF['mviga'], '—', 'Si hay, es Tipo I', 'NTC-M 1.6.1 c), p. 15', 'input', '@', 'mviga')
     dv_list(ws, cel(N['mviga']), '=LST_SINO')
-    S.row('¿Hay muros diafragma?', 'NO', '—', '', 'NTC-M 1.6.1 d), p. 15', 'input', '@', 'mdiaf')
+    S.row('¿Hay muros diafragma?', DEF['mdiaf'], '—', '', 'NTC-M 1.6.1 d), p. 15', 'input', '@', 'mdiaf')
     dv_list(ws, cel(N['mdiaf']), '=LST_SINO')
-    S.row('Uso', 'HABITACIÓN UNIFAMILIAR', '—', '', 'NTC-M 1.6.1 e), p. 15', 'input', '@', 'uso')
+    S.row('Uso', DEF['uso'], '—', '', 'NTC-M 1.6.1 e), p. 15', 'input', '@', 'uso')
     dv_list(ws, cel(N['uso']), '=LST_USO')
-    S.row('Viviendas en el predio (si es plurifamiliar)', 1, '—', 'Plurifamiliar: máximo 10', 'NTC-M 1.6.1 f), p. 15', 'input', '0', 'nviv')
-    S.row('TIPO DE ESTRUCTURA', '=IF(AND({grupo}="B",{sup}<=250,{niv}<=2,{mviga}="NO",{mdiaf}="NO",{uso}<>"OTRO",OR({uso}<>"HABITACIÓN PLURIFAMILIAR",{nviv}<=10)),"TIPO II","TIPO I")',
+    S.row('Viviendas en el predio (si es plurifamiliar)', DEF['nviv'], '—', 'Plurifamiliar: máximo 10', 'NTC-M 1.6.1 f), p. 15', 'input', '0', 'nviv')
+    S.row('TIPO DE ESTRUCTURA', '=IF(AND(ISNUMBER({sup}),ISNUMBER({niv}),{grupo}="B",{sup}<=250,{niv}<=2,{mviga}="NO",COUNTIF(%s,"SÍ")=0,{mdiaf}="NO",{uso}<>"OTRO",OR({uso}<>"HABITACIÓN PLURIFAMILIAR",AND(ISNUMBER({nviv}),{nviv}<=10))),"TIPO II","TIPO I")' % mr('sv'),
           '—', 'Tipo II sólo si cumple todo 1.6.1', 'NTC-M 1.6.1 y 1.6.2, p. 15–16', 'key', '@', 'tipoE')
-    S.row('Por qué', '=IF({tipoE}="TIPO II","Cumple a) a f) de 1.6.1",""&IF({grupo}="A","Grupo A; ","")&IF({sup}>250,"más de 250 m²; ","")&IF({niv}>2,"más de dos niveles; ","")&IF({mviga}="SÍ","muros sobre vigas o losa; ","")&IF({mdiaf}="SÍ","muros diafragma; ","")&IF({uso}="OTRO","uso no listado; ","")&IF(AND({uso}="HABITACIÓN PLURIFAMILIAR",{nviv}>10),"más de diez viviendas; ",""))',
-          '—', '', 'NTC-M 1.6.1, p. 15', 'text', '@', 'tipoR')
+    S.row('Por qué', '=IF({tipoE}="TIPO II","Cumple a) a f) de 1.6.1",""&IF(OR(NOT(ISNUMBER({sup})),NOT(ISNUMBER({niv}))),"faltan superficie o niveles; ","")&IF({grupo}="A","Grupo A; ","")&IF({sup}>250,"más de 250 m²; ","")&IF({niv}>2,"más de dos niveles; ","")&IF(OR({mviga}="SÍ",COUNTIF(%s,"SÍ")>0),"muros sobre vigas o losa; ","")&IF({mdiaf}="SÍ","muros diafragma; ","")&IF({uso}="OTRO","uso no listado; ","")&IF(AND({uso}="HABITACIÓN PLURIFAMILIAR",OR(NOT(ISNUMBER({nviv})),{nviv}>10)),"más de diez viviendas o falta el dato; ",""))' % mr('sv'),
+          '—', '', 'NTC-M 1.6.1, p. 15', 'text', '@', 'tipoR', h=42)
     S.gap()
     S.section('2. MAMPOSTERÍA — PIEZA, MORTERO, f\'m Y v\'m (NTC-M 2.1, 2.8)')
     S.header()
@@ -204,7 +209,7 @@ def sheet_datos(wb):
     S.row("f'm — RESISTENCIA DE DISEÑO A COMPRESIÓN QUE SE USA", '=IF({fm_src}="ENSAYES DE PILAS (2.8.1.3)",{fm_ens},IF({fm_src}="TIPO II (TABLA 12.2.3.1.2)",{fm_t2},MAX({fm_tab},0)))', 'kg/cm²', '', 'NTC-M 2.8.1', 'key', '0.0', 'fm')
     S.row("¿El f'm es válido?", '=IF({fm}<=0,"NO VÁLIDO: sin f\'m (mortero III o faltan ensayes)",IF({fm_src}="TIPO II (TABLA 12.2.3.1.2)",IF({tipoE}="TIPO II","VÁLIDO (Tipo II)","NO VÁLIDO: la tabla de Tipo II no aplica a estructura Tipo I"),'
           'IF({fm_src}="ENSAYES DE PILAS (2.8.1.3)","VÁLIDO (ensayes)",IF(OR({fp}<60,AND({mat}="CONCRETO",{hueca}="NO",{fp}<100)),"NO VÁLIDO: f\'p fuera de la tabla (2.8.1.4.1)",IF({fp}>IF({mat}="CONCRETO",200,300),"PENDIENTE: f\'p arriba de la tabla, se tomó el último renglón","PENDIENTE: confirmar f\'p con ensayes de piezas (2.8.1.4.3 d)")))))',
-          '—', '', 'NTC-M 2.8.1.4.3, p. 25', 'text', '@', 'fm_st')
+          '—', '', 'NTC-M 2.8.1.4.3, p. 25', 'text', '@', 'fm_st', h=54)
     S.row("v'm de ensayes de muretes: v_m medio", None, 'kg/cm²', 'Si hay ensayes (9 muretes)', 'NTC-M 2.8.2.4, p. 26', 'input', '0.00', 'vm_bar')
     S.row('c_v — coeficiente de variación de los muretes', 0.2, '—', '≥ 0.20', 'NTC-M 2.8.2.4.6, p. 26', 'input', '0.00', 'cv_')
     S.row("v'm de ensayes = v_m / (1 + 2.5·c_v)", '=IF(ISNUMBER({vm_bar}),{vm_bar}/(1+2.5*MAX({cv_},0.2)),0)', 'kg/cm²', '', 'NTC-M ec. 2.8.2.4.6, p. 26', 'calc', '0.00', 'vm_ens')
@@ -214,7 +219,7 @@ def sheet_datos(wb):
     dv_list(ws, cel(N['vm_src']), '=LST_VMSRC')
     S.row("v'm — RESISTENCIA DE DISEÑO A COMPRESIÓN DIAGONAL QUE SE USA", '=IF({vm_src}="ENSAYES DE MURETES (2.8.2.4)",{vm_ens},IF({vm_src}="TIPO II (TABLA 12.2.3.2.2)",{vm_t2},N({vm_prov})))', 'kg/cm²', '', 'NTC-M 2.8.2', 'key', '0.00', 'vm')
     S.row("¿El v'm es válido?", '=IF({vm}<=0,"NO VÁLIDO: sin v\'m",IF({vm_src}="ENSAYES DE MURETES (2.8.2.4)","VÁLIDO (ensayes)",IF({vm_src}="TIPO II (TABLA 12.2.3.2.2)",IF({tipoE}="TIPO II","VÁLIDO (Tipo II)","NO VÁLIDO: estructura Tipo I, el v\'m sale de 9 muretes (2.8.2.1)"),"PENDIENTE: v\'m provisional; estructura "&{tipoE}&", hacen falta los ensayes de muretes (2.8.2.4)")))',
-          '—', 'Tipo I: sólo vale de ensayes', 'NTC-M 2.8.2.1 y 2.8.2.4.5, p. 25–26', 'text', '@', 'vm_st')
+          '—', 'Tipo I: sólo vale de ensayes', 'NTC-M 2.8.2.1 y 2.8.2.4.5, p. 25–26', 'text', '@', 'vm_st', h=54)
     S.row('E_m — módulo de elasticidad (corta duración)', '=IF({mat}="CONCRETO",800,600)*{fm}', 'kg/cm²', "800·f'm (concreto) · 600·f'm (arcilla)", 'NTC-M 2.8.5.4, p. 27', 'calc', '0', 'Em')
     S.gap()
     S.section('3. CONCRETO Y ACERO')
@@ -230,7 +235,7 @@ def sheet_datos(wb):
     S.gap()
     S.section('4. MURO, CASTILLO Y DALA TÍPICOS (los usan todos los muros; MUROS deja cambiar H, t y los castillos extremos)')
     S.header()
-    S.row('H — altura libre típica', 2.75, 'm', 'Altura libre entre losas', 'NTC-M 6.1.3, p. 60', 'input', '0.00', 'Hdef')
+    S.row('H — altura libre típica', DEF['Hdef'], 'm', 'Altura libre entre losas', 'NTC-M 6.1.3, p. 60', 'input', '0.00', 'Hdef')
     S.row('t — espesor típico de la mampostería', 15, 'cm', '≥ 12 cm en Tipo I', 'NTC-M 6.1.3, p. 60', 'input', '0.0', 'tdef')
     S.row('h_c — castillo, lado paralelo al muro', 15, 'cm', '≥ 15 cm', 'NTC-M 6.2.1.1 b), p. 60', 'input', '0.0', 'hc')
     S.row('b_c — castillo, lado perpendicular al muro', 15, 'cm', '≥ 12 cm y ≥ t', 'NTC-M 6.2.1.1 b), p. 60', 'input', '0.0', 'bc')
@@ -286,7 +291,7 @@ def sheet_datos(wb):
     S.row('Q — factor de comportamiento sísmico', '=INDEX(%s,MATCH({sis},%s,0))' % (TB['SISQ'], TB['SIS']), '—', '', 'NTC-Sismo Tabla 4.3.3, p. 60', 'key', '0.0', 'Q')
     S.row('γ_SV — distorsión límite de seguridad de vida', '=INDEX(%s,MATCH({sis},%s,0))' % (TB['SISSV'], TB['SIS']), '—', '', 'NTC-Sismo Tabla 4.3.3, p. 60', 'key', '0.000', 'gSV')
     S.row('γ_OI — distorsión límite de ocupación inmediata', '=INDEX(%s,MATCH({sis},%s,0))' % (TB['SISOI'], TB['SIS']), '—', 'Sólo Grupo A', 'NTC-Sismo Tabla 4.3.3 y 1.7, p. 29 y 60', 'calc', '0.0000', 'gOI')
-    S.row("R' — sobrerresistencia del periodo fundamental", 1.68, '—', "Q·R' = 2.52 en Casa Rocha", 'NTC-Sismo 3.3', 'input', '0.00', 'Rp')
+    S.row("R' — sobrerresistencia del periodo fundamental", DEF['Rp'], '—', DEF['Rp_txt'], 'NTC-Sismo 3.3', 'input', '0.00', 'Rp')
     S.row("Factor de la distorsión de seguridad de vida = Q·R'·FC", '={Q}*{Rp}*{FCs}', '—', "Q·R'·FC", 'NTC-Sismo 1.7, p. 29', 'calc', '0.000', 'kSV')
     S.row('¿Los elementos no estructurales están separados de la estructura?', 'NO', '—', 'NO → 0.002 · SÍ → 0.004', 'NTC-Sismo 1.7, p. 29', 'input', '@', 'sep')
     dv_list(ws, cel(N['sep']), '=LST_SINO')
@@ -302,8 +307,8 @@ def sheet_datos(wb):
     r = S.r
     hdr_cell(ws, r, 2, 'Combinaciones con SISMO'); hdr_cell(ws, r, 3, 'Combinaciones de GRAVEDAD')
     ws.merge_cells('C%d:D%d' % (r, r))
-    sis = ['Comb4.%d' % i for i in range(1, 9)] + [None] * 4
-    grav = ['Comb2.2'] + [None] * 11
+    sis = (list(DEF['cmb_s']) + [None] * 12)[:12]
+    grav = (list(DEF['cmb_g']) + [None] * 12)[:12]
     for i in range(12):
         cell(ws, r + 1 + i, 2, sis[i], 'input', '@', al='left')
         cell(ws, r + 1 + i, 3, grav[i], 'input', '@', al='left')
@@ -345,8 +350,8 @@ def sheet_instrucciones(wb):
     S.section('NO REVISA')
     S.bullet('Flexión fuera del plano, muros diafragma, mampostería reforzada interiormente y el diseño de la viga de apoyo (va en la hoja de losas).')
     S.gap()
-    S.section('EJEMPLO: CASA ROCHA')
-    S.bullet('37 muros del modelo R3.2 con los vanos del plano arquitectónico y las fuerzas de tu hoja de revisión. Alturas de vanos típicas: confírmalas.')
+    S.section(DEF['ej_tit'])
+    S.bullet(DEF['ej_txt'])
     ws.sheet_view.zoomScale = 100
     print_setup(ws, 'B1:F%d' % S.r, landscape=False)
     return ws

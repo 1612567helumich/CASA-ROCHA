@@ -2,7 +2,7 @@
 from openpyxl.styles import Alignment
 from muros_comun import *        # noqa: F401,F403
 
-DEFAULT_SEL = 'CAD_PA_21'
+DEFAULT_SEL = 'M-2'
 
 
 def V(k):

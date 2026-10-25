@@ -306,7 +306,7 @@ def build_croquis_datos(wb, wsK):
         ci = ch_(i, 5, ['{k_c%d}' % t for t in range(1, NT + 1)])
         xa = '(%s+IF(%s=1,{k_hc},0))' % (si, ci); xb = '(%s+%s-IF(%s=1,{k_hc},0))' % (si, ti, ci)
         nl = 'IF(%s=1,{k_nl},0)' % ci
-        kk = 'MIN(INT((%s-2)/2)+1,MAXa(%s,1))' % (j, nl)
+        kk = 'MIN(INT((%s-2)/2)+1,MAX(%s,1))' % (j, nl)
         first = 'MOD(%s-2,2)' % j
         side_t = 'IF(MOD(%s,2)=1,IF(%s=0,0,1),IF(%s=0,1,0))' % (kk, first, first)
         last_side = 'IF(MOD(%s,2)=1,1,0)' % nl
@@ -388,7 +388,7 @@ def build_croquis_datos(wb, wsK):
     # posición de los castillos (marcas sobre la dala) y sección crítica
     kx = lambda k: CQ('E', 'MIN(%s,{k_K})' % k)
     dyn('Bkpos', lambda k: AXb(kx(k)), lambda k: '(%s+1.5)' % AZb('%s+{k_hd}' % H_), NK, '="Castillos"')
-    zcrit = 'IF({k_nv}>0,MAXb(5,MIN({k_H}-5,({k_v1a}+{k_v1h})/2)),{k_H}/2)'
+    zcrit = 'IF({k_nv}>0,MAX(5,MIN({k_H}-5,({k_v1a}+{k_v1h})/2)),{k_H}/2)'
     dyn('Bcrit', lambda k: AXb(ch_(k, 2, ['-25', '%s+25' % L_])), lambda k: AZb(ch_(k, 2, [zcrit, zcrit])), 2,
         '="Sección crítica: ΣL = "&TEXT(' + V('Lc') + ',"0.00")&" m"')
 

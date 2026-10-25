@@ -1,7 +1,8 @@
 """Dibuja la hoja CROQUIS a PNG para revisarla a ojo (LibreOffice + pdftoppm).
 
 Uso:
-    python3 render_croquis.py SALIDA_DIR [MURO ...]
+    python3 render_croquis.py SALIDA_DIR [MURO ...]                 # hoja general (M-1, M-2, M-3)
+    python3 render_croquis.py SALIDA_DIR --casa_rocha [MURO ...]    # hoja de Casa Rocha
 
 Por cada muro arma una copia del libro con ese muro escogido en DETALLE, deja visible sólo CROQUIS, la convierte a PDF
 con `soffice --headless --convert-to pdf` y pasa sus páginas a PNG con `pdftoppm`. No toca el libro entregado.
@@ -13,14 +14,14 @@ import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-EJEMPLOS = ['CAD_PA_21', 'CAD_PB_13', 'CAD_PA_35', 'CAD_PB_01']
+EJEMPLOS = {'general': ['M-1', 'M-2', 'M-3'], 'casa_rocha': ['CAD_PA_21', 'CAD_PB_13', 'CAD_PA_35', 'CAD_PB_01']}
 
 
-def render(sel, outdir, tag, dpi=110):
+def render(sel, outdir, tag, dpi=110, caso='general'):
     import gen_muros
     tmp = tempfile.mkdtemp()
     full = os.path.join(tmp, 'croquis_%s.xlsx' % tag)
-    gen_muros.build(full, sel=sel, only='CROQUIS')
+    gen_muros.build(full, sel=sel, only='CROQUIS', caso=caso)
     dst = full
     subprocess.run(['soffice', '--headless', '--convert-to', 'pdf', '--outdir', tmp, dst], check=True, capture_output=True, timeout=600)
     pdf = dst[:-5] + '.pdf'
@@ -35,7 +36,8 @@ def render(sel, outdir, tag, dpi=110):
 
 
 if __name__ == '__main__':
-    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, 'out')
-    sels = sys.argv[2:] or EJEMPLOS
-    for s in sels:
-        print(s, '->', render(s, out, s))
+    args = [a for a in sys.argv[1:] if a != '--casa_rocha']
+    caso = 'casa_rocha' if '--casa_rocha' in sys.argv else 'general'
+    out = args[0] if args else os.path.join(HERE, 'out')
+    for s in args[1:] or EJEMPLOS[caso]:
+        print(s, '->', render(s, out, s, caso=caso))
