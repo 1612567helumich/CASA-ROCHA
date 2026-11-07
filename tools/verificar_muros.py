@@ -131,5 +131,71 @@ for i, n, s, sec, r in B.area_assign:
             corner_use[(p, B.below(s, f))] += 1
 print(f"      esquinas de tablero: {len(corner_use)}")
 
+# 8. Espacios muertos: lo que era muro y ya no es (y al reves) solo puede ser
+#    una tira pegada a un castillo; y ningun tablero se encima con otro.
+from redibujar_muros import SNAP, cluster  # noqa: E402
+
+
+def cells(P, Q):
+    hs = cluster([p[k] for p in P + Q for k in ("h0", "h1")])
+    zs = cluster([p[k] for p in P + Q for k in ("z0", "z1")])
+    for a, b in zip(hs, hs[1:]):
+        for c, d in zip(zs, zs[1:]):
+            yield a, b, c, d, (a + b) / 2, (c + d) / 2
+
+
+def count_in(S, h, z):
+    return sum(1 for p in S if p["h0"] - TOL < h < p["h1"] + TOL and p["z0"] - TOL < z < p["z1"] + TOL)
+
+
+bad_gap, overlaps, strips = [], [], []
+for key in sorted(set(ga) | set(gb)):
+    story, axis, coord = key
+    P, Q = ga.get(key, []), gb.get(key, [])
+    ch = []
+    for x, y, pt, ln in cast[story]:
+        off, h = (x, y) if axis == "X" else (y, x)
+        if abs(off - coord) <= TOL:
+            ch.append(h)
+    for a, b, c, d, hm, zm in cells(P, Q):
+        n_old, n_new = count_in(P, hm, zm), count_in(Q, hm, zm)
+        if n_new > 1:
+            overlaps.append((story, axis, coord, a, b, c, d))
+        if (n_old > 0) != (n_new > 0):
+            touches = any(abs(a - c0) <= TOL or abs(b - c0) <= TOL for c0 in ch)
+            rec = (story, f"{axis}={coord:g}", round(a, 4), round(b, 4), round(c, 2), round(d, 2),
+                   "se quito" if n_old else "se agrego")
+            if b - a <= SNAP + TOL and touches:
+                strips.append(rec)
+            else:
+                bad_gap.append(rec)
+check(not overlaps, "ningun tablero se encima con otro")
+check(not bad_gap, "no hay huecos nuevos: todo lo que cambio es una tira pegada a un castillo")
+for x in bad_gap:
+    print("      ", x)
+w = [r[3] - r[2] for r in strips]
+print(f"      tiras que cambiaron: {len(strips)} rectangulos, ancho maximo {max(w) * 100:.1f} cm,"
+      f" {sum(1 for r in strips if r[6] == 'se quito')} quitadas, {sum(1 for r in strips if r[6] == 'se agrego')} agregadas")
+
+# 9. Nudos casi encimados (podrian dejar rendijas o elementos de 1 mm)
+P3 = set()
+for i, n, s, sec, r in B.area_assign:
+    if B.is_wall_section(sec):
+        for p, f in B.areas[n][1]:
+            x, y, dz = B.points[p]
+            P3.add((p, round(x, 5), round(y, 5), round(B.elev[B.below(s, f)] - dz, 5)))
+P3 = sorted(P3, key=lambda t: t[1:])
+near = []
+for i, a in enumerate(P3):
+    for b in P3[i + 1:]:
+        if b[1] - a[1] > 0.01:
+            break
+        dd = ((a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2 + (a[3] - b[3]) ** 2) ** 0.5
+        if 0 < dd < 0.01 and a[0] != b[0]:
+            near.append((a, b, round(dd * 1000, 2)))
+check(not near, "no hay nudos de muro a menos de 1 cm de otro nudo distinto")
+for x in near:
+    print("      ", x)
+
 print("\nRESULTADO:", "TODO BIEN" if ok else "HAY FALLAS")
 sys.exit(0 if ok else 1)
