@@ -91,7 +91,7 @@ def self_weight(text):
                 mat, D, B = frame[sec]
                 W["castillos y dalas"] += (M.elev[story] - M.elev[M.below(story)]) * D * B * dens[mat] * wmod.get(sec, 1.0)
     for ln, (p1, p2) in M.beams.items():
-        a, b = M.points[p1][:2], M.points[p2][:2]
+        a, b = M.points[p1], M.points[p2]          # (x, y, dz): la viga puede ir abajo del nivel
         for story, sec in M.line_assign.get(ln, []):
             if sec in frame:
                 mat, D, B = frame[sec]
