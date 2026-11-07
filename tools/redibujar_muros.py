@@ -6,10 +6,10 @@ Que hace, por cada eje de muro y por cada entrepiso:
   1. Lleva al eje del castillo toda orilla de muro que quede a <= SNAP de un
      castillo (las "tiras" junto a los huecos). No mueve orillas que esten en
      un cruce con otro muro.
-  2. Parte los muros en cada eje de castillo.
-  3. Arma la reticula con los cortes de altura que ya existian en ese tramo
-     de muro (antepechos y dinteles) y crea un tablero por celda con muro.
-  4. Cada tablero hereda seccion, pier label y opciones de malla del pedazo
+  2. Parte cada pedazo de muro solo en los ejes de castillo que le caen
+     adentro. No agrega cortes a lo alto: antepechos, dinteles y macizos
+     quedan partidos a la altura que ya tenian en el modelo.
+  3. Cada tablero hereda seccion, pier label y opciones de malla del pedazo
      original del que sale. Puntos nuevos solo donde hacen falta.
 
 No toca: castillos, dalas, losas, cargas, combinaciones ni nada fuera de
@@ -223,28 +223,13 @@ def rebuild_line(key, pieces, cast_h, perp_junctions, zb, zt, log):
         if snap[e2] < snap[e1] - TOL:
             raise RuntimeError(f"Orden invertido al mover orillas en {key}")
 
-    # 2) tramos corridos de muro (proyeccion en h)
-    runs = []
-    for p in sorted(sp, key=lambda p: p["h0"]):
-        if runs and p["h0"] <= runs[-1][1] + TOL:
-            runs[-1][1] = max(runs[-1][1], p["h1"])
-            runs[-1][2].append(p)
-        else:
-            runs.append([p["h0"], p["h1"], [p]])
-
+    # 2) cada pedazo se parte SOLO en los ejes de castillo que le caen adentro;
+    #    los cortes a lo alto quedan exactamente como venian en el modelo
     cells = []
-    for r0, r1, rp in runs:
-        hb = cluster([p["h0"] for p in rp] + [p["h1"] for p in rp] + [c for c in cast_h if r0 + TOL < c < r1 - TOL])
-        zbk = cluster([p["z0"] for p in rp] + [p["z1"] for p in rp])
+    for p in sp:
+        hb = cluster([p["h0"], p["h1"]] + [c for c in cast_h if p["h0"] + TOL < c < p["h1"] - TOL])
         for a, b in zip(hb, hb[1:]):
-            for c, d in zip(zbk, zbk[1:]):
-                hm, zm = (a + b) / 2, (c + d) / 2
-                par = [p for p in rp if p["h0"] - TOL < hm < p["h1"] + TOL and p["z0"] - TOL < zm < p["z1"] + TOL]
-                if not par:
-                    continue
-                if len(par) > 1:
-                    raise RuntimeError(f"Celda con dos padres en {key}: {[p['name'] for p in par]}")
-                cells.append(dict(par[0], h0=a, h1=b, z0=c, z1=d, parent=par[0]["name"]))
+            cells.append(dict(p, h0=a, h1=b, parent=p["name"]))
     return cells
 
 
