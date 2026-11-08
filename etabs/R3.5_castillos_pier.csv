@@ -1,0 +1,129 @@
+﻿castillo,piso,x,y,pier,caso
+C79,N+3.00,6.887,15.447,PB-11-1,confina un solo pier
+C80,N+3.00,6.887,17.446,PB-12-1,confina un solo pier
+C60004,N+3.00,0.35,21.446,PB-14-1,confina un solo pier
+C10016,N+3.00,5.275,21.446,PB-14-2,confina un solo pier
+C60005,N+3.00,4.575,21.446,PB-14-2,confina un solo pier
+C10023,N+3.00,8.146,21.446,PB-14-3,confina un solo pier
+C10001,N+3.00,-0.702,24.371,PB-15-1,confina un solo pier
+C10021,N+3.00,7.479,24.371,PB-15-2,confina un solo pier
+C10026,N+3.00,8.701,24.371,PB-15-3,confina un solo pier
+C60001,N+3.00,1.075,5.346,PB-4-2,confina un solo pier
+C60003,N+3.00,3.648,5.946,PB-5-1,confina un solo pier
+C10014,N+3.00,5.298,5.946,PB-5-2,confina un solo pier
+C39,N+3.00,2.925,6.948,PB-6-1,esquina con muro sin pier
+C88,N+3.00,8.144,9.95,PB-8-1,confina un solo pier
+C10,N+3.00,0.0,1.919,PB-A-1,confina un solo pier
+C12,N+3.00,0.0,2.921,PB-A-1,confina un solo pier
+C16,N+3.00,0.0,7.871,PB-A-1,confina un solo pier
+C18,N+3.00,0.0,9.95,PB-A-1,confina un solo pier
+C19,N+3.00,0.0,14.021,PB-A-1,confina un solo pier
+C21,N+3.00,0.0,15.846,PB-A-1,confina un solo pier
+C22,N+3.00,0.0,17.446,PB-A-1,confina un solo pier
+C24,N+3.00,0.0,19.447,PB-A-1,confina un solo pier
+C9,N+3.00,0.0,0.0,PB-A-1,confina un solo pier
+C90006,N+3.00,0.0,11.986,PB-A-1,confina un solo pier
+C60002,N+3.00,2.925,6.046,PB-B-1,confina un solo pier
+C10011,N+3.00,4.925,16.396,PB-E-1,confina un solo pier
+C10012,N+3.00,4.925,18.146,PB-E-2,confina un solo pier
+C10013,N+3.00,4.925,19.2,PB-E-3,confina un solo pier
+C74,N+3.00,5.923,6.948,PB-G-1,esquina con muro sin pier
+C82,N+3.00,7.25,21.446,PB-H-1,esquina con muro sin pier
+C102,N+3.00,8.85,19.446,PB-J-1,confina un solo pier
+C38,N+3.00,8.85,12.1,PB-J-1,confina un solo pier
+C90003,N+3.00,8.85,14.247,PB-J-1,confina un solo pier
+C92,N+3.00,8.85,0.0,PB-J-1,confina un solo pier
+C93,N+3.00,8.85,2.316,PB-J-1,confina un solo pier
+C94,N+3.00,8.85,4.632,PB-J-1,confina un solo pier
+C95,N+3.00,8.85,6.948,PB-J-1,esquina con muro sin pier
+C96,N+3.00,8.85,8.449,PB-J-1,confina un solo pier
+C5,N+3.00,-1.6,22.671,PB-X-1.60-1,confina un solo pier
+C6,N+3.00,-1.6,23.671,PB-X-1.60-1,confina un solo pier
+C7,N+3.00,-1.6,24.371,PB-X-1.60-1,esquina con muro sin pier
+C10018,N+3.00,6.272,6.948,(sin pier),"solo en murete, antepecho o dintel (sin pier)"
+C10024,N+3.00,8.5,6.948,(sin pier),"solo en murete, antepecho o dintel (sin pier)"
+C101,N+3.00,8.85,17.446,(sin pier),compartido por dos muros con pier: PB-12-1 / PB-J-1
+C104,N+3.00,8.85,21.446,(sin pier),compartido por dos muros con pier: PB-14-3 / PB-J-1
+C108,N+3.00,8.85,24.371,(sin pier),compartido por dos muros con pier: PB-15-3 / PB-J-1
+C13,N+3.00,0.0,5.346,(sin pier),compartido por dos muros con pier: PB-4-1 / PB-A-1
+C15,N+3.00,0.0,6.948,(sin pier),compartido por dos muros con pier: PB-6-1 / PB-A-1
+C26,N+3.00,0.0,21.446,(sin pier),compartido por dos muros con pier: PB-14-1 / PB-A-1
+C28,N+3.00,0.0,24.371,(sin pier),compartido por dos muros con pier: PB-15-1 / PB-A-1
+C4,N+3.00,-1.6,21.446,(sin pier),compartido por dos muros con pier: PB-14-1 / PB-X-1.60-1
+C57,N+3.00,4.925,15.447,(sin pier),compartido por dos muros con pier: PB-11-1 / PB-E-1
+C59,N+3.00,4.925,17.446,(sin pier),compartido por dos muros con pier: PB-12-1 / PB-E-2
+C62,N+3.00,4.925,21.446,(sin pier),compartido por dos muros con pier: PB-14-2 / PB-E-3
+C73,N+3.00,5.923,5.946,(sin pier),compartido por dos muros con pier: PB-5-2 / PB-G-1
+C83,N+3.00,7.25,24.371,(sin pier),compartido por dos muros con pier: PB-15-2 / PB-H-1
+C90001,N+3.00,2.925,5.346,(sin pier),compartido por dos muros con pier: PB-4-2 / PB-B-1
+C9002,N+3.00,8.85,15.447,(sin pier),compartido por dos muros con pier: PB-11-1 / PB-J-1
+C97,N+3.00,8.85,9.95,(sin pier),compartido por dos muros con pier: PB-8-1 / PB-J-1
+C10004,N+6.00,2.129,17.446,PA-12-1,confina un solo pier
+C10008,N+6.00,3.429,17.446,PA-12-2,confina un solo pier
+C10015,N+6.00,5.422,17.446,PA-12-3,confina un solo pier
+C10020,N+6.00,6.722,17.446,PA-12-4,confina un solo pier
+C80,N+6.00,6.887,17.446,PA-12-4,confina un solo pier
+C10003,N+6.00,0.925,21.446,PA-14-1,confina un solo pier
+C10005,N+6.00,2.927,21.446,PA-14-2,confina un solo pier
+C10017,N+6.00,5.925,21.446,PA-14-2,confina un solo pier
+C10022,N+6.00,7.925,21.446,PA-14-3,confina un solo pier
+C10002,N+6.00,0.925,2.921,PA-3-1,confina un solo pier
+C10007,N+6.00,3.575,2.921,PA-3-2,confina un solo pier
+C10014,N+6.00,5.298,5.946,PA-5-1,confina un solo pier
+C50,N+6.00,4.327,5.946,PA-5-1,esquina con muro sin pier
+C33,N+6.00,2.163,7.871,PA-7-1,confina un solo pier
+C60006,N+6.00,6.28,9.95,PA-8-1,confina un solo pier
+C66,N+6.00,5.422,9.95,PA-8-1,esquina con muro sin pier
+C81,N+6.00,7.85,9.95,PA-8-2,confina un solo pier
+C88,N+6.00,8.144,9.95,PA-8-2,confina un solo pier
+C10,N+6.00,0.0,1.919,PA-A-1,esquina con muro sin pier
+C13,N+6.00,0.0,5.346,PA-A-1,confina un solo pier
+C15,N+6.00,0.0,6.948,PA-A-1,confina un solo pier
+C18,N+6.00,0.0,9.95,PA-A-1,confina un solo pier
+C90006,N+6.00,0.0,11.986,PA-A-1,confina un solo pier
+C24,N+6.00,0.0,19.447,PA-A-2,confina un solo pier
+C10006,N+6.00,3.427,14.796,PA-C-1,confina un solo pier
+C54,N+6.00,4.426,17.446,PA-D-1,esquina con muro sin pier
+C55,N+6.00,4.426,19.447,PA-D-1,confina un solo pier
+C60007,N+6.00,5.422,11.0,PA-F-1,confina un solo pier
+C67,N+6.00,5.422,14.872,PA-F-1,confina un solo pier
+C72,N+6.00,5.923,4.433,PA-G-1,confina un solo pier
+C74,N+6.00,5.923,6.948,PA-G-1,esquina con muro sin pier
+C102,N+6.00,8.85,19.446,PA-J-1,confina un solo pier
+C38,N+6.00,8.85,12.1,PA-J-1,confina un solo pier
+C9002,N+6.00,8.85,15.447,PA-J-1,confina un solo pier
+C95,N+6.00,8.85,6.948,PA-J-1,esquina con muro sin pier
+C96,N+6.00,8.85,8.449,PA-J-1,confina un solo pier
+C98,N+6.00,8.85,13.779,PA-J-1,confina un solo pier
+C10009,N+6.00,4.327,5.046,PA-X4.33-1,confina un solo pier
+C10010,N+6.00,4.327,6.996,PA-X4.33-2,confina un solo pier
+C32,N+6.00,1.714,14.021,PA-Y14.02-1,confina un solo pier
+C53,N+6.00,4.327,14.021,PA-Y14.02-1,confina un solo pier
+C90002,N+6.00,6.247,14.247,PA-Y14.25-1,confina un solo pier
+C31,N+6.00,1.514,15.846,PA-Y15.85-1,confina un solo pier
+C44,N+6.00,3.427,15.846,PA-Y15.85-1,esquina con muro sin pier
+C84,N+6.00,7.336,15.846,PA-Y15.85-2,confina un solo pier
+C10018,N+6.00,6.272,6.948,(sin pier),"solo en murete, antepecho o dintel (sin pier)"
+C101,N+6.00,8.85,17.446,(sin pier),compartido por dos muros con pier: PA-12-4 / PA-J-1
+C104,N+6.00,8.85,21.446,(sin pier),compartido por dos muros con pier: PA-14-3 / PA-J-1
+C12,N+6.00,0.0,2.921,(sin pier),compartido por dos muros con pier: PA-3-1 / PA-A-1
+C16,N+6.00,0.0,7.871,(sin pier),compartido por dos muros con pier: PA-7-1 / PA-A-1
+C19,N+6.00,0.0,14.021,(sin pier),compartido por dos muros con pier: PA-A-1 / PA-Y14.02-1
+C21,N+6.00,0.0,15.846,(sin pier),compartido por dos muros con pier: PA-A-2 / PA-Y15.85-1
+C22,N+6.00,0.0,17.446,(sin pier),compartido por dos muros con pier: PA-12-1 / PA-A-2
+C26,N+6.00,0.0,21.446,(sin pier),compartido por dos muros con pier: PA-14-1 / PA-A-2
+C30,N+6.00,4.327,1.919,(sin pier),"solo en murete, antepecho o dintel (sin pier)"
+C40,N+6.00,3.029,15.846,(sin pier),compartido por dos muros con pier: PA-X3.03-1 / PA-Y15.85-1
+C41,N+6.00,3.029,17.446,(sin pier),compartido por dos muros con pier: PA-12-2 / PA-X3.03-1
+C42,N+6.00,3.427,14.021,(sin pier),compartido por dos muros con pier: PA-C-1 / PA-Y14.02-1
+C47,N+6.00,4.327,7.871,(sin pier),compartido por dos muros con pier: PA-7-1 / PA-X4.33-2
+C48,N+6.00,4.327,2.921,(sin pier),compartido por dos muros con pier: PA-3-2 / PA-X4.33-1
+C56,N+6.00,4.426,21.446,(sin pier),compartido por dos muros con pier: PA-14-2 / PA-D-1
+C68,N+6.00,5.422,15.846,(sin pier),compartido por dos muros con pier: PA-F-1 / PA-Y15.85-2
+C69,N+6.00,5.822,15.846,(sin pier),compartido por dos muros con pier: PA-X5.82-1 / PA-Y15.85-2
+C70,N+6.00,5.822,17.446,(sin pier),compartido por dos muros con pier: PA-12-3 / PA-X5.82-1
+C71,N+6.00,5.923,2.921,(sin pier),compartido por dos muros con pier: PA-3-2 / PA-G-1
+C73,N+6.00,5.923,5.946,(sin pier),compartido por dos muros con pier: PA-5-1 / PA-G-1
+C87,N+6.00,8.5,6.948,(sin pier),"solo en murete, antepecho o dintel (sin pier)"
+C90003,N+6.00,8.85,14.247,(sin pier),compartido por dos muros con pier: PA-J-1 / PA-Y14.25-1
+C97,N+6.00,8.85,9.95,(sin pier),compartido por dos muros con pier: PA-8-2 / PA-J-1
