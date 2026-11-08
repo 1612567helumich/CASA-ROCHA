@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Mete los espectros de PRODISIS (CFE 2015, Morelia) al .e2k y los asigna:
   - SXSV, SYSV, SXcimentacion, SYcimentacion -> espectro de diseno, SF = 9.81
-  - SXLD, SYLD                             -> espectro transparente, SF = 9.81 / 6
-    (el mismo factor de servicio que ya traia el modelo, ahora sobre el transparente)
+  - SXLD, SYLD                             -> espectro transparente, SF = 9.81 / 5.5 (Fser, MDOC 3.1.8)
+    (servicio para edificios del Grupo B)
 No toca nada mas: la funcion anterior se queda definida pero sin usar.
 Uso: python3 espectros_morelia.py ENTRADA.e2k SALIDA.e2k DISENO.txt TRANSPARENTE.txt
 """
@@ -50,7 +50,7 @@ def main(src, dst, dis, tra):
         if caso.startswith(("SXSV", "SYSV", "SXcimentacion", "SYcimentacion")):
             out[i] = f'{m[1]}"{F_DIS}"{m[3]}{G:g}{m[4]}'
         elif caso.startswith(("SXLD", "SYLD")):
-            out[i] = f'{m[1]}"{F_TRA}"{m[3]}{round(G / 6, 4):g}{m[4]}'
+            out[i] = f'{m[1]}"{F_TRA}"{m[3]}{round(G / 5.5, 4):g}{m[4]}'
         else:
             continue
         n += 1

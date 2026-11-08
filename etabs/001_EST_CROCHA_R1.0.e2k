@@ -2699,11 +2699,11 @@ $ LOAD CASES
   LOADCASE "Carga Muerta"  TYPE  "Linear Static"  INITCOND  "PRESET"  
   LOADCASE "Carga Muerta"  LOADPAT  "Dead (CM)"  SF  1 
   LOADCASE "SXLD - Limitación de Daño (g=9.81m/s2, Ks<1, Q'=1, R'=1)"  TYPE  "Response Spectrum"  MODALCASE  "Modal"  
-  LOADCASE "SXLD - Limitación de Daño (g=9.81m/s2, Ks<1, Q'=1, R'=1)"  ACCEL  "U1"  FUNC  "Morelia CFE Transparente"  SF  1.635 
+  LOADCASE "SXLD - Limitación de Daño (g=9.81m/s2, Ks<1, Q'=1, R'=1)"  ACCEL  "U1"  FUNC  "Morelia CFE Transparente"  SF  1.7836 
   LOADCASE "SXLD - Limitación de Daño (g=9.81m/s2, Ks<1, Q'=1, R'=1)"  MODALDAMPTYPE  "Constant"  CONSTDAMP  0.05 
   LOADCASE "SXLD - Limitación de Daño (g=9.81m/s2, Ks<1, Q'=1, R'=1)"  ECCENRATIOTYPICAL  0.05 
   LOADCASE "SYLD - Limitación de Daño (g=9.81m/s2, Ks<1, Q'=1, R'=1)"  TYPE  "Response Spectrum"  MODALCASE  "Modal"  
-  LOADCASE "SYLD - Limitación de Daño (g=9.81m/s2, Ks<1, Q'=1, R'=1)"  ACCEL  "U2"  FUNC  "Morelia CFE Transparente"  SF  1.635 
+  LOADCASE "SYLD - Limitación de Daño (g=9.81m/s2, Ks<1, Q'=1, R'=1)"  ACCEL  "U2"  FUNC  "Morelia CFE Transparente"  SF  1.7836 
   LOADCASE "SYLD - Limitación de Daño (g=9.81m/s2, Ks<1, Q'=1, R'=1)"  MODALDAMPTYPE  "Constant"  CONSTDAMP  0.05 
   LOADCASE "SYLD - Limitación de Daño (g=9.81m/s2, Ks<1, Q'=1, R'=1)"  ECCENRATIOTYPICAL  0.05 
   LOADCASE "SXSV - Seguridad de Vida (g=9.81m/s2, Q'>1, R'>1)"  TYPE  "Response Spectrum"  MODALCASE  "Modal"  
