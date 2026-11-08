@@ -420,6 +420,38 @@ def recalcular(xlsx, workdir):
 
 
 # ---------------------------------------------------------------- fase C: formato y caches
+def actualizar_caches(pkg, vals, log):
+    """Guarda en cada formula el valor recalculado por LibreOffice."""
+    nupd = 0
+    for name, S in pkg.sheets.items():
+        V = vals.get(name, {})
+        for rn, c in S.cells():
+            if c.find(q("f")) is None:
+                continue
+            col, _ = split_ref(c.get("r"))
+            v = V.get((rn, col2num(col)))
+            ve = c.find(q("v"))
+            if ve is None:
+                ve = etree.SubElement(c, q("v"))
+            if v is None:
+                c.set("t", "str")
+                ve.text = ""
+            elif isinstance(v, bool):
+                c.set("t", "b")
+                ve.text = "1" if v else "0"
+            elif isinstance(v, (int, float)):
+                c.attrib.pop("t", None)
+                ve.text = fmt_num(v)
+            elif isinstance(v, str) and v in ("#N/A", "#VALUE!", "#REF!", "#DIV/0!", "#NUM!", "#NAME?", "#NULL!"):
+                c.set("t", "e")
+                ve.text = v
+            else:
+                c.set("t", "str")
+                ve.text = str(v)
+            nupd += 1
+    log["caches_actualizados"] = nupd
+
+
 def fase_formato(pkg, vals, log):
     st = pkg.styles
     fonts = st.find(q("fonts")).findall(q("font"))
@@ -454,35 +486,7 @@ def fase_formato(pkg, vals, log):
         wrap_cache[s] = len(xf_list) - 1
         return wrap_cache[s]
 
-    # 1) cache de formulas desde el recalculo de LibreOffice
-    nupd = 0
-    for name, S in pkg.sheets.items():
-        V = vals.get(name, {})
-        for rn, c in S.cells():
-            if c.find(q("f")) is None:
-                continue
-            col, _ = split_ref(c.get("r"))
-            v = V.get((rn, col2num(col)))
-            ve = c.find(q("v"))
-            if ve is None:
-                ve = etree.SubElement(c, q("v"))
-            if v is None:
-                c.set("t", "str")
-                ve.text = ""
-            elif isinstance(v, bool):
-                c.set("t", "b")
-                ve.text = "1" if v else "0"
-            elif isinstance(v, (int, float)):
-                c.attrib.pop("t", None)
-                ve.text = fmt_num(v)
-            elif isinstance(v, str) and v in ("#N/A", "#VALUE!", "#REF!", "#DIV/0!", "#NUM!", "#NAME?", "#NULL!"):
-                c.set("t", "e")
-                ve.text = v
-            else:
-                c.set("t", "str")
-                ve.text = str(v)
-            nupd += 1
-    log["caches_actualizados"] = nupd
+    actualizar_caches(pkg, vals, log)
 
     # 2) columnas agrupadas
     def set_cols(S, lo, hi, **attrs):
