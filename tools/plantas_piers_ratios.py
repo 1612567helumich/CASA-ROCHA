@@ -244,7 +244,7 @@ def main(e2k, hoja, salida, claros="", propuesta=None):
     x0, x1, y0, y1 = min(xs) - 0.3, max(xs) + 0.3, min(ys) - 0.3, max(ys) + 0.3
     Wp = int((x1 - x0) * PX) + 2 * M0 + 120
     W = Wp + PANEL
-    H = int((y1 - y0) * PX) + 2 * M0 + (330 if claros else 160) + (60 if prop else 0)
+    H = int((y1 - y0) * PX) + 2 * M0 + (330 if claros else 160) + (85 if prop else 0)
 
     def eje(dir_, c):
         for lab, cc in grids[dir_]:
@@ -397,9 +397,11 @@ def main(e2k, hoja, salida, claros="", propuesta=None):
                 lin, otro = ("Y", "X") if g["ax"] == "Y" else ("X", "Y")
                 donde = f"Eje {eje(lin, g['co'])}, de {eje(otro, g['a'])} a {eje(otro, g['b'])}"
                 pp = next((prop[n] for n in g["piers"] if n in prop), None)
+                g["hmin"] = math.ceil(g["Lv"] / 14 * 100 / 5 - 1e-9) * 5      # 4.1.18: L/h <= 14
+                minimo = f"mín. norma {g['hmin']}" if g["hmin"] > 30 else "L/h pasa con 30"
                 if pp:
                     g["sec"] = pp["seccion"]
-                    s = (f"{i}.  {donde} · claro {g['Lv']:.2f} m → {pp['seccion']}"
+                    s = (f"{i}.  {donde} · claro {g['Lv']:.2f} m · {minimo} → {pp['seccion']}"
                          + (f"  {pp['nota']}" if pp.get("nota") else "") + f"   ({', '.join(g['piers'])})")
                 elif g["h"] > 30:
                     g["sec"] = f"15×{g['h']}"
@@ -413,6 +415,9 @@ def main(e2k, hoja, salida, claros="", propuesta=None):
             for ln in prop.get("_extra", ["Las demás dalas bajo muros de PA pasan con 15×30 (el peralte de la losa)."]):
                 d.text((30, yy + 2), ln, font=F(18), fill=(60, 60, 60))
                 yy += 25
+            d.text((30, yy + 2), "Mín. norma = peralte con el que L/h ≤ 14 (NTC-M 4.1.18). Solo depende del peralte: "
+                   "ensanchar no lo cambia.", font=F(18, True), fill=(0, 0, 0))
+            yy += 25
             for i, g in enumerate(orden_g, 1):
                 a, b, Lv = g["a"], g["b"], g["Lv"]
                 if g["ax"] == "X":
@@ -420,7 +425,7 @@ def main(e2k, hoja, salida, claros="", propuesta=None):
                 else:
                     box = [X(a) - 16, Y(g["co"]) - 34, X(b) + 16, Y(g["co"]) + 34]
                 d.ellipse(box, outline=(0, 0, 0), width=4)
-                texto = f"{i}: {g['sec']}"
+                texto = f"{i}: {g['sec']}" + (f" (mín. {g['hmin']})" if g.get("hmin", 0) > 30 else "")
                 f = F(17, True)
                 tw, th = d.textbbox((0, 0), texto, font=f)[2:]
                 w, h = tw + 10, th + 8
@@ -437,7 +442,7 @@ def main(e2k, hoja, salida, claros="", propuesta=None):
                 d.rounded_rectangle([cx, cy, cx + w, cy + h], radius=4, fill=(255, 255, 255), outline=(0, 0, 0), width=2)
                 d.text((cx + 5, cy + 3), texto, font=f, fill=(0, 0, 0))
         # tabla
-        tx, ty = Wp + 10, 190
+        tx, ty = Wp + 10, 215
         n_ok = sum(1 for f_ in filas if f_[2])
         resumen.append((titulo, n_ok, len(filas) - n_ok))
         d.text((tx, ty), f"{titulo}: {n_ok} cumplen y {len(filas) - n_ok} no", font=F(24, True), fill=(20, 20, 20))
