@@ -78,7 +78,7 @@ def main(e2k, hoja, propuesta, salida):
         tw, th = d.textbbox((0, 0), texto, font=f)[2:]
         w, h = (th + 10, tw + 10) if rot else (tw + 10, th + 10)
         if rot if vertical is None else vertical:
-            cands = [(cx0 + 10 + s, cy0 - h / 2 + k) for k in (0, -40, 40, -80, 80, -120, 120) for s in (0, -w - 20)]
+            cands = [(cx0 + 16 + s, cy0 - h / 2 + k) for k in (0, -40, 40, -80, 80, -120, 120) for s in (0, -w - 32)]
         else:
             cands = [(cx0 - w / 2 + k, cy0 + s) for k in (0, -50, 50, -100, 100) for s in (-h - 10, 10, -2 * h - 16, h + 16)]
         for cx, cy in cands:
@@ -146,7 +146,7 @@ def main(e2k, hoja, propuesta, salida):
             cx0, cy0 = X(g["co"]), (Y(g["a"]) + Y(g["b"])) / 2
         else:
             cx0, cy0 = (X(g["a"]) + X(g["b"])) / 2, Y(g["co"])
-        lab, pos = poner(d, puestas, g["sec"], (0, 0, 0), cx0, cy0, False, F(24, True), borde=(0, 0, 0),
+        lab, pos = poner(d, puestas, f"{g['sec']} peralte", (0, 0, 0), cx0, cy0, False, F(24, True), borde=(0, 0, 0),
                          vertical=g["ax"] == "X")
         img2.paste(lab, pos, lab)
 
