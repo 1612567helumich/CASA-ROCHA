@@ -2,7 +2,8 @@
 """Plantas sencillas para el cliente, sin textos a las orillas:
   hoja 1, PLANTA BAJA: el ratio de cada muro a un lado (azul = pasa, rojo = no pasa). Donde la norma no
   da ratio (machon o V_R = 0 por tension) va el de cortante con P = 0, en rojo.
-  hoja 2, PLANTA ALTA: todas las dalas bajo muros de PA en negro con su medida (ancho x peralte, cm);
+  hoja 2, PLANTA ALTA: todas las dalas bajo muros de PA en negro con su medida (ancho x peralte, cm) y
+  una flecha de la etiqueta a su dala;
   las que cambian con letra grande y las demas (clave _resto del JSON, 15x30) con letra chica.
 Ratios igual que plantas_piers_ratios.py (tabique: hoja de muros; concreto: revision NTC-C).
 
@@ -43,8 +44,8 @@ def main(e2k, hoja, propuesta, salida):
     X = lambda x: M0 + (x - x0) * PX
     Y = lambda y: H - M0 - (y - y0) * PX
 
-    def lienzo(titulo):
-        img = Image.new("RGB", (W, H), "white")
+    def lienzo(titulo, extra=0):
+        img = Image.new("RGB", (W + extra, H), "white")
         d = ImageDraw.Draw(img)
         d.text((30, 22), titulo, font=F(32, True), fill=(0, 0, 0))
         for lab, c in grids["X"]:
@@ -107,15 +108,40 @@ def main(e2k, hoja, propuesta, salida):
             lab = lab.rotate(90, expand=True)
         return lab, (int(cx), int(cy))
 
+    def flecha(d, pos, size, seg):
+        """Flecha de la etiqueta (pos, size) al punto mas cercano de la dala (seg)."""
+        cx, cy = pos[0] + size[0] / 2, pos[1] + size[1] / 2
+        (ax_, ay_), (bx_, by_) = seg
+        vx, vy = bx_ - ax_, by_ - ay_
+        L2 = vx * vx + vy * vy or 1.0
+        t = max(0.0, min(1.0, ((cx - ax_) * vx + (cy - ay_) * vy) / L2))
+        qx, qy = ax_ + t * vx, ay_ + t * vy
+        dx, dy = qx - cx, qy - cy
+        dist = math.hypot(dx, dy)
+        hw, hh = size[0] / 2 + 3, size[1] / 2 + 3
+        k = min(hw / abs(dx) if dx else 9e9, hh / abs(dy) if dy else 9e9)
+        if dist < 1 or k >= 1:                       # la etiqueta ya toca la dala
+            return
+        ux, uy = dx / dist, dy / dist
+        sx, sy = cx + dx * k, cy + dy * k            # sale del borde de la etiqueta
+        tx_, ty_ = qx - ux * 8, qy - uy * 8          # punta junto a la dala
+        if math.hypot(tx_ - sx, ty_ - sy) < 6:
+            return
+        d.line([(sx, sy), (tx_, ty_)], fill=(0, 0, 0), width=3)
+        bx2, by2 = tx_ - ux * 16, ty_ - uy * 16
+        d.polygon([(tx_, ty_), (bx2 - uy * 7, by2 + ux * 7), (bx2 + uy * 7, by2 - ux * 7)], fill=(0, 0, 0))
+
     import openpyxl
     _D = openpyxl.load_workbook(hoja, data_only=True)["DATOS"]
     fr_v, vm, t_tip = _D["C80"].value, _D["C35"].value, _D["C52"].value      # F_R cortante, v'm, t tipico
     # ---------------- hoja 1: planta baja con ratios
     pb = M.order[-2]
     Hm = (M.elev[pb] - M.elev[M.below(pb)]) * 100
-    img1, d = lienzo("PLANTA BAJA — ratio de cada muro")
+    PANEL1 = 780
+    img1, d = lienzo("PLANTA BAJA — ratio de cada muro", PANEL1)
     piers = muros(d, pb)
     puestas = []
+    especiales = []
     for n, e in piers.items():
         r = res.get(n)
         if r is None:
@@ -130,6 +156,13 @@ def main(e2k, hoja, propuesta, salida):
             f_ = r["CY"] or 1.0
             vr0 = min(fr_v * 0.5 * vm * AT * f_, 1.5 * fr_v * vm * AT * f_) / 1000
             ratio, no = r["BK"] / vr0, no or ["sin V_R"]
+            if extra == "col.":
+                motivo = f"Machón de {r['F'] * 100:.0f} cm: va como columna"
+            else:
+                motivo = "Con tensión la norma no cuenta al tabique"
+                motivo += {3: "; con alambres no alcanza, va con malla",
+                           -1: "; ni con refuerzo horizontal alcanza"}.get(r["ED"], "")
+            especiales.append((n, ratio, motivo))
         texto = f"{ratio:.2f}"
         (a0, b0) = ((X(e["co"]), Y(e["h0"])), (X(e["co"]), Y(e["h1"]))) if e["ax"] == "X" else \
                    ((X(e["h0"]), Y(e["co"])), (X(e["h1"]), Y(e["co"])))
@@ -137,6 +170,32 @@ def main(e2k, hoja, propuesta, salida):
                          e["ax"] == "X", F(22, True),
                          vertical=e["ax"] == "X")
         img1.paste(lab, pos, lab)
+    # tablita a un lado
+    tx, ty = W + 10, 190
+    d.text((tx, ty), "Muros sin ratio de norma", font=F(28, True), fill=(0, 0, 0))
+    d.text((tx, ty + 38), "(su número es el cortante con P = 0)", font=F(22), fill=(60, 60, 60))
+    ty += 88
+    c1, c2, c3 = tx, tx + 190, tx + 290
+    for c_, t_ in ((c1, "Muro"), (c2, "Ratio"), (c3, "Por qué va en rojo")):
+        d.text((c_, ty), t_, font=F(21, True), fill=(80, 80, 80))
+    ty += 34
+    d.line([(tx, ty), (W + PANEL1 - 20, ty)], fill=(160, 160, 160), width=1)
+    ty += 8
+    for n, ratio, motivo in sorted(especiales, key=lambda x: -x[1]):
+        d.text((c1, ty), n, font=F(21, True), fill=ROJO)
+        d.text((c2, ty), f"{ratio:.2f}", font=F(21, True), fill=ROJO)
+        lineas, cur = [], ""
+        for wd in motivo.split(" "):
+            prueba = (cur + " " + wd).strip()
+            if d.textlength(prueba, font=F(20)) <= W + PANEL1 - 25 - c3:
+                cur = prueba
+            else:
+                lineas.append(cur); cur = wd
+        lineas.append(cur)
+        for i, ln in enumerate(lineas):
+            d.text((c3, ty + i * 27), ln, font=F(20), fill=(30, 30, 30))
+        ty += max(1, len(lineas)) * 27 + 14
+        d.line([(tx, ty - 6), (W + PANEL1 - 20, ty - 6)], fill=(225, 225, 225), width=1)
 
     # ---------------- hoja 2: planta alta con las vigas que cambian
     pa = M.order[-3]
@@ -185,6 +244,7 @@ def main(e2k, hoja, propuesta, salida):
         else:
             p0, p1 = (X(g["a"]), Y(g["co"])), (X(g["b"]), Y(g["co"]))
         d.line([p0, p1], fill=(0, 0, 0), width=12)
+        g["seg"] = (p0, p1)
         puestas.append((min(p0[0], p1[0]) - 9, min(p0[1], p1[1]) - 9, max(p0[0], p1[0]) + 9, max(p0[1], p1[1]) + 9))
     for g in sorted(grupos.values(), key=lambda g: (not g["cambia"], -g["Lv"])):
         if g["ax"] == "X":
@@ -193,6 +253,7 @@ def main(e2k, hoja, propuesta, salida):
             cx0, cy0 = (X(g["a"]) + X(g["b"])) / 2, Y(g["co"])
         lab, pos = poner(d, puestas, f"{g['sec']} peralte", (0, 0, 0), cx0, cy0, False,
                          F(24 if g["cambia"] else 18, True), borde=(0, 0, 0), vertical=g["ax"] == "X")
+        flecha(d, pos, lab.size, g["seg"])
         img2.paste(lab, pos, lab)
 
     img1.save(salida, save_all=True, append_images=[img2], resolution=150)
