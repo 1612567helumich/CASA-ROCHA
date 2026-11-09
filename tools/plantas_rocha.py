@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Plantas sencillas para el cliente, sin textos a las orillas:
-  hoja 1, PLANTA BAJA: el ratio de cada muro a un lado (azul = pasa, rojo = no pasa). Donde la norma no
+  hoja 1, PLANTA BAJA: nombre y ratio de cada muro a un lado (azul = pasa, rojo = no pasa). Donde la norma no
   da ratio (machon o V_R = 0 por tension) va el de cortante con P = 0, en rojo.
   hoja 2, PLANTA ALTA: todas las dalas bajo muros de PA en negro con su medida (ancho x peralte, cm) y
   una flecha de la etiqueta a su dala;
@@ -90,7 +90,7 @@ def main(e2k, hoja, propuesta, salida):
         k = min((size[0] / 2 + 3) / abs(dx) if dx else 9e9, (size[1] / 2 + 3) / abs(dy) if dy else 9e9)
         return 0.0 if dist < 1 or k >= 1 else dist * (1 - k) - 8
 
-    def poner(d, puestas, texto, color, cx0, cy0, rot, f, borde=None, vertical=None, gap=None, seg=None):
+    def poner(d, puestas, texto, color, cx0, cy0, rot, f, borde=None, vertical=None, gap=None, seg=None, xmin=None):
         tw, th = d.textbbox((0, 0), texto, font=f)[2:]
         w, h = (th + 10, tw + 10) if rot else (tw + 10, th + 10)
         if rot if vertical is None else vertical:
@@ -106,7 +106,7 @@ def main(e2k, hoja, propuesta, salida):
         cabe = lambda bx: seg is None or largo_flecha((bx[0] + 2, bx[1] + 2), (w, h), seg) >= 22
         libre = lambda bx: cx_ok(bx) and cabe(bx) and all(bx[2] <= o[0] or bx[0] >= o[2] or bx[3] <= o[1] or bx[1] >= o[3]
                                                          for o in puestas)
-        cx_ok = lambda bx: bx[0] > M0 - 12 and bx[2] < W - 5 and bx[1] > 100 and bx[3] < H - 5
+        cx_ok = lambda bx: bx[0] > (M0 - 12 if xmin is None else xmin) and bx[2] < W - 5 and bx[1] > 100 and bx[3] < H - 5
         bx = None
         for cx, cy in cands:
             prueba = (cx - 2, cy - 2, cx + w + 2, cy + h + 2)
@@ -159,7 +159,19 @@ def main(e2k, hoja, propuesta, salida):
     PANEL1 = 780
     img1, d = lienzo("PLANTA BAJA — ratio de cada muro", PANEL1)
     piers = muros(d, pb)
-    puestas = []
+    puestas = []                                     # que las etiquetas no tapen muros ni circulos de ejes
+    for (s_, ax_, co_), pcs in walls.items():
+        if s_ != pb:
+            continue
+        for p in pcs:
+            if ax_ == "X":
+                puestas.append((X(co_) - 7, Y(p["h1"]) - 7, X(co_) + 7, Y(p["h0"]) + 7))
+            else:
+                puestas.append((X(p["h0"]) - 7, Y(co_) - 7, X(p["h1"]) + 7, Y(co_) + 7))
+    for _, c in grids["X"]:
+        puestas += [(X(c) - 19, yy - 19, X(c) + 19, yy + 19) for yy in (Y(y1) - 40, Y(y0) + 40)]
+    for _, c in grids["Y"]:
+        puestas.append((X(x0) - 64, Y(c) - 19, X(x0) - 26, Y(c) + 19))
     especiales = []
     for n, e in piers.items():
         r = res.get(n)
@@ -182,12 +194,12 @@ def main(e2k, hoja, propuesta, salida):
                 motivo += {3: "; con alambres no alcanza, va con malla",
                            -1: "; ni con refuerzo horizontal alcanza"}.get(r["ED"], "")
             especiales.append((n, ratio, motivo))
-        texto = f"{ratio:.2f}"
+        texto = f"{n} · {ratio:.2f}"
         (a0, b0) = ((X(e["co"]), Y(e["h0"])), (X(e["co"]), Y(e["h1"]))) if e["ax"] == "X" else \
                    ((X(e["h0"]), Y(e["co"])), (X(e["h1"]), Y(e["co"])))
         lab, pos = poner(d, puestas, texto, ROJO if no else AZUL, (a0[0] + b0[0]) / 2, (a0[1] + b0[1]) / 2,
                          e["ax"] == "X", F(22, True),
-                         vertical=e["ax"] == "X")
+                         vertical=e["ax"] == "X", xmin=20)
         img1.paste(lab, pos, lab)
     # tablita a un lado
     tx, ty = W + 10, 190
