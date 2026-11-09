@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>PA-Y14.25-1 en 3D</title>
+<!-- Se ve con three.js r149 (three.min.js en la misma carpeta, de npm three@0.149.0).
+     Para sacar la imagen: abrir en Chromium (Playwright) a 1600x1130 y tomar captura. -->
+<style>
+  html, body { margin: 0; background: #ffffff; font-family: "DejaVu Sans", Arial, sans-serif; }
+  #wrap { position: relative; width: 1600px; height: 1130px; overflow: hidden; }
+  canvas { display: block; position: absolute; left: 0; top: 90px; }
+  .lab { position: absolute; transform: translate(-50%, -50%); white-space: nowrap; font-size: 17px;
+         background: rgba(255,255,255,0.88); padding: 2px 7px; border-radius: 5px; }
+  .b { font-weight: bold; }
+  .rojo { color: #c62828; font-weight: bold; }
+  .verde { color: #2e7d32; font-weight: bold; }
+  .azul { color: #1565c0; font-weight: bold; }
+  #titulo { position: absolute; left: 0; right: 0; top: 14px; text-align: center; font-size: 30px; font-weight: bold; }
+  #sub { position: absolute; left: 0; right: 0; top: 56px; text-align: center; font-size: 17px; color: #444; }
+  #nota { position: absolute; left: 24px; right: 24px; top: 935px; font-size: 17px; line-height: 1.45;
+          background: #fafafa; border: 1px solid #bbb; border-radius: 8px; padding: 12px 16px; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="titulo">PA-Y14.25-1: su dala está bien, pero su lado izquierdo cuelga de la dala del eje F</div>
+  <div id="sub">Geometría del modelo R1.2 · deformación exagerada · gris punteado = sin cargar · grieta negra = cortante · flechas rojas = carga de azotea</div>
+  <div id="nota">
+    <b>1.</b> La dala del eje F libra 5.50 m sin muro abajo (de la dala del eje 8 al muro de concreto PB-11-1) y carga todo PA-F-1 → <span class="rojo">se flecha</span>.<br>
+    <b>2.</b> La dala de PA-Y14.25-1 cae a la izquierda en esa dala del eje F y a la derecha en PB-J-1: el lado izquierdo baja, el derecho no.<br>
+    <b>3.</b> El muro se tuerce en su plano → cortante 5.4 t (5.0 t de pura gravedad) contra 3.1 t que aguanta → <b>1.75</b>.<br>
+    <b>Arreglo:</b> peraltar la dala del eje F (óvalo 1, 15×50) o darle apoyo abajo. Se arreglan PA-F-1 y PA-Y14.25-1.
+  </div>
+</div>
+<script src="three.min.js"></script>
+<script>
+const W = 1600, H = 840, TOP = 90;
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(window.devicePixelRatio || 1);
+renderer.setSize(W, H);
+renderer.setClearColor(0xffffff);
+document.getElementById("wrap").prepend(renderer.domElement);
+const scene = new THREE.Scene();
+scene.add(new THREE.AmbientLight(0xffffff, 0.62));
+const sol = new THREE.DirectionalLight(0xffffff, 0.55); sol.position.set(14, 18, 10); scene.add(sol);
+const sol2 = new THREE.DirectionalLight(0xffffff, 0.25); sol2.position.set(-10, 8, -6); scene.add(sol2);
+
+// modelo (x, y en planta; z arriba)  ->  three (x, z, -y)
+const V = (x, y, z) => new THREE.Vector3(x, z, -y);
+
+// geometria R1.2 (m)
+const yF0 = 9.95, yF1 = 15.447, xF = 5.422;     // dala del eje F
+const yw = 14.247, xw0 = 6.25, xJ = 8.85;       // PA-Y14.25-1 y su dala
+const yPF0 = 11.0, yPF1 = 15.85;                // PA-F-1
+const A = 0.55;                                  // flecha dibujada (exagerada)
+const zd0 = 2.9, zd1 = 3.1, zm1 = 5.9, t = 0.15;
+const dF = y => (y >= yF0 && y <= yF1) ? A * Math.sin(Math.PI * (y - yF0) / (yF1 - yF0)) : 0;
+const dJ = dF(yw);
+const dY = x => (x >= xF && x <= xJ) ? dJ * (xJ - x) / (xJ - xF) : 0;
+const muroSobre = (d, alivio) => (x, y, z) => z <= zd1 + 1e-6 ? d(x, y) : d(x, y) * (1 - alivio * (z - zd1) / (zm1 - zd1));
+
+const COL = { pb: 0xc8704b, pa: 0xe0956f, dala: 0x8f8f8f, conc: 0x707070, dalaF: 0xb04040, dalaY: 0x3f74b8 };
+
+// caja de x0..x1, y0..y1, z0..z1 subdividida; dz(x,y,z) baja cada vertice
+function caja(x0, x1, y0, y1, z0, z1, color, dz, n = 30, fantasma = false) {
+  const g = new THREE.BoxGeometry(x1 - x0, z1 - z0, y1 - y0, n, 2, n);
+  const p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i) + (x0 + x1) / 2, z = p.getY(i) + (z0 + z1) / 2, y = -(p.getZ(i)) + (y0 + y1) / 2;
+    const d = dz ? dz(x, y, z) : 0;
+    p.setXYZ(i, x, z - d, -y);
+  }
+  g.computeVertexNormals();
+  const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ color }));
+  scene.add(m);
+  const eg = new THREE.EdgesGeometry(g, 25);
+  scene.add(new THREE.LineSegments(eg, new THREE.LineBasicMaterial({ color: 0x5a5a5a })));
+  if (fantasma) {
+    const g0 = new THREE.BoxGeometry(x1 - x0, z1 - z0, y1 - y0);
+    g0.translate((x0 + x1) / 2, (z0 + z1) / 2, -(y0 + y1) / 2);
+    const l = new THREE.LineSegments(new THREE.EdgesGeometry(g0),
+      new THREE.LineDashedMaterial({ color: 0x8a8a8a, dashSize: 0.12, gapSize: 0.08 }));
+    l.computeLineDistances(); scene.add(l);
+  }
+  return m;
+}
+
+// planta baja
+caja(xJ - t / 2, xJ + t / 2, 12.6, 16.4, 0, zd0, COL.pb, null, 4);                // PB-J-1 (tramo)
+caja(4.925, xJ - t / 2, yF1 - t / 2, yF1 + t / 2, 0, zd0, COL.conc, null, 4);       // PB-11-1 (concreto)
+// dalas en N+3.00
+caja(4.4, xJ, yF0 - t / 2, yF0 + t / 2, zd0, zd1, COL.dala, null, 6);              // dala eje 8
+caja(4.925, xJ, yF1 - t / 2, yF1 + t / 2, zd0, zd1, COL.dala, null, 6);            // dala sobre PB-11-1
+caja(xF - t / 2, xF + t / 2, yF0, yF1, zd0, zd1, COL.dalaF, (x, y) => dF(y), 40, true);       // dala eje F
+caja(xF + t / 2, xJ - t / 2, yw - t / 2, yw + t / 2, zd0, zd1, COL.dalaY, (x) => dY(x), 30, true); // dala del muro
+// planta alta
+caja(xF - t / 2, xF + t / 2, yPF0, yPF1, zd1, zm1, COL.pa, muroSobre((x, y) => dF(y), 0.75), 40, true); // PA-F-1
+caja(xw0, xJ - t / 2, yw - t / 2, yw + t / 2, zd1, zm1, COL.pa, muroSobre((x) => dY(x), 0.6), 30, true); // PA-Y14.25-1
+
+// grietas: zigzag de cilindros pegado a la cara del muro
+function grieta(pts) {
+  const mat = new THREE.MeshBasicMaterial({ color: 0x111111 });
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i], b = pts[i + 1];
+    const L = a.distanceTo(b);
+    const c = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, L, 6), mat);
+    c.position.copy(a.clone().add(b).multiplyScalar(0.5));
+    c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+    scene.add(c);
+  }
+}
+function zigzag(p0, p1, n, amp, dirAmp) {
+  const out = [];
+  for (let i = 0; i <= n; i++) {
+    const s = i / n;
+    const p = p0.clone().lerp(p1, s);
+    if (i > 0 && i < n) p.add(dirAmp.clone().multiplyScalar(i % 2 ? amp : -amp));
+    out.push(p);
+  }
+  return out;
+}
+// PA-Y14.25-1 (cara sur, y = yw - t/2 - 0.02): sube hacia el lado que se baja
+const yc = yw - t / 2 - 0.03;
+grieta(zigzag(V(8.05, yc, zd1 + 0.15 - dY(8.05)), V(6.55, yc, zm1 - 0.25 - 0.4 * dY(6.55)), 10, 0.09, new THREE.Vector3(1, 0, 0)));
+// PA-F-1 (cara este, x = xF + t/2 + 0.02): arco sobre la dala que se flecha
+const xc = xF + t / 2 + 0.03;
+grieta(zigzag(V(xc, 11.2, zd1 + 0.12 - dF(11.2)), V(xc, 12.5, zm1 - 0.35), 9, 0.09, new THREE.Vector3(0, 0, 1)));
+
+// flechas de carga
+function flecha(x, y, ztop) {
+  const mat = new THREE.MeshLambertMaterial({ color: 0xc62828 });
+  const tallo = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.75, 8), mat);
+  tallo.position.copy(V(x, y, ztop + 0.55)); scene.add(tallo);
+  const punta = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.25, 12), mat);
+  punta.rotation.x = Math.PI; punta.position.copy(V(x, y, ztop + 0.08)); scene.add(punta);
+}
+for (const x of [6.7, 7.5, 8.3]) flecha(x, yw, zm1 - 0.4 * dY(x));
+for (const y of [11.6, 12.8, 14.9]) flecha(xF, y, zm1 - 0.25 * dF(y));
+// punto donde una dala se apoya en la otra
+const bola = new THREE.Mesh(new THREE.SphereGeometry(0.14, 20, 14), new THREE.MeshLambertMaterial({ color: 0xc62828 }));
+bola.position.copy(V(xF, yw, zd0 - dJ - 0.05)); scene.add(bola);
+
+// camara: desde el sureste, arriba
+const cam = new THREE.PerspectiveCamera(30, W / H, 0.1, 200);
+cam.position.copy(V(18.6, 3.4, 12.6));
+cam.lookAt(V(6.9, 13.2, 2.9));
+renderer.render(scene, cam);
+
+// rotulos en HTML sobre la imagen
+function rot(x, y, z, html, cls = "", dx = 0, dy = 0) {
+  const p = V(x, y, z).project(cam);
+  const d = document.createElement("div");
+  d.className = "lab " + cls;
+  d.innerHTML = html;
+  d.style.left = ((p.x + 1) / 2 * W + dx) + "px";
+  d.style.top = ((1 - p.y) / 2 * H + TOP + dy) + "px";
+  document.getElementById("wrap").appendChild(d);
+}
+rot(7.6, yw, 4.6, "PA-Y14.25-1", "b");
+rot(xF, 12.3, 4.4, "PA-F-1", "b");
+rot(xF, 10.4, zd0 - dF(10.4) - 0.35, "dala del eje F · 5.50 m · 15×20<br>se flecha", "rojo", -40, 25);
+rot(7.0, yw, zd0 - dY(7.0) - 0.25, "dala de PA-Y14.25-1 · 3.41 m<br>(su claro sí pasa con 15×30)", "azul", 20, 78);
+rot(xF, yw, zd0 - dJ - 0.05, "aquí se apoya en la dala del eje F → <b>se baja</b>", "rojo", 20, 42);
+rot(xJ, yw, zd1 + 0.2, "no se baja", "verde", 85, -40);
+rot(xJ, 14.0, 1.0, "PB-J-1 (muro de abajo)", "", 40, 0);
+rot(5.0, yF0, zd1 + 0.25, "dala eje 8", "", 0, 0);
+document.title = "listo";
+</script>
+</body>
+</html>
