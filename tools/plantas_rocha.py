@@ -77,17 +77,34 @@ def main(e2k, hoja, propuesta, salida):
                     e["h0"], e["h1"] = min(e["h0"], p["h0"]), max(e["h1"], p["h1"])
         return piers
 
-    def poner(d, puestas, texto, color, cx0, cy0, rot, f, borde=None, vertical=None):
+    def largo_flecha(pos, size, seg):
+        """Lo que mide la flecha de la etiqueta a su dala (0 si no cabe)."""
+        cx, cy = pos[0] + size[0] / 2, pos[1] + size[1] / 2
+        (ax_, ay_), (bx_, by_) = seg
+        vx, vy = bx_ - ax_, by_ - ay_
+        L2 = vx * vx + vy * vy or 1.0
+        t = max(0.0, min(1.0, ((cx - ax_) * vx + (cy - ay_) * vy) / L2))
+        dx, dy = ax_ + t * vx - cx, ay_ + t * vy - cy
+        dist = math.hypot(dx, dy)
+        k = min((size[0] / 2 + 3) / abs(dx) if dx else 9e9, (size[1] / 2 + 3) / abs(dy) if dy else 9e9)
+        return 0.0 if dist < 1 or k >= 1 else dist * (1 - k) - 8
+
+    def poner(d, puestas, texto, color, cx0, cy0, rot, f, borde=None, vertical=None, gap=None, seg=None):
         tw, th = d.textbbox((0, 0), texto, font=f)[2:]
         w, h = (th + 10, tw + 10) if rot else (tw + 10, th + 10)
         if rot if vertical is None else vertical:
-            cands = [(cx0 + 16 + s, cy0 - h / 2 + k) for k in (0, -40, 40, -80, 80, -120, 120, -170, 170, -220, 220) for s in (0, -w - 32)]
+            g_ = 16 if gap is None else gap
+            cands = [(cx0 + g_ + s, cy0 - h / 2 + k) for k in (0, -40, 40, -80, 80, -120, 120, -170, 170, -220, 220)
+                     for s in (0, -w - 2 * g_)]
         else:
-            cands = [(cx0 - w / 2 + k, cy0 + s) for k in (0, -50, 50, -100, 100, -150, 150) for s in (-h - 10, 10, -2 * h - 16, h + 16)]
+            ss = (-h - 10, 10, -2 * h - 16, h + 16) if gap is None else (-h - gap, gap, -h - gap - 35, gap + 35)
+            cands = [(cx0 - w / 2 + k, cy0 + s) for k in (0, -50, 50, -100, 100, -150, 150) for s in ss]
         for rad in (60, 100, 140, 180, 230):                      # si no cabe cerca, alrededor y mas lejos
             for ang in range(0, 360, 30):
                 cands.append((cx0 + rad * math.cos(math.radians(ang)) - w / 2, cy0 + rad * math.sin(math.radians(ang)) - h / 2))
-        libre = lambda bx: cx_ok(bx) and all(bx[2] <= o[0] or bx[0] >= o[2] or bx[3] <= o[1] or bx[1] >= o[3] for o in puestas)
+        cabe = lambda bx: seg is None or largo_flecha((bx[0] + 2, bx[1] + 2), (w, h), seg) >= 22
+        libre = lambda bx: cx_ok(bx) and cabe(bx) and all(bx[2] <= o[0] or bx[0] >= o[2] or bx[3] <= o[1] or bx[1] >= o[3]
+                                                         for o in puestas)
         cx_ok = lambda bx: bx[0] > M0 - 12 and bx[2] < W - 5 and bx[1] > 100 and bx[3] < H - 5
         bx = None
         for cx, cy in cands:
@@ -120,16 +137,17 @@ def main(e2k, hoja, propuesta, salida):
         dist = math.hypot(dx, dy)
         hw, hh = size[0] / 2 + 3, size[1] / 2 + 3
         k = min(hw / abs(dx) if dx else 9e9, hh / abs(dy) if dy else 9e9)
-        if dist < 1 or k >= 1:                       # la etiqueta ya toca la dala
-            return
+        if dist < 1 or k >= 1:                       # la etiqueta quedo encima de su dala: no hay flecha
+            return False
         ux, uy = dx / dist, dy / dist
         sx, sy = cx + dx * k, cy + dy * k            # sale del borde de la etiqueta
         tx_, ty_ = qx - ux * 8, qy - uy * 8          # punta junto a la dala
         if math.hypot(tx_ - sx, ty_ - sy) < 6:
-            return
+            return False
         d.line([(sx, sy), (tx_, ty_)], fill=(0, 0, 0), width=3)
         bx2, by2 = tx_ - ux * 16, ty_ - uy * 16
         d.polygon([(tx_, ty_), (bx2 - uy * 7, by2 + ux * 7), (bx2 + uy * 7, by2 - ux * 7)], fill=(0, 0, 0))
+        return True
 
     import openpyxl
     _D = openpyxl.load_workbook(hoja, data_only=True)["DATOS"]
@@ -238,6 +256,7 @@ def main(e2k, hoja, propuesta, salida):
     grupos = {i: g for i, g in enumerate(juntos)}
     muros(d, pa)
     puestas = []
+    sin_flecha = []
     for g in grupos.values():                        # la viga: linea negra a lo largo de su claro, encima del muro
         if g["ax"] == "X":
             p0, p1 = (X(g["co"]), Y(g["a"])), (X(g["co"]), Y(g["b"]))
@@ -252,12 +271,14 @@ def main(e2k, hoja, propuesta, salida):
         else:
             cx0, cy0 = (X(g["a"]) + X(g["b"])) / 2, Y(g["co"])
         lab, pos = poner(d, puestas, f"{g['sec']} peralte", (0, 0, 0), cx0, cy0, False,
-                         F(24 if g["cambia"] else 18, True), borde=(0, 0, 0), vertical=g["ax"] == "X")
-        flecha(d, pos, lab.size, g["seg"])
+                         F(24 if g["cambia"] else 18, True), borde=(0, 0, 0), vertical=g["ax"] == "X", gap=48,
+                         seg=g["seg"])
+        if not flecha(d, pos, lab.size, g["seg"]):
+            sin_flecha.append((g["sec"], g["ax"], round(g["co"], 2), round(g["a"], 2), round(g["b"], 2), pos, lab.size))
         img2.paste(lab, pos, lab)
 
     img1.save(salida, save_all=True, append_images=[img2], resolution=150)
-    print("listo:", salida)
+    print("listo:", salida, "| etiquetas en PA:", len(grupos), "| sin flecha:", sin_flecha or "ninguna")
 
 
 if __name__ == "__main__":
