@@ -1,0 +1,14 @@
+{
+ "_titulo": "PROPUESTA DE DALAS CON LOSA DE 30 (peralte 30 = ahogada en la losa, no cuelga)",
+ "PA-F-1": {"seccion": "30×45", "nota": "(cuelga 15; f_CM 0.99, falta interacción muro-viga)"},
+ "PA-12-1": {"seccion": "40×40", "nota": "(cuelga 10)"},
+ "PA-12-2": {"seccion": "40×40", "nota": "(cuelga 10)"},
+ "PA-3-1": {"seccion": "30×35", "nota": "(cuelga 5; PA-3-1 sigue fallando por f_CM: apoyo abajo o moverlo)"},
+ "PA-3-2": {"seccion": "30×35", "nota": "(cuelga 5)"},
+ "PA-7-1": {"seccion": "30×35", "nota": "(cuelga 5)"},
+ "PA-Y14.02-1": {"seccion": "30×35", "nota": "(cuelga 5)"},
+ "PA-D-1": {"seccion": "35×30", "nota": "(no cuelga; f_CM 0.99, 40×30 holgado)"},
+ "PA-X4.33-2": {"seccion": "50×30", "nota": "(no cuelga; por el f_CM del muro corto)"},
+ "_extra": ["Las demás dalas bajo muros de PA: 15×30, no cuelgan (las de claro hasta 3.43 m ya pasan).",
+            "Verificado en una copia de la hoja (4.1.18: L/h ≤ 14, flecha y f_CM). Las fuerzas cambian al correr el modelo con estas dalas."]
+}

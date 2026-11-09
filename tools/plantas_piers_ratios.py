@@ -11,10 +11,13 @@
   Armado supuesto: una capa de #3 @ 18 cm vertical y horizontal (p = 0.0026 >= 0.0025,
   6.5.6.2) y castillos de los extremos con 4 #3.
 
-Uso: python3 plantas_piers_ratios.py MODELO.e2k HOJA.xlsx SALIDA.pdf [PIER,PIER,...]
+Uso: python3 plantas_piers_ratios.py MODELO.e2k HOJA.xlsx SALIDA.pdf [PIER,PIER,...] [PROPUESTA.json]
      La lista opcional de piers marca con un circulo negro el claro de su viga de apoyo
      (L_v de la hoja) con el peralte que pide la 4.1.18 o, si no es por claro, el f_CM.
+     PROPUESTA.json (opcional): {"PIER": {"seccion": "30×45", "nota": "..."}, "_titulo": "...", "_extra": [...]}
+     pone esa seccion en la lista de arriba y en el ovalo.
 """
+import json
 import math
 import os
 import re
@@ -225,8 +228,9 @@ def claro_de(e, Lv, ax, co, walls, story_abajo, castillos, vigas):
     return e["h0"], e["h1"]          # sin tramo que cuadre: el ovalo encierra el muro
 
 
-def main(e2k, hoja, salida, claros=""):
+def main(e2k, hoja, salida, claros="", propuesta=None):
     claros = [c.strip() for c in claros.split(",") if c.strip()]
+    prop = json.load(open(propuesta, encoding="utf-8")) if propuesta else {}
     txt = open(e2k, encoding="utf-8", newline="").read()
     M = Model(txt)
     secs = materiales(txt)
@@ -240,7 +244,7 @@ def main(e2k, hoja, salida, claros=""):
     x0, x1, y0, y1 = min(xs) - 0.3, max(xs) + 0.3, min(ys) - 0.3, max(ys) + 0.3
     Wp = int((x1 - x0) * PX) + 2 * M0 + 120
     W = Wp + PANEL
-    H = int((y1 - y0) * PX) + 2 * M0 + (330 if claros else 160)
+    H = int((y1 - y0) * PX) + 2 * M0 + (330 if claros else 160) + (60 if prop else 0)
 
     def eje(dir_, c):
         for lab, cc in grids[dir_]:
@@ -386,20 +390,29 @@ def main(e2k, hoja, salida, claros=""):
                                    + ": la hoja los trae sobre viga, pero van encima de muros de PB (corregir captura).")
             orden_g = sorted(grupos.values(), key=lambda g: (g["h"] <= 30, -g["Lv"]))
             yy = 92
-            d.text((30, yy), "DALAS QUE SE FLECHAN (sin muro abajo) Y PERALTE QUE OCUPAN", font=F(20, True), fill=(0, 0, 0))
+            titulo_p = prop.get("_titulo", "DALAS QUE SE FLECHAN (sin muro abajo) Y PERALTE QUE OCUPAN")
+            d.text((30, yy), titulo_p, font=F(20, True), fill=(0, 0, 0))
             yy += 30
             for i, g in enumerate(orden_g, 1):
                 lin, otro = ("Y", "X") if g["ax"] == "Y" else ("X", "Y")
                 donde = f"Eje {eje(lin, g['co'])}, de {eje(otro, g['a'])} a {eje(otro, g['b'])}"
-                if g["h"] > 30:
+                pp = next((prop[n] for n in g["piers"] if n in prop), None)
+                if pp:
+                    g["sec"] = pp["seccion"]
+                    s = (f"{i}.  {donde} · claro {g['Lv']:.2f} m → {pp['seccion']}"
+                         + (f"  {pp['nota']}" if pp.get("nota") else "") + f"   ({', '.join(g['piers'])})")
+                elif g["h"] > 30:
+                    g["sec"] = f"15×{g['h']}"
                     s = f"{i}.  {donde} · claro {g['Lv']:.2f} m → 15×{g['h']}   ({', '.join(g['piers'])})"
                 else:
+                    g["sec"] = "muro corto"
                     s = (f"{i}.  {', '.join(g['piers'])} (eje {eje(lin, g['co'])}): no es peralte, es muro corto "
                          f"(f_CM {g['fcm']:.1f} veces el límite) → apoyo abajo o moverlo")
                 d.text((30, yy), s, font=F(18), fill=(0, 0, 0))
                 yy += 25
-            d.text((30, yy + 2), "Las demás dalas bajo muros de PA pasan con 15×30 (el peralte de la losa).",
-                   font=F(18), fill=(60, 60, 60))
+            for ln in prop.get("_extra", ["Las demás dalas bajo muros de PA pasan con 15×30 (el peralte de la losa)."]):
+                d.text((30, yy + 2), ln, font=F(18), fill=(60, 60, 60))
+                yy += 25
             for i, g in enumerate(orden_g, 1):
                 a, b, Lv = g["a"], g["b"], g["Lv"]
                 if g["ax"] == "X":
@@ -407,7 +420,7 @@ def main(e2k, hoja, salida, claros=""):
                 else:
                     box = [X(a) - 16, Y(g["co"]) - 34, X(b) + 16, Y(g["co"]) + 34]
                 d.ellipse(box, outline=(0, 0, 0), width=4)
-                texto = f"{i}: 15×{g['h']}" if g["h"] > 30 else f"{i}: muro corto"
+                texto = f"{i}: {g['sec']}"
                 f = F(17, True)
                 tw, th = d.textbbox((0, 0), texto, font=f)[2:]
                 w, h = tw + 10, th + 8
@@ -470,4 +483,4 @@ def main(e2k, hoja, salida, claros=""):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:5])
+    main(*sys.argv[1:6])
