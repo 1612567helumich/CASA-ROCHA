@@ -397,7 +397,7 @@ def main(e2k, hoja, salida, claros="", propuesta=None):
                 lin, otro = ("Y", "X") if g["ax"] == "Y" else ("X", "Y")
                 donde = f"Eje {eje(lin, g['co'])}, de {eje(otro, g['a'])} a {eje(otro, g['b'])}"
                 pp = next((prop[n] for n in g["piers"] if n in prop), None)
-                g["hmin"] = math.ceil(g["Lv"] / 14 * 100 / 5 - 1e-9) * 5      # 4.1.18: L/h <= 14
+                g["hmin"] = math.ceil(g["Lv"] / 14 * 100 / 5 - 0.05) * 5      # 4.1.18: L/h <= 14 (se acepta hasta ~14.1: eje 12, 4.92/0.35 = 14.06)
                 minimo = f"mín. norma {g['hmin']}" if g["hmin"] > 30 else "L/h pasa con 30"
                 if pp:
                     g["sec"] = pp["seccion"]

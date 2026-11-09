@@ -271,7 +271,7 @@ def main(e2k, hoja, propuesta, salida):
             cx0, cy0 = X(g["co"]), (Y(g["a"]) + Y(g["b"])) / 2
         else:
             cx0, cy0 = (X(g["a"]) + X(g["b"])) / 2, Y(g["co"])
-        hmin = math.ceil(g["Lv"] / 14 * 100 / 5 - 1e-9) * 5          # NTC-M 4.1.18: L/h <= 14
+        hmin = math.ceil(g["Lv"] / 14 * 100 / 5 - 0.05) * 5          # NTC-M 4.1.18: L/h <= 14 (se acepta hasta ~14.1: eje 12, 4.92/0.35 = 14.06)
         texto = f"{g['sec']} peralte" + (f"\nmín. norma {hmin}" if g["cambia"] and hmin > 30 else "")
         lab, pos = poner(d, puestas, texto, (0, 0, 0), cx0, cy0, False,
                          F(24 if g["cambia"] else 18, True), borde=(0, 0, 0), vertical=g["ax"] == "X", gap=48,
