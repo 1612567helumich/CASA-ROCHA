@@ -5,6 +5,7 @@
   hoja 2, PLANTA ALTA: todas las dalas bajo muros de PA en negro con su medida (ancho x peralte, cm) y
   una flecha de la etiqueta a su dala;
   las que cambian con letra grande y las demas (clave _resto del JSON, 15x30) con letra chica.
+  Si el claro pide mas de 30 de peralte por L/h <= 14 (NTC-M 4.1.18), abajo va "min. norma NN".
 Ratios igual que plantas_piers_ratios.py (tabique: hoja de muros; concreto: revision NTC-C).
 
 Uso: python3 plantas_rocha.py MODELO.e2k HOJA.xlsx PROPUESTA.json SALIDA.pdf
@@ -270,7 +271,9 @@ def main(e2k, hoja, propuesta, salida):
             cx0, cy0 = X(g["co"]), (Y(g["a"]) + Y(g["b"])) / 2
         else:
             cx0, cy0 = (X(g["a"]) + X(g["b"])) / 2, Y(g["co"])
-        lab, pos = poner(d, puestas, f"{g['sec']} peralte", (0, 0, 0), cx0, cy0, False,
+        hmin = math.ceil(g["Lv"] / 14 * 100 / 5 - 1e-9) * 5          # NTC-M 4.1.18: L/h <= 14
+        texto = f"{g['sec']} peralte" + (f"\nmín. norma {hmin}" if g["cambia"] and hmin > 30 else "")
+        lab, pos = poner(d, puestas, texto, (0, 0, 0), cx0, cy0, False,
                          F(24 if g["cambia"] else 18, True), borde=(0, 0, 0), vertical=g["ax"] == "X", gap=48,
                          seg=g["seg"])
         if not flecha(d, pos, lab.size, g["seg"]):
