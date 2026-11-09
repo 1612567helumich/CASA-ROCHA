@@ -11,7 +11,9 @@
   Armado supuesto: una capa de #3 @ 18 cm vertical y horizontal (p = 0.0026 >= 0.0025,
   6.5.6.2) y castillos de los extremos con 4 #3.
 
-Uso: python3 plantas_piers_ratios.py MODELO.e2k HOJA.xlsx SALIDA.pdf
+Uso: python3 plantas_piers_ratios.py MODELO.e2k HOJA.xlsx SALIDA.pdf [PIER,PIER,...]
+     La lista opcional de piers marca con un circulo negro el claro de su viga de apoyo
+     (L_v de la hoja) con el peralte que pide la 4.1.18 o, si no es por claro, el f_CM.
 """
 import math
 import os
@@ -150,7 +152,7 @@ def leer_hoja(path):
     M, D = wb["MUROS"], wb["DATOS"]
     frfm = (D["C81"].value or 0) * (D["C30"].value or 0)
     from openpyxl.utils import column_index_from_string as ci
-    cols = "B F BK BL BN BO CP CQ CW CX EB EC ED EM EN EO EP EU EW".split()
+    cols = "B F AM BK BL BN BO CP CQ CW CX EB EC ED EM EN EO EP EU EW".split()
     out = {}
     for row in range(1, M.max_row + 1):
         name = M.cell(row, 2).value
@@ -183,7 +185,49 @@ def envolver(d, texto, font, ancho):
     return lineas
 
 
-def main(e2k, hoja, salida):
+def vigas_del_piso(txt, story):
+    pts = {m[1]: (float(m[2]), float(m[3]))
+           for m in re.finditer(r'^\s*POINT "([^"]+)"\s+(-?[\d.E+-]+)\s+(-?[\d.E+-]+)', txt, re.M)}
+    asig = {m[1] for m in re.finditer(r'LINEASSIGN\s+"([^"]+)"\s+"%s"' % re.escape(story), txt)}
+    return [(pts[m[2]], pts[m[3]]) for m in re.finditer(r'^\s*LINE\s+"([^"]+)"\s+BEAM\s+"([^"]+)"\s+"([^"]+)"', txt, re.M)
+            if m[1] in asig]
+
+
+def claro_de(e, Lv, ax, co, walls, story_abajo, castillos, vigas):
+    """Tramo (h0, h1) de la viga de apoyo: entre apoyos consecutivos (muros o castillos del piso de abajo
+    o vigas que la cruzan) cuya distancia sea L_v y que mas se encime con el muro; si no hay, L_v centrado."""
+    cand = set()
+    for (s2, ax2, co2), ps in walls.items():
+        if s2 != story_abajo:
+            continue
+        for p in ps:
+            if ax2 == ax and abs(co2 - co) < 0.02:
+                cand.update((p["h0"], p["h1"]))
+            elif ax2 != ax and p["h0"] - 0.02 <= co <= p["h1"] + 0.02:
+                cand.add(co2)
+    for x, y, *_ in castillos:
+        if (ax == "X" and abs(x - co) < 0.02) or (ax == "Y" and abs(y - co) < 0.02):
+            cand.add(y if ax == "X" else x)
+    for A, B in vigas:
+        k = 0 if ax == "Y" else 1          # coordenada a lo largo del eje
+        if abs(A[k] - B[k]) < 0.01 and min(A[1 - k], B[1 - k]) - 0.02 <= co <= max(A[1 - k], B[1 - k]) + 0.02:
+            cand.add(A[k])
+    cand = sorted(cand)
+    mejor = None
+    for i, a in enumerate(cand):
+        for b in cand[i + 1:]:
+            if abs((b - a) - Lv) < 0.06:
+                ov = min(b, e["h1"]) - max(a, e["h0"])
+                if mejor is None or ov > mejor[0]:
+                    mejor = (ov, a, b)
+    if mejor and mejor[0] > 0:
+        return mejor[1], mejor[2]
+    m = (e["h0"] + e["h1"]) / 2
+    return m - Lv / 2, m + Lv / 2
+
+
+def main(e2k, hoja, salida, claros=""):
+    claros = [c.strip() for c in claros.split(",") if c.strip()]
     txt = open(e2k, encoding="utf-8", newline="").read()
     M = Model(txt)
     secs = materiales(txt)
@@ -309,8 +353,64 @@ def main(e2k, hoja, salida):
                     break
             puestas.append(bx)
             img.paste(lab, (int(cx), int(cy)), lab)
+        # claros de vigas de apoyo marcados con circulo negro
+        marcados = [n for n in claros if n in piers and res.get(n) and isinstance(res[n]["AM"], (int, float))]
+        if marcados:
+            abajo = M.below(story)
+            vigas = vigas_del_piso(txt, abajo)
+            cast = M.castillos()[abajo]
+            grupos, sobre_muro = {}, []
+            for n in marcados:
+                e, r = piers[n], res[n]
+                ov = sum(max(0.0, min(e["h1"], p["h1"]) - max(e["h0"], p["h0"]))
+                         for (s2, ax2, co2), ps in walls.items() if s2 == abajo and ax2 == e["ax"] and abs(co2 - e["co"]) < 0.02
+                         for p in ps)
+                if ov / (e["h1"] - e["h0"]) > 0.5:      # en realidad va encima de un muro del piso de abajo
+                    sobre_muro.append(n)
+                    continue
+                Lv = r["AM"]
+                a, b = claro_de(e, Lv, e["ax"], e["co"], walls, abajo, cast, vigas)
+                eo = r["EO"] if isinstance(r["EO"], (int, float)) and r["EO"] > 0 else 14.0
+                hreq = math.ceil(max(Lv / 14, Lv / eo) * 100 / 5 - 1e-9) * 5
+                g = grupos.setdefault((e["ax"], round(e["co"], 3), round(a, 2), round(b, 2)),
+                                      dict(ax=e["ax"], co=e["co"], a=a, b=b, Lv=Lv, h=0, fcm=0.0, piers=[]))
+                g["h"] = max(g["h"], hreq)
+                g["fcm"] = max(g["fcm"], (r["EM"] or 0) / frfm if frfm else 0)
+                g["piers"].append(n)
+            d.text((30, 114), "Círculo negro = claro de la dala de apoyo que no pasa la 4.1.18 (NTC-M) ni con vigas de "
+                   "15×30. Dice el claro y el peralte que pide, o si es por f_CM (muro corto).",
+                   font=F(17, True), fill=(0, 0, 0))
+            if sobre_muro:
+                nota = ("Ojo: " + ", ".join(sobre_muro) + " la hoja los trae sobre viga, pero en el modelo van encima "
+                        "de muros de planta baja: hay que corregir esa captura (no llevan círculo).")
+                for i, ln in enumerate(envolver(d, nota, F(17, True), Wp - 60)):
+                    d.text((30, 140 + 22 * i), ln, font=F(17, True), fill=ROJO)
+            for g in grupos.values():
+                a, b, Lv = g["a"], g["b"], g["Lv"]
+                if g["ax"] == "X":
+                    box = [X(g["co"]) - 34, Y(b) - 16, X(g["co"]) + 34, Y(a) + 16]
+                else:
+                    box = [X(a) - 16, Y(g["co"]) - 34, X(b) + 16, Y(g["co"]) + 34]
+                d.ellipse(box, outline=(0, 0, 0), width=4)
+                texto = (f"claro {Lv:.2f} m → peralte {g['h']} cm" if g["h"] > 30
+                         else f"claro {Lv:.2f} m · f_CM {g['fcm']:.1f}× (muro corto)")
+                f = F(15, True)
+                tw, th = d.textbbox((0, 0), texto, font=f)[2:]
+                w, h = tw + 10, th + 8
+                cx0, cy0 = (box[0] + box[2]) / 2, (box[1] + box[3]) / 2
+                cands = [(cx0 - w / 2, box[3] + 4), (cx0 - w / 2, box[1] - h - 4), (box[2] + 6, cy0 - h / 2),
+                         (box[0] - w - 6, cy0 - h / 2)]
+                cands += [(x_ + dx, y_ + dy) for x_, y_ in cands[:4] for dx, dy in ((0, 30), (0, -30), (40, 0), (-40, 0),
+                                                                                     (0, 60), (0, -60))]
+                for cx, cy in cands:
+                    bx = (cx - 2, cy - 2, cx + w + 2, cy + h + 2)
+                    if libre(bx) and cx > M0 - 10:
+                        break
+                puestas.append(bx)
+                d.rounded_rectangle([cx, cy, cx + w, cy + h], radius=4, fill=(255, 255, 255), outline=(0, 0, 0), width=2)
+                d.text((cx + 5, cy + 3), texto, font=f, fill=(0, 0, 0))
         # tabla
-        tx, ty = Wp + 10, 140
+        tx, ty = Wp + 10, 190
         n_ok = sum(1 for f_ in filas if f_[2])
         resumen.append((titulo, n_ok, len(filas) - n_ok))
         d.text((tx, ty), f"{titulo}: {n_ok} cumplen y {len(filas) - n_ok} no", font=F(24, True), fill=(20, 20, 20))
@@ -354,4 +454,4 @@ def main(e2k, hoja, salida):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:4])
+    main(*sys.argv[1:5])
