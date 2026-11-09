@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Plantas sencillas para el cliente, sin textos a las orillas:
-  hoja 1, PLANTA BAJA: el ratio de cada muro a un lado (azul = pasa, rojo = no pasa).
-  hoja 2, PLANTA ALTA: cada viga que cambia en negro, con su medida (ancho x peralte, cm).
+  hoja 1, PLANTA BAJA: el ratio de cada muro a un lado (azul = pasa, rojo = no pasa). Donde la norma no
+  da ratio (machon o V_R = 0 por tension) va el de cortante con P = 0, en rojo.
+  hoja 2, PLANTA ALTA: todas las dalas bajo muros de PA en negro con su medida (ancho x peralte, cm);
+  las que cambian con letra grande y las demas (clave _resto del JSON, 15x30) con letra chica.
 Ratios igual que plantas_piers_ratios.py (tabique: hoja de muros; concreto: revision NTC-C).
 
 Uso: python3 plantas_rocha.py MODELO.e2k HOJA.xlsx PROPUESTA.json SALIDA.pdf
@@ -78,13 +80,23 @@ def main(e2k, hoja, propuesta, salida):
         tw, th = d.textbbox((0, 0), texto, font=f)[2:]
         w, h = (th + 10, tw + 10) if rot else (tw + 10, th + 10)
         if rot if vertical is None else vertical:
-            cands = [(cx0 + 16 + s, cy0 - h / 2 + k) for k in (0, -40, 40, -80, 80, -120, 120) for s in (0, -w - 32)]
+            cands = [(cx0 + 16 + s, cy0 - h / 2 + k) for k in (0, -40, 40, -80, 80, -120, 120, -170, 170, -220, 220) for s in (0, -w - 32)]
         else:
-            cands = [(cx0 - w / 2 + k, cy0 + s) for k in (0, -50, 50, -100, 100) for s in (-h - 10, 10, -2 * h - 16, h + 16)]
+            cands = [(cx0 - w / 2 + k, cy0 + s) for k in (0, -50, 50, -100, 100, -150, 150) for s in (-h - 10, 10, -2 * h - 16, h + 16)]
+        for rad in (60, 100, 140, 180, 230):                      # si no cabe cerca, alrededor y mas lejos
+            for ang in range(0, 360, 30):
+                cands.append((cx0 + rad * math.cos(math.radians(ang)) - w / 2, cy0 + rad * math.sin(math.radians(ang)) - h / 2))
+        libre = lambda bx: cx_ok(bx) and all(bx[2] <= o[0] or bx[0] >= o[2] or bx[3] <= o[1] or bx[1] >= o[3] for o in puestas)
+        cx_ok = lambda bx: bx[0] > M0 - 12 and bx[2] < W - 5 and bx[1] > 100 and bx[3] < H - 5
+        bx = None
         for cx, cy in cands:
-            bx = (cx - 2, cy - 2, cx + w + 2, cy + h + 2)
-            if cx > M0 - 10 and all(bx[2] <= o[0] or bx[0] >= o[2] or bx[3] <= o[1] or bx[1] >= o[3] for o in puestas):
+            prueba = (cx - 2, cy - 2, cx + w + 2, cy + h + 2)
+            if libre(prueba):
+                bx = prueba
                 break
+        if bx is None:
+            cx, cy = cands[0]
+            bx = (cx - 2, cy - 2, cx + w + 2, cy + h + 2)
         puestas.append(bx)
         lab = Image.new("RGBA", (int(tw + 10), int(th + 10)), (255, 255, 255, 0))
         ld = ImageDraw.Draw(lab)
@@ -95,6 +107,9 @@ def main(e2k, hoja, propuesta, salida):
             lab = lab.rotate(90, expand=True)
         return lab, (int(cx), int(cy))
 
+    import openpyxl
+    _D = openpyxl.load_workbook(hoja, data_only=True)["DATOS"]
+    fr_v, vm, t_tip = _D["C80"].value, _D["C35"].value, _D["C52"].value      # F_R cortante, v'm, t tipico
     # ---------------- hoja 1: planta baja con ratios
     pb = M.order[-2]
     Hm = (M.elev[pb] - M.elev[M.below(pb)]) * 100
@@ -109,11 +124,17 @@ def main(e2k, hoja, propuesta, salida):
             ratio, no, extra = revisa_concreto(r, e["sec"]["t"], e["sec"]["fc"], Hm)
         else:
             ratio, no, extra = revisa_tabique(r, frfm)
-        texto = "col." if extra == "col." else ("no pasa" if ratio == math.inf else f"{ratio:.2f}")
+        if extra == "col." or ratio == math.inf:
+            # sin ratio de norma (machon o V_R = 0 por tension): cortante como si P = 0, se queda en rojo
+            AT = r["CE"] or r["F"] * 100 * t_tip
+            f_ = r["CY"] or 1.0
+            vr0 = min(fr_v * 0.5 * vm * AT * f_, 1.5 * fr_v * vm * AT * f_) / 1000
+            ratio, no = r["BK"] / vr0, no or ["sin V_R"]
+        texto = f"{ratio:.2f}"
         (a0, b0) = ((X(e["co"]), Y(e["h0"])), (X(e["co"]), Y(e["h1"]))) if e["ax"] == "X" else \
                    ((X(e["h0"]), Y(e["co"])), (X(e["h1"]), Y(e["co"])))
         lab, pos = poner(d, puestas, texto, ROJO if no else AZUL, (a0[0] + b0[0]) / 2, (a0[1] + b0[1]) / 2,
-                         e["ax"] == "X" and texto != "col.", F(22, True),
+                         e["ax"] == "X", F(22, True),
                          vertical=e["ax"] == "X")
         img1.paste(lab, pos, lab)
 
@@ -130,8 +151,32 @@ def main(e2k, hoja, propuesta, salida):
             continue
         e = piers[n]
         a, b = claro_de(e, res[n]["AM"], e["ax"], e["co"], walls, abajo, cast, vigas)
+        a, b = min(a, e["h0"]), max(b, e["h1"])
         grupos.setdefault((e["ax"], round(e["co"], 3), round(a, 2), round(b, 2)),
-                          dict(ax=e["ax"], co=e["co"], a=a, b=b, Lv=res[n]["AM"], sec=pp["seccion"]))
+                          dict(ax=e["ax"], co=e["co"], a=a, b=b, Lv=res[n]["AM"], sec=pp["seccion"], cambia=True))
+    resto = prop.get("_resto", "15×30")              # todas las demas dalas bajo muros de PA
+    for n, e in piers.items():
+        if n in prop or n not in res:
+            continue
+        ov = sum(max(0.0, min(e["h1"], p["h1"]) - max(e["h0"], p["h0"]))
+                 for (s2, ax2, co2), ps in walls.items() if s2 == abajo and ax2 == e["ax"] and abs(co2 - e["co"]) < 0.02
+                 for p in ps)
+        Lv = res[n]["AM"]
+        if ov / (e["h1"] - e["h0"]) > 0.5 or not isinstance(Lv, (int, float)) or Lv <= 0:
+            a, b, Lv = e["h0"], e["h1"], e["h1"] - e["h0"]     # va sobre muro de PB: dala del largo del muro
+        else:
+            a, b = claro_de(e, Lv, e["ax"], e["co"], walls, abajo, cast, vigas)
+            a, b = min(a, e["h0"]), max(b, e["h1"])
+        grupos.setdefault((e["ax"], round(e["co"], 3), round(a, 2), round(b, 2)),
+                          dict(ax=e["ax"], co=e["co"], a=a, b=b, Lv=Lv, sec=resto, cambia=False))
+    juntos = []
+    for g in sorted(grupos.values(), key=lambda g: (g["ax"], round(g["co"], 3), g["sec"], g["a"])):
+        u = juntos[-1] if juntos else None
+        if u and u["ax"] == g["ax"] and abs(u["co"] - g["co"]) < 0.02 and u["sec"] == g["sec"] and g["a"] <= u["b"] + 1.2:
+            u["b"] = max(u["b"], g["b"]); u["Lv"] = max(u["Lv"], g["Lv"])
+        else:
+            juntos.append(dict(g))
+    grupos = {i: g for i, g in enumerate(juntos)}
     muros(d, pa)
     puestas = []
     for g in grupos.values():                        # la viga: linea negra a lo largo de su claro, encima del muro
@@ -141,13 +186,13 @@ def main(e2k, hoja, propuesta, salida):
             p0, p1 = (X(g["a"]), Y(g["co"])), (X(g["b"]), Y(g["co"]))
         d.line([p0, p1], fill=(0, 0, 0), width=12)
         puestas.append((min(p0[0], p1[0]) - 9, min(p0[1], p1[1]) - 9, max(p0[0], p1[0]) + 9, max(p0[1], p1[1]) + 9))
-    for g in sorted(grupos.values(), key=lambda g: -g["Lv"]):
+    for g in sorted(grupos.values(), key=lambda g: (not g["cambia"], -g["Lv"])):
         if g["ax"] == "X":
             cx0, cy0 = X(g["co"]), (Y(g["a"]) + Y(g["b"])) / 2
         else:
             cx0, cy0 = (X(g["a"]) + X(g["b"])) / 2, Y(g["co"])
-        lab, pos = poner(d, puestas, f"{g['sec']} peralte", (0, 0, 0), cx0, cy0, False, F(24, True), borde=(0, 0, 0),
-                         vertical=g["ax"] == "X")
+        lab, pos = poner(d, puestas, f"{g['sec']} peralte", (0, 0, 0), cx0, cy0, False,
+                         F(24 if g["cambia"] else 18, True), borde=(0, 0, 0), vertical=g["ax"] == "X")
         img2.paste(lab, pos, lab)
 
     img1.save(salida, save_all=True, append_images=[img2], resolution=150)

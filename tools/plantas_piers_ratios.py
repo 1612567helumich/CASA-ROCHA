@@ -155,7 +155,7 @@ def leer_hoja(path):
     M, D = wb["MUROS"], wb["DATOS"]
     frfm = (D["C81"].value or 0) * (D["C30"].value or 0)
     from openpyxl.utils import column_index_from_string as ci
-    cols = "B F AM BK BL BN BO CP CQ CW CX EB EC ED EM EN EO EP EU EW".split()
+    cols = "B F AM BK BL BN BO CE CP CQ CW CX CY EB EC ED EM EN EO EP EU EW".split()
     out = {}
     for row in range(1, M.max_row + 1):
         name = M.cell(row, 2).value
