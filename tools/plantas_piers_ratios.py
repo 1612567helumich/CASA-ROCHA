@@ -222,8 +222,7 @@ def claro_de(e, Lv, ax, co, walls, story_abajo, castillos, vigas):
                     mejor = (ov, a, b)
     if mejor and mejor[0] > 0:
         return mejor[1], mejor[2]
-    m = (e["h0"] + e["h1"]) / 2
-    return m - Lv / 2, m + Lv / 2
+    return e["h0"], e["h1"]          # sin tramo que cuadre: el ovalo encierra el muro
 
 
 def main(e2k, hoja, salida, claros=""):
@@ -241,7 +240,13 @@ def main(e2k, hoja, salida, claros=""):
     x0, x1, y0, y1 = min(xs) - 0.3, max(xs) + 0.3, min(ys) - 0.3, max(ys) + 0.3
     Wp = int((x1 - x0) * PX) + 2 * M0 + 120
     W = Wp + PANEL
-    H = int((y1 - y0) * PX) + 2 * M0 + 160
+    H = int((y1 - y0) * PX) + 2 * M0 + (330 if claros else 160)
+
+    def eje(dir_, c):
+        for lab, cc in grids[dir_]:
+            if abs(cc - c) < 0.02:
+                return lab
+        return f"{c:.2f}"
     X = lambda x: M0 + (x - x0) * PX
     Y = lambda y: H - M0 - (y - y0) * PX
     paginas, resumen = [], []
@@ -251,11 +256,10 @@ def main(e2k, hoja, salida, claros=""):
         d = ImageDraw.Draw(img)
         d.text((30, 20), f"{titulo} — piers con su ratio (muros de {M.below(story)} a {story})", font=F(30, True),
                fill=(20, 20, 20))
-        d.text((30, 62), "Modelo R1.2 · fuerzas de la corrida R1.2 · hoja Muros_CasaRocha_NTC2023 · "
-               "verde = cumple (ratio ≤ 1) · rojo = no cumple · rayado = muro de concreto",
-               font=F(17), fill=(60, 60, 60))
-        d.text((30, 88), "Ratio = el mayor de P_u/P_R, M_u/M_R, V_u/V_R y, si desplanta sobre viga, L/h de la viga y "
-               "f_CM/(F_R·f'm). ∞ = V_R vale 0. col. = machón que va como columna.", font=F(17), fill=(60, 60, 60))
+        d.text((30, 62), "Verde = cumple · rojo = no cumple · número = ratio (∞: V_R = 0, col.: va como columna) · "
+               "rayado = muro de concreto", font=F(17), fill=(60, 60, 60))
+        notas_tabla = ["Ratio = el mayor de P_u/P_R, M_u/M_R, V_u/V_R y, si desplanta sobre viga, L/h de la viga y "
+                       "f_CM/(F_R·f'm). Modelo R1.2, fuerzas de la corrida R1.2, hoja Muros_CasaRocha_NTC2023."]
         for lab, c in grids["X"]:
             d.line([(X(c), Y(y0) + 10), (X(c), Y(y1) - 10)], fill=(205, 215, 235), width=1)
             for yy in (Y(y1) - 40, Y(y0) + 40):
@@ -377,24 +381,34 @@ def main(e2k, hoja, salida, claros=""):
                 g["h"] = max(g["h"], hreq)
                 g["fcm"] = max(g["fcm"], (r["EM"] or 0) / frfm if frfm else 0)
                 g["piers"].append(n)
-            d.text((30, 114), "Círculo negro = claro de la dala de apoyo que no pasa la 4.1.18 (NTC-M) ni con vigas de "
-                   "15×30. Dice el claro y el peralte que pide, o si es por f_CM (muro corto).",
-                   font=F(17, True), fill=(0, 0, 0))
             if sobre_muro:
-                nota = ("Ojo: " + ", ".join(sobre_muro) + " la hoja los trae sobre viga, pero en el modelo van encima "
-                        "de muros de planta baja: hay que corregir esa captura (no llevan círculo).")
-                for i, ln in enumerate(envolver(d, nota, F(17, True), Wp - 60)):
-                    d.text((30, 140 + 22 * i), ln, font=F(17, True), fill=ROJO)
-            for g in grupos.values():
+                notas_tabla.append("PA con óvalo: no pasan la 4.1.18 ni con dala de 15×30. " + ", ".join(sobre_muro)
+                                   + ": la hoja los trae sobre viga, pero van encima de muros de PB (corregir captura).")
+            orden_g = sorted(grupos.values(), key=lambda g: (g["h"] <= 30, -g["Lv"]))
+            yy = 92
+            d.text((30, yy), "DALAS QUE SE FLECHAN (sin muro abajo) Y PERALTE QUE OCUPAN", font=F(20, True), fill=(0, 0, 0))
+            yy += 30
+            for i, g in enumerate(orden_g, 1):
+                lin, otro = ("Y", "X") if g["ax"] == "Y" else ("X", "Y")
+                donde = f"Eje {eje(lin, g['co'])}, de {eje(otro, g['a'])} a {eje(otro, g['b'])}"
+                if g["h"] > 30:
+                    s = f"{i}.  {donde} · claro {g['Lv']:.2f} m → 15×{g['h']}   ({', '.join(g['piers'])})"
+                else:
+                    s = (f"{i}.  {', '.join(g['piers'])} (eje {eje(lin, g['co'])}): no es peralte, es muro corto "
+                         f"(f_CM {g['fcm']:.1f} veces el límite) → apoyo abajo o moverlo")
+                d.text((30, yy), s, font=F(18), fill=(0, 0, 0))
+                yy += 25
+            d.text((30, yy + 2), "Las demás dalas bajo muros de PA pasan con 15×30 (el peralte de la losa).",
+                   font=F(18), fill=(60, 60, 60))
+            for i, g in enumerate(orden_g, 1):
                 a, b, Lv = g["a"], g["b"], g["Lv"]
                 if g["ax"] == "X":
                     box = [X(g["co"]) - 34, Y(b) - 16, X(g["co"]) + 34, Y(a) + 16]
                 else:
                     box = [X(a) - 16, Y(g["co"]) - 34, X(b) + 16, Y(g["co"]) + 34]
                 d.ellipse(box, outline=(0, 0, 0), width=4)
-                texto = (f"claro {Lv:.2f} m → peralte {g['h']} cm" if g["h"] > 30
-                         else f"claro {Lv:.2f} m · f_CM {g['fcm']:.1f}× (muro corto)")
-                f = F(15, True)
+                texto = f"{i}: 15×{g['h']}" if g["h"] > 30 else f"{i}: muro corto"
+                f = F(17, True)
                 tw, th = d.textbbox((0, 0), texto, font=f)[2:]
                 w, h = tw + 10, th + 8
                 cx0, cy0 = (box[0] + box[2]) / 2, (box[1] + box[3]) / 2
@@ -438,15 +452,17 @@ def main(e2k, hoja, salida, claros=""):
             ty += max(1, len(lineas)) * 20 + 8
             d.line([(tx, ty - 4), (W - 30, ty - 4)], fill=(232, 232, 232), width=1)
         if any(e["concreto"] for _, e, *_ in filas):
-            ty += 10
-            nota_c = ("Muros de concreto: revisión rápida NTC-Concreto 2023, ductilidad baja. Cortante con la ec. "
-                      "6.5.5.3.3 (α_c = 0.8, p_t = 0.0025, F_R = 0.75). Flexocompresión por compatibilidad con P_u "
-                      "mín. y máx., armado supuesto #3 @ 18 cm en una capa al centro (6.5.7.1.3: el cortante medio es "
-                      "menor que 0.6·√f'c) y 4 #3 en cada castillo extremo. La hoja de muros todavía los revisa como "
-                      "tabique: ese resultado no aplica.")
-            for ln in envolver(d, nota_c, F(14), W - 40 - tx):
+            notas_tabla.append("Muros de concreto: revisión rápida NTC-Concreto 2023, ductilidad baja. Cortante con la "
+                               "ec. 6.5.5.3.3 (α_c = 0.8, p_t = 0.0025, F_R = 0.75). Flexocompresión por compatibilidad "
+                               "con P_u mín. y máx., armado supuesto #3 @ 18 cm en una capa al centro (6.5.7.1.3: el "
+                               "cortante medio es menor que 0.6·√f'c) y 4 #3 en cada castillo extremo. La hoja de muros "
+                               "todavía los revisa como tabique: ese resultado no aplica.")
+        ty += 10
+        for nt in notas_tabla:
+            for ln in envolver(d, nt, F(14), W - 40 - tx):
                 d.text((tx, ty), ln, font=F(14), fill=(90, 90, 90))
                 ty += 19
+            ty += 6
         paginas.append(img)
     paginas[0].save(salida, save_all=True, append_images=paginas[1:], resolution=150)
     for p in resumen:
