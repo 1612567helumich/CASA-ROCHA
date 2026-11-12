@@ -517,9 +517,9 @@ $ POINT COORDINATES
   POINT "223"  4.327 1.919 
   POINT "264"  4.327 6.948 
   POINT "270"  8.85 15.447 
-  POINT "271"  0.20044 5.346 
-  POINT "273"  0.20044 5.346 2.1
-  POINT "274"  0.20044 5.346 0.9
+  POINT "271"  0.25044 5.346 
+  POINT "273"  0.25044 5.346 2.1
+  POINT "274"  0.25044 5.346 0.9
   POINT "279"  2.925 5.346 
   POINT "280"  2.925 5.946 
   POINT "282"  2.925 6.948 0.9
@@ -3178,6 +3178,7 @@ R2.3 (11/11/2026): castillo C60002 movido de (B, 6.046) al cruce B/5 (punto 280,
 R2.4 (11/11/2026): PB-8-1 (eje 8, de 8.144 a J, panel WC59) pasa a 'MuroConcreto15'. Total 14 machones de concreto en PB.
 R2.6 (11/11/2026): PB-15-1 (eje 15, -0.702 a A) y PB-15-3 (eje 15, 8.701 a J) pasan a 'MuroConcreto15'. PB-B-1 (con su castillo en B/5) y PB-14-1 siguen de tabique. Total 16 machones de concreto en PB.
 R2.7 (11/11/2026): eje 6, tramos de 0.35 m entre castillos (WC56, G a 6.272; WC58, 8.50 a J) pasan a 'MuroConcreto15' con piers PB-6-MG y PB-6-MJ (columnas de 15 x 50). C10018 y C10024 entran a esos piers. Total 18 machones de concreto en PB.
+R2.8 (12/11/2026): PB-4-1 (eje 4, en A) pasa de 0.20 a 0.25 m: puntos 271, 273 y 274 recorridos a x = 0.25044. La ventana del eje 4 junto a ella queda 5 cm mas angosta.
 R3.4 (08/11/2026): muros de concreto en planta baja. PB-6-1 (eje 6, de A a B, panel WC55) y PB-11-1 (eje 11, de E a J, paneles WC60 y WC61) cambian de 'Muro 15 cm' (tabique) a 'MuroConcreto15' (f'c 250 kg/cm2, 15 cm).
 R3.4: castillos C39 y C79 se conservan como frames dentro de sus piers; sin modificadores de rigidez en los muros de concreto.
 Geometry corrected against supplied 001_PLANO_CROCHA_R3.0.dxf: walls, door/window positions and shell elevations.
