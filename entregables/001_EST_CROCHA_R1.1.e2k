@@ -1850,10 +1850,10 @@ $ AREA ASSIGNS
   AREAASSIGN  "WC14"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-A-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
   AREAASSIGN  "WC15"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-A-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
   AREAASSIGN  "WC16"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-A-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
-  AREAASSIGN  "WC17"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-B-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
-  AREAASSIGN  "WCM10"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-B-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
-  AREAASSIGN  "WC18"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-B-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
-  AREAASSIGN  "WCM11"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-B-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
+  AREAASSIGN  "WC17"  "N+3.00"  SECTION "MuroConcreto15"  PIER  "PB-B-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
+  AREAASSIGN  "WCM10"  "N+3.00"  SECTION "MuroConcreto15"  PIER  "PB-B-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
+  AREAASSIGN  "WC18"  "N+3.00"  SECTION "MuroConcreto15"  PIER  "PB-B-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
+  AREAASSIGN  "WCM11"  "N+3.00"  SECTION "MuroConcreto15"  PIER  "PB-B-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
   AREAASSIGN  "WC19"  "N+3.00"  SECTION "Muro 15 cm"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
   AREAASSIGN  "WC20"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-E-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
   AREAASSIGN  "WC21"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-E-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
@@ -3148,6 +3148,7 @@ R2.11 (12/11/2026): PB-15-2 (H) y PB-15-3 (J) regresan a 'MuroConcreto15' (colum
 R2.12 (13/11/2026): PB-14-2 (C1, E/14) pasa de 85 a 80 cm fisicos: puntos 503, 80023 y 80025 de x = 4.575 a 4.625 (el vano de su izquierda crece 5 cm). Castillos K1 '001_K-15x15' con ARMEX 15X15-4: 4 varillas de 5/16 in (0.49 cm2) con material nuevo 'ARMEX fy=5000' (nota del plano LA-18). Falta correr ETABS.
 R1.1 (14/11/2026): losa de entrepiso N+3.00 de 35 cm: 'LR-35' (reticular de nervios de 10 cm a 70 cm a centros, capa de 5 cm), espesor equivalente por rigidez 0.2318 m y peso 316 kg/m2 (material 'LR-35 equiv', 1363.83 kg/m3); 20 paneles pasan de LR-30 a LR-35. El panel LR-30 de N+6.00 no se toca. Falta correr ETABS.
 R1.1 (15/11/2026): se quitan las mochetas de 25 cm PB-15-2 (H/15), PB-15-3 (J/15) y PB-4-1 (A/4): fuera los paneles WC86-WC88, WC91-WC93 y WC42-WC44 y los castillos de jamba C10021 y C10026; la ventana llega al castillo K1 de la esquina (C83, C108 y C13). Puntos 482, 534, 80030, 487, 535, 80031, 271, 273 y 274 pasan a 83, 200, 198, 108, 199, 196, 13, 531 y 180; barras que quedaban de largo cero fuera (B50084_1, B50084_3, B50082_1, B50082_3); la dala B50084_2 queda de H a J con su carga de 539.7 kg/m. Falta correr ETABS.
+R1.1 (15/11/2026): PB-B-1 (eje B, de y = 5.346 a 6.046, 0.70 m, muro de la entrada) pasa de tabique a 'MuroConcreto15' (castillo K3 de concreto): paneles WC17, WC18, WCM10 y WCM11. Falta correr ETABS.
 R3.4 (08/11/2026): muros de concreto en planta baja. PB-6-1 (eje 6, de A a B, panel WC55) y PB-11-1 (eje 11, de E a J, paneles WC60 y WC61) cambian de 'Muro 15 cm' (tabique) a 'MuroConcreto15' (f'c 250 kg/cm2, 15 cm).
 R3.4: castillos C39 y C79 se conservan como frames dentro de sus piers; sin modificadores de rigidez en los muros de concreto.
 Geometry corrected against supplied 001_PLANO_CROCHA_R3.0.dxf: walls, door/window positions and shell elevations.
