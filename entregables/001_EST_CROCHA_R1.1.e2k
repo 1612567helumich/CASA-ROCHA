@@ -89,7 +89,7 @@ $ MATERIAL PROPERTIES
   MATERIAL  "f'm=50kg/cm2 (Mortero Tipo I, f'p=100kg/cm2)"  STRAIN -1 STRESS -1 
   MATERIAL  "f'm=50kg/cm2 (Mortero Tipo I, f'p=100kg/cm2)"  STRAIN 0 STRESS 0 POINTID "A"  
   MATERIAL  "f'm=50kg/cm2 (Mortero Tipo I, f'p=100kg/cm2)"  STRAIN 1 STRESS 1 
-  MATERIAL  "Tabique rojo recocido f'm=20kg/cm2"    TYPE "Masonry"    GRADE "Mamposteria de Arcilla"    WEIGHTPERVOLUME 1300
+  MATERIAL  "Tabique rojo recocido f'm=20kg/cm2"    TYPE "Masonry"    GRADE "Mamposteria de Arcilla"    WEIGHTPERVOLUME 1800
   MATERIAL  "Tabique rojo recocido f'm=20kg/cm2"    SYMTYPE "Isotropic"  E 120000000  U 0.25  A 4.500000159168849E-06
   MATERIAL  "Tabique rojo recocido f'm=20kg/cm2"  FM 200000
   MATERIAL  "Tabique rojo recocido f'm=20kg/cm2"  HYSTYPE "Concrete"  ENERGYDEGFACT 0 SSTYPE "Simple"  STRAINATFM 0.002 STRAINATULTIMATE 0.005 FINALSLOPE -0.1 IOTENSION 0.01 LSTENSION 0.02 CPTENSION 0.05 IOCOMPRESSION 0.003 LSCOMPRESSION 0.006 CPCOMPRESSION 0.015 
@@ -130,7 +130,7 @@ $ MATERIAL PROPERTIES
   MATERIAL  "Concreto f'c=250kg/cm2. Clase 1A (LR-30 equiv)"    FC 2500000  FR 316227.78
   MATERIAL  "Concreto f'c=250kg/cm2. Clase 1A (LR-30 equiv)"  TIMEDEPCONCCODE "CEBFIP90"  
   MATERIAL  "Concreto f'c=250kg/cm2. Clase 1A (LR-30 equiv)"  HYSTYPE "Concrete"  ENERGYDEGFACT 0 SSTYPE "Mander"  STRAINATFC 0.0018386021 STRAINATULTIMATE 0.005 FINALSLOPE -0.1 IOTENSION 0.01 LSTENSION 0.02 CPTENSION 0.05 IOCOMPRESSION 0.003 LSCOMPRESSION 0.006 CPCOMPRESSION 0.015 
-  MATERIAL  "Concreto f'c=250kg/cm2. Clase 1A (LR-35 equiv)"    TYPE "Concrete"    GRADE "Clase 1A"    WEIGHTPERVOLUME 1363.83
+  MATERIAL  "Concreto f'c=250kg/cm2. Clase 1A (LR-35 equiv)"    TYPE "Concrete"    GRADE "Clase 1A"    WEIGHTPERVOLUME 1570.58
   MATERIAL  "Concreto f'c=250kg/cm2. Clase 1A (LR-35 equiv)"    SYMTYPE "Isotropic"  E 2.2135944E+09  U 0.2  A 5.500000042957254E-06
   MATERIAL  "Concreto f'c=250kg/cm2. Clase 1A (LR-35 equiv)"    FC 2500000  FR 316227.78
   MATERIAL  "Concreto f'c=250kg/cm2. Clase 1A (LR-35 equiv)"  TIMEDEPCONCCODE "CEBFIP90"  
@@ -2058,8 +2058,8 @@ $ LOAD PATTERNS
   WINDEXPOSURE "Viento Y"  "SET"  "1"  ANGLE 90 
 
 $ POINT OBJECT LOADS
-  POINTLOAD  "242"  "N+6.00"  TYPE "FORCE"  LC "EquiposAzotea"    FZ -1100
-  POINTLOAD  "243"  "N+6.00"  TYPE "FORCE"  LC "EquiposAzotea"    FZ -1100
+  POINTLOAD  "242"  "N+6.00"  TYPE "FORCE"  LC "EquiposAzotea"    FZ -1500
+  POINTLOAD  "243"  "N+6.00"  TYPE "FORCE"  LC "EquiposAzotea"    FZ -1500
 
 $ FRAME OBJECT LOADS
   LINELOAD  "B50063_3"  "N+3.00"  TYPE "TRAPF"  DIR "GRAV"  LC "Sobrecarga"  FSTART 206  FEND 206  RDSTART 0  RDEND 0.999999  
@@ -3149,6 +3149,7 @@ R2.12 (13/11/2026): PB-14-2 (C1, E/14) pasa de 85 a 80 cm fisicos: puntos 503, 8
 R1.1 (14/11/2026): losa de entrepiso N+3.00 de 35 cm: 'LR-35' (reticular de nervios de 10 cm a 70 cm a centros, capa de 5 cm), espesor equivalente por rigidez 0.2318 m y peso 316 kg/m2 (material 'LR-35 equiv', 1363.83 kg/m3); 20 paneles pasan de LR-30 a LR-35. El panel LR-30 de N+6.00 no se toca. Falta correr ETABS.
 R1.1 (15/11/2026): se quitan las mochetas de 25 cm PB-15-2 (H/15), PB-15-3 (J/15) y PB-4-1 (A/4): fuera los paneles WC86-WC88, WC91-WC93 y WC42-WC44 y los castillos de jamba C10021 y C10026; la ventana llega al castillo K1 de la esquina (C83, C108 y C13). Puntos 482, 534, 80030, 487, 535, 80031, 271, 273 y 274 pasan a 83, 200, 198, 108, 199, 196, 13, 531 y 180; barras que quedaban de largo cero fuera (B50084_1, B50084_3, B50082_1, B50082_3); la dala B50084_2 queda de H a J con su carga de 539.7 kg/m. Falta correr ETABS.
 R1.1 (15/11/2026): PB-B-1 (eje B, de y = 5.346 a 6.046, 0.70 m, muro de la entrada) pasa de tabique a 'MuroConcreto15' (castillo K3 de concreto): paneles WC17, WC18, WCM10 y WCM11. Falta correr ETABS.
+R1.1 (15/11/2026): pesos. (1) Losa LR-35: se suma el macizo de las vigas de apoyo NP (b x 35 sin casetón) repartido en toda la losa: 7.30 t / 152.4 m2 = +47.9 kg/m2; de 316.1 a 364.1 kg/m2 (material 'LR-35 equiv' de 1363.83 a 1570.58 kg/m3). (2) Muros de tabique con aplanados: 270 kg/m2 en 15 cm (material 'Tabique rojo recocido' de 1300 a 1800 kg/m3). (3) Tinacos: 1100 kg de agua + 400 kg de base = 1500 kg cada uno (puntos 242 y 243, EquiposAzotea). Falta correr ETABS.
 R3.4 (08/11/2026): muros de concreto en planta baja. PB-6-1 (eje 6, de A a B, panel WC55) y PB-11-1 (eje 11, de E a J, paneles WC60 y WC61) cambian de 'Muro 15 cm' (tabique) a 'MuroConcreto15' (f'c 250 kg/cm2, 15 cm).
 R3.4: castillos C39 y C79 se conservan como frames dentro de sus piers; sin modificadores de rigidez en los muros de concreto.
 Geometry corrected against supplied 001_PLANO_CROCHA_R3.0.dxf: walls, door/window positions and shell elevations.
