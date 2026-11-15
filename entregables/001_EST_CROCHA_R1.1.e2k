@@ -369,6 +369,7 @@ $ WALL PROPERTIES
   SHELLPROP  "Wall1"  PROPTYPE  "Wall"  MATERIAL "4000Psi"  MODELINGTYPE "ShellThin"  WALLTHICKNESS 0.25 
   SHELLPROP  "Muro 15 cm"  PROPTYPE  "Wall"  MATERIAL "Tabique rojo recocido f'm=20kg/cm2"  MODELINGTYPE "ShellThick"  WALLTHICKNESS 0.15 
   SHELLPROP  "MuroConcreto15"  PROPTYPE  "Wall"  MATERIAL "Concreto f'c=250kg/cm2. Clase 1A"  MODELINGTYPE "ShellThin"  WALLTHICKNESS 0.15 
+  SHELLPROP  "MuroConcreto25"  PROPTYPE  "Wall"  MATERIAL "Concreto f'c=250kg/cm2. Clase 1A"  MODELINGTYPE "ShellThin"  WALLTHICKNESS 0.25 
 
 $ LINK PROPERTIES
   LINKPROP  "Link1"  TYPE "LINEAR"  
@@ -563,6 +564,7 @@ $ POINT COORDINATES
   POINT "477"  5.27544 21.446 
   POINT "478"  5.92485 21.446 
   POINT "479"  6.27205 6.948 
+  POINT "91013"  6.37205 6.948 
   POINT "481"  6.722 17.446 
   POINT "483"  7.92544 21.446 
   POINT "484"  8.146077 21.446 
@@ -579,7 +581,7 @@ $ POINT COORDINATES
   POINT "531"  0 5.346 2.1
   POINT "532"  1.07544 5.346 2.1
   POINT "533"  5.27544 21.446 2.1
-  POINT "538"  6.27205 6.948 2.1
+  POINT "538"  6.37205 6.948 2.1
   POINT "539"  8.50005 6.948 2.1
   POINT "560"  5.9984403 17.072 
   POINT "561"  8.77544 17.072 
@@ -779,6 +781,7 @@ $ LINE CONNECTIVITIES
   LINE  "C10016"  COLUMN  "477"  "477"  1
   LINE  "C10017"  COLUMN  "478"  "478"  1
   LINE  "C10018"  COLUMN  "479"  "479"  1
+  LINE  "C91013"  COLUMN  "91013"  "91013"  1
   LINE  "C10020"  COLUMN  "481"  "481"  1
   LINE  "C10022"  COLUMN  "483"  "483"  1
   LINE  "C10023"  COLUMN  "484"  "484"  1
@@ -1067,7 +1070,7 @@ $ LINE CONNECTIVITIES
   LINE  "B28_3"  BEAM  "468"  "48"  0
   LINE  "B29"  BEAM  "48"  "71"  0
   LINE  "B1_1"  BEAM  "161"  "74"  0
-  LINE  "B1_2"  BEAM  "74"  "479"  0
+  LINE  "B1_2"  BEAM  "74"  "91013"  0
   LINE  "B8"  BEAM  "485"  "95"  0
 
 $ AREA CONNECTIVITIES
@@ -1130,8 +1133,8 @@ $ AREA CONNECTIVITIES
   AREA "WC55"  PANEL  4  "15"  "91006"  "91006"  "15"  1  1  0  0  
   AREA "WCM5"  PANEL  4  "91005"  "39"  "39"  "91005"  1  1  0  0  
   AREA "WCM6"  PANEL  4  "91006"  "91005"  "91005"  "91006"  1  1  0  0  
-  AREA "WC56"  PANEL  4  "479"  "74"  "74"  "479"  1  1  0  0  
-  AREA "WC57"  PANEL  4  "485"  "479"  "538"  "539"  1  1  0  0  
+  AREA "WC56"  PANEL  4  "91013"  "74"  "74"  "91013"  1  1  0  0  
+  AREA "WC57"  PANEL  4  "485"  "91013"  "538"  "539"  1  1  0  0  
   AREA "WC58"  PANEL  4  "95"  "485"  "485"  "95"  1  1  0  0  
   AREA "WC59"  PANEL  4  "88"  "97"  "97"  "88"  1  1  0  0  
   AREA "WC60"  PANEL  4  "304"  "91001"  "91001"  "304"  1  1  0  0  
@@ -1360,7 +1363,7 @@ $ POINT ASSIGNS
   POINTASSIGN  "474"  "N 0.00"  RESTRAINT "UX UY UZ RX RY RZ"  
   POINTASSIGN  "475"  "N 0.00"  RESTRAINT "UX UY UZ RX RY RZ"  
   POINTASSIGN  "477"  "N 0.00"  RESTRAINT "UX UY UZ RX RY RZ"  
-  POINTASSIGN  "479"  "N 0.00"  RESTRAINT "UX UY UZ RX RY RZ"  
+  POINTASSIGN  "91013"  "N 0.00"  RESTRAINT "UX UY UZ RX RY RZ"  
   POINTASSIGN  "484"  "N 0.00"  RESTRAINT "UX UY UZ RX RY RZ"  
   POINTASSIGN  "485"  "N 0.00"  RESTRAINT "UX UY UZ RX RY RZ"  
   POINTASSIGN  "499"  "N 0.00"  RESTRAINT "UX UY UZ RX RY RZ"  
@@ -1464,7 +1467,7 @@ $ LINE ASSIGNS
   LINEASSIGN  "C74"  "N+3.00"  SECTION "001_K-15x15"  MINNUMSTA 3 PIER "PB-G-1"  AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
   LINEASSIGN  "C74"  "N+6.00"  SECTION "001_K-15x15"  MINNUMSTA 3 PIER "PA-G-1"  AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
   LINEASSIGN  "C10017"  "N+6.00"  SECTION "001_K-15x15"  MINNUMSTA 3 PIER "PA-14-2"  AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
-  LINEASSIGN  "C10018"  "N+3.00"  SECTION "001_K-15x15"  MINNUMSTA 3 PIER "PB-6-MG"  AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
+  LINEASSIGN  "C91013"  "N+3.00"  SECTION "001_K-15x15"  MINNUMSTA 3 PIER "PB-6-MG"  AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
   LINEASSIGN  "C10018"  "N+6.00"  SECTION "001_K-15x15"  MINNUMSTA 3 AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
   LINEASSIGN  "C10020"  "N+6.00"  SECTION "001_K-15x15"  MINNUMSTA 3 PIER "PA-12-4"  AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
   LINEASSIGN  "C79"  "N+3.00"  SECTION "001_K-15x15"  MINNUMSTA 3 PIER "PB-11-1"  AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
@@ -1863,7 +1866,7 @@ $ AREA ASSIGNS
   AREAASSIGN  "WC25"  "N+3.00"  SECTION "Muro 15 cm"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
   AREAASSIGN  "WC26"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-E-3"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
   AREAASSIGN  "WC27"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-E-3"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
-  AREAASSIGN  "WC28"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-G-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
+  AREAASSIGN  "WC28"  "N+3.00"  SECTION "MuroConcreto25"  PIER  "PB-G-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
   AREAASSIGN  "WC29"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-H-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
   AREAASSIGN  "WC30"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-J-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
   AREAASSIGN  "WC31"  "N+3.00"  SECTION "Muro 15 cm"  PIER  "PB-J-1"  OBJMESHTYPE "DEFAULT"  ADDRESTRAINT "Yes"  CARDINALPOINT "MIDDLE"  TRANSFORMSTIFFNESSFOROFFSETS "No"  
@@ -3150,6 +3153,7 @@ R1.1 (14/11/2026): losa de entrepiso N+3.00 de 35 cm: 'LR-35' (reticular de nerv
 R1.1 (15/11/2026): se quitan las mochetas de 25 cm PB-15-2 (H/15), PB-15-3 (J/15) y PB-4-1 (A/4): fuera los paneles WC86-WC88, WC91-WC93 y WC42-WC44 y los castillos de jamba C10021 y C10026; la ventana llega al castillo K1 de la esquina (C83, C108 y C13). Puntos 482, 534, 80030, 487, 535, 80031, 271, 273 y 274 pasan a 83, 200, 198, 108, 199, 196, 13, 531 y 180; barras que quedaban de largo cero fuera (B50084_1, B50084_3, B50082_1, B50082_3); la dala B50084_2 queda de H a J con su carga de 539.7 kg/m. Falta correr ETABS.
 R1.1 (15/11/2026): PB-B-1 (eje B, de y = 5.346 a 6.046, 0.70 m, muro de la entrada) pasa de tabique a 'MuroConcreto15' (castillo K3 de concreto): paneles WC17, WC18, WCM10 y WCM11. Falta correr ETABS.
 R1.1 (15/11/2026): pesos. (1) Losa LR-35: se suma el macizo de las vigas de apoyo NP (b x 35 sin casetón) repartido en toda la losa: 7.30 t / 152.4 m2 = +47.9 kg/m2; de 316.1 a 364.1 kg/m2 (material 'LR-35 equiv' de 1363.83 a 1570.58 kg/m3). (2) Muros de tabique con aplanados: 270 kg/m2 en 15 cm (material 'Tabique rojo recocido' de 1300 a 1800 kg/m3). (3) Tinacos: 1100 kg de agua + 400 kg de base = 1500 kg cada uno (puntos 242 y 243, EquiposAzotea). Falta correr ETABS.
+R1.1 (15/11/2026): PB-G-1 (eje G, de 5 a 6) pasa de tabique a 'MuroConcreto25' (K6 de concreto 25 x 100, el espesor crece 10 cm hacia +x; el panel se deja en el eje G). PB-6-MG (K5) se alarga 10 cm hacia +x (0.50 a 0.60 m): punto nuevo 91013 en (6.37205, 6.948) solo para planta baja (WC56, WC57, dala B1_2, castillo C91013 y empotramiento); el punto 538 (antepecho) se recorre a x = 6.37205; la planta alta sigue en 479. Falta correr ETABS.
 R3.4 (08/11/2026): muros de concreto en planta baja. PB-6-1 (eje 6, de A a B, panel WC55) y PB-11-1 (eje 11, de E a J, paneles WC60 y WC61) cambian de 'Muro 15 cm' (tabique) a 'MuroConcreto15' (f'c 250 kg/cm2, 15 cm).
 R3.4: castillos C39 y C79 se conservan como frames dentro de sus piers; sin modificadores de rigidez en los muros de concreto.
 Geometry corrected against supplied 001_PLANO_CROCHA_R3.0.dxf: walls, door/window positions and shell elevations.
