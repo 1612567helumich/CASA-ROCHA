@@ -619,10 +619,12 @@ $ POINT COORDINATES
   POINT "91017"  2.85 15.921
   POINT "91018"  2.85 16.221
   POINT "91019"  0.075 16.221
-  POINT "572"  5.822 16.697 
-  POINT "573"  8.85 16.697 
-  POINT "574"  0 16.997 
-  POINT "575"  3.029 16.997 
+  POINT "91020"  5.422 15.397
+  POINT "91021"  8.85 15.397
+  POINT "572"  5.822 16.297
+  POINT "573"  8.85 16.297
+  POINT "574"  0 16.296
+  POINT "575"  3.029 16.296
   POINT "576"  0 10.346 
   POINT "577"  4.327 10.346 
   POINT "578"  0 11.096 
@@ -956,6 +958,7 @@ $ LINE CONNECTIVITIES
   LINE  "B50120_2"  BEAM  "32"  "42"  0
   LINE  "B50120_3"  BEAM  "42"  "53"  0
   LINE  "B50123"  BEAM  "572"  "573"  0
+  LINE  "B91020"  BEAM  "91020"  "91021"  0
   LINE  "B50124"  BEAM  "574"  "575"  0
   LINE  "B50126_1"  BEAM  "166"  "80045"  0
   LINE  "B50126_2"  BEAM  "80045"  "388"  0
@@ -1667,6 +1670,7 @@ $ LINE ASSIGNS
   LINEASSIGN  "B50074_2"  "N+6.00"  SECTION "002_D-15x20"  CARDINALPT 8  MAXSTASPC 0.5 AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
   LINEASSIGN  "B50074_3"  "N+6.00"  SECTION "002_D-15x20"  CARDINALPT 8  MAXSTASPC 0.5 AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
   LINEASSIGN  "B50123"  "N+6.00"  SECTION "002_D-15x20"  CARDINALPT 8  MAXSTASPC 0.5 AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
+  LINEASSIGN  "B91020"  "N+6.00"  SECTION "002_D-15x20"  CARDINALPT 8  MAXSTASPC 0.5 AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
   LINEASSIGN  "B50124"  "N+6.00"  SECTION "002_D-15x20"  CARDINALPT 8  MAXSTASPC 0.5 AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
   LINEASSIGN  "B50126_1"  "N+6.00"  SECTION "002_D-15x20"  CARDINALPT 2  MAXSTASPC 0.5 AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
   LINEASSIGN  "B50126_2"  "N+6.00"  SECTION "002_D-15x20"  CARDINALPT 2  MAXSTASPC 0.5 AUTOMESH "YES"  MESHATINTERSECTIONS "YES"  
@@ -3189,6 +3193,7 @@ R1.1 (15/11/2026): PB-G-1 (eje G, de 5 a 6) pasa de tabique a 'MuroConcreto25' (
 R1.1 (15/11/2026): vigas de apoyo NP de N+3.00 con su seccion real (ancho x 35, concreto de la losa): 25 tramos que eran dala 15x20 bajo muros de PA sin muro abajo pasan a NP-15x35, NP-20x35, NP-30x35, NP-35x35, NP-40x35 y NP-65x35. Peso y masa con modificador = 0.15*0.20/(b*0.35) para que pesen lo mismo que la dala (el macizo de las NP ya va repartido en la losa LR-35). Falta correr ETABS.
 R1.1 (16/11/2026): entrepiso N+3.00 de 30 (25 de nervadura + 5 de capa): los 20 tableros pasan de 'LR-35' a 'LR-30 NP' (espesor equivalente 0.1999 m, material 'LR-30 NP equiv' de 1620.06 kg/m3 = 323.9 kg/m2: 283.9 de la reticular + 39.9 del macizo de las NP de 30 repartido). Vigas NP de ancho x 30 (NP-15x30 ... NP-65x30), peso igual al de la dala 15x20. La azotea sigue con 'LR-30'. Falta correr ETABS.
 R1.1 (16/11/2026): vanos de azotea sobre la taza de cada baño de PA (franjas de 0.30 junto al muro de la taza): A1 baño de arriba a la derecha (y 15.922 a 16.222), A2 baño de abajo a la derecha (y 15.472 a 15.772) y A3 nuevo en el baño de la izquierda (x 0.075 a 2.85, y 15.921 a 16.221). Tinacos (puntos 242 y 243, 1.5 t c/u) del y = 16.325 al eje 12 (y = 17.446). Falta correr ETABS.
+R1.1 (16/11/2026): cerramientos de azotea (dala 15x20) al borde libre de cada vano: B50124 de y 16.997 a 16.296 (baño izquierdo), B50123 de y 16.697 a 16.297 (baño de arriba a la derecha; los tableros F80026/F80028 se parten ahí) y B91020 nuevo en y 15.397 del eje F al J (baño de abajo a la derecha). El otro lado de cada vano llega a la dala del muro de y 15.846. Falta correr ETABS.
 R3.4 (08/11/2026): muros de concreto en planta baja. PB-6-1 (eje 6, de A a B, panel WC55) y PB-11-1 (eje 11, de E a J, paneles WC60 y WC61) cambian de 'Muro 15 cm' (tabique) a 'MuroConcreto15' (f'c 250 kg/cm2, 15 cm).
 R3.4: castillos C39 y C79 se conservan como frames dentro de sus piers; sin modificadores de rigidez en los muros de concreto.
 Geometry corrected against supplied 001_PLANO_CROCHA_R3.0.dxf: walls, door/window positions and shell elevations.
