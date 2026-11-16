@@ -547,8 +547,8 @@ $ POINT COORDINATES
   POINT "216"  4.327 9.596 
   POINT "220"  5.923 9.95 
   POINT "238"  0 9.95 
-  POINT "242"  1 17.446
-  POINT "243"  2.3 17.446
+  POINT "242"  7 17.446
+  POINT "243"  8.25 17.446
   POINT "223"  4.327 1.919 
   POINT "264"  4.327 6.948 
   POINT "270"  8.85 15.447 
@@ -4540,6 +4540,7 @@ R1.1 (16/11/2026): cerramientos de azotea (dala 15x20) al borde libre de cada va
 R1.1 (16/11/2026): continuidad en el entrepiso de 30: las 82 dalas 15x20 de N+3.00 a nivel de losa pasan a '002_D-15x30' (concreto de la losa, peso y masa con modificador 0.666667 para que pesen lo mismo que la 15x20); con las NP, todas las vigas del entrepiso quedan de 30 de peralte. Las dalas de antepechos y dinteles (a media altura de muro) y las de azotea siguen 15x20. Falta correr ETABS.
 R1.1 (16/11/2026): continuidad de ancho: eje 12 (y = 17.446) completo de -2.00 a 8.85 en NP-40x30 y la línea y = 14.021 de -2.00 a 4.327 en NP-20x30 (antes la parte sobre muro y el volado eran 15x30). Macizo extra 2.770 m2 (b x L) repartido en la losa: 'LR-30 NP equiv' 1660.81 kg/m3 = 332.0 kg/m2. Falta correr ETABS.
 R1.1 (16/11/2026): grupos para aislar en las vistas: DALAS (274), DALAS N+3.00 (135), DALAS N+6.00 (139), VIGAS NP (30), CASTILLOS (126), CASTILLOS PB (57), CASTILLOS PA (69), MUROS (199), MUROS PB (98), MUROS PA (101), MUROS CONCRETO (36), LOSAS (31), LOSAS N+3.00 (20), LOSAS N+6.00 (11). No cambian el análisis.
+R1.1 (16/11/2026): tinacos (puntos 242 y 243, 1.5 t c/u) a la derecha sobre el eje 12: x = 7.00 y 8.25 (encima de PA-12-4, que va sobre los muros de PB del eje 12); antes en x = 1.00 y 2.30 sobre la NP-15. Falta correr ETABS.
 R3.4 (08/11/2026): muros de concreto en planta baja. PB-6-1 (eje 6, de A a B, panel WC55) y PB-11-1 (eje 11, de E a J, paneles WC60 y WC61) cambian de 'Muro 15 cm' (tabique) a 'MuroConcreto15' (f'c 250 kg/cm2, 15 cm).
 R3.4: castillos C39 y C79 se conservan como frames dentro de sus piers; sin modificadores de rigidez en los muros de concreto.
 Geometry corrected against supplied 001_PLANO_CROCHA_R3.0.dxf: walls, door/window positions and shell elevations.
