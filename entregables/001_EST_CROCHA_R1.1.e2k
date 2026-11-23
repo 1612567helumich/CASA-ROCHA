@@ -590,7 +590,6 @@ $ POINT COORDINATES
   POINT "476"  5.421961 17.446 
   POINT "477"  5.27544 21.446 
   POINT "478"  5.92485 21.446 
-  POINT "479"  6.27205 6.948 
   POINT "91013"  6.37205 6.948 
   POINT "481"  6.722 17.446 
   POINT "483"  7.92544 21.446 
@@ -669,7 +668,7 @@ $ POINT COORDINATES
   POINT "198"  7.25 24.371 0.9
   POINT "199"  8.85 24.371 2.1
   POINT "200"  7.25 24.371 2.1
-  POINT "80006"  6.27205 6.948 0.9
+  POINT "80006"  6.37205 6.948 0.9
   POINT "80007"  8.50005 6.948 0.9
   POINT "80010"  0 11.9855 
   POINT "80012"  3.625 23.446 
@@ -815,7 +814,7 @@ $ LINE CONNECTIVITIES
   LINE  "C10015"  COLUMN  "476"  "476"  1
   LINE  "C10016"  COLUMN  "477"  "477"  1
   LINE  "C10017"  COLUMN  "478"  "478"  1
-  LINE  "C10018"  COLUMN  "479"  "479"  1
+  LINE  "C10018"  COLUMN  "91013"  "91013"  1
   LINE  "C91013"  COLUMN  "91013"  "91013"  1
   LINE  "C10020"  COLUMN  "481"  "481"  1
   LINE  "C10022"  COLUMN  "483"  "483"  1
@@ -945,8 +944,8 @@ $ LINE CONNECTIVITIES
   LINE  "B50099"  BEAM  "204"  "163"  0
   LINE  "B50104_1"  BEAM  "50"  "475"  0
   LINE  "B50104_2"  BEAM  "475"  "73"  0
-  LINE  "B50105_1"  BEAM  "74"  "479"  0
-  LINE  "B50105_2"  BEAM  "479"  "485"  0
+  LINE  "B50105_1"  BEAM  "74"  "91013"  0
+  LINE  "B50105_2"  BEAM  "91013"  "485"  0
   LINE  "B50105_3"  BEAM  "485"  "95"  0
   LINE  "B50107"  BEAM  "205"  "214"  0
   LINE  "B50108"  BEAM  "206"  "215"  0
@@ -1259,8 +1258,8 @@ $ AREA CONNECTIVITIES
   AREA "WC142"  PANEL  4  "103"  "47"  "71"  "48"  0  0  0  0  
   AREA "WC143"  PANEL  4  "50"  "475"  "475"  "50"  1  1  0  0  
   AREA "WC144"  PANEL  4  "475"  "73"  "73"  "475"  1  1  0  0  
-  AREA "WC145"  PANEL  4  "479"  "74"  "74"  "479"  1  1  0  0  
-  AREA "WC146"  PANEL  4  "80007"  "80006"  "479"  "485"  0  0  0  0  
+  AREA "WC145"  PANEL  4  "91013"  "74"  "74"  "91013"  1  1  0  0  
+  AREA "WC146"  PANEL  4  "80007"  "80006"  "91013"  "485"  0  0  0  0  
   AREA "WC147"  PANEL  4  "95"  "485"  "485"  "95"  1  1  0  0  
   AREA "WC148"  PANEL  4  "16"  "33"  "33"  "16"  1  1  0  0  
   AREA "WC149"  PANEL  4  "33"  "52"  "52"  "33"  1  1  0  0  
@@ -4544,6 +4543,7 @@ R1.1 (16/11/2026): el volado del eje 12 fuera de A (B13, x = -2.00 a 0) regresa 
 R1.1 (17/11/2026): para que pasen compresión de muro sobre viga (NTC-M 4.1.18.2) se ensanchan: NP-21 (eje 4.33, x = 4.327, y = 2.921 a 7.871: B50091_2, B50091_3, B50091_4) de NP-15x30 a NP-35x30 y NP-24 (eje D, x = 4.426, y = 17.446 a 21.446: B90011) de NP-35x30 a NP-40x30. Macizo extra 1.190 m2 (b x L) repartido en la losa: 'LR-30 NP equiv' de 1649.04 a 1666.54 kg/m3 = 333.1 kg/m2. Falta correr ETABS.
 R1.1 (17/11/2026): NP-21 (eje 4.33: B50091_2, B50091_3, B50091_4) de NP-35x30 a NP-40x30, igual que NP-24. Macizo extra 0.248 m2: 'LR-30 NP equiv' de 1666.54 a 1670.18 kg/m3 = 333.9 kg/m2. Falta correr ETABS.
 R1.1 (23/11/2026): castillos K1 sin ARMEX: castillo armado de 15 x 20 (20 a lo largo del muro) con 4 #4 (f_y 4200) y anillos #2 de 10 x 15 @ 15 (@ 7.5 en 50 cm de cada extremo). En el modelo la sección 001_K-15x15 conserva 15 x 15 (rigidez del lado seguro); solo cambia el acero de la sección (4 #4). No requiere correr de nuevo por esto.
+R1.1 (23/11/2026): vano de PA en el eje 6 (entre G y J) recorrido 10 cm para alinearlo con el ventanal de PB: arranca en x = 6.372 (antes 6.272). El muro de PA sobre el K5 pasa de 35 a 45 cm (continuidad 100%); se mueven con el vano el castillo C10018, la dala de cerramiento B50105 y la dala del dintel B90001. Hay que correr de nuevo.
 R3.4 (08/11/2026): muros de concreto en planta baja. PB-6-1 (eje 6, de A a B, panel WC55) y PB-11-1 (eje 11, de E a J, paneles WC60 y WC61) cambian de 'Muro 15 cm' (tabique) a 'MuroConcreto15' (f'c 250 kg/cm2, 15 cm).
 R3.4: castillos C39 y C79 se conservan como frames dentro de sus piers; sin modificadores de rigidez en los muros de concreto.
 Geometry corrected against supplied 001_PLANO_CROCHA_R3.0.dxf: walls, door/window positions and shell elevations.
